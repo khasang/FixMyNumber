@@ -6,3 +6,4 @@
 и другие удобные функции для исправления ваших контактов.
 
 ## [User stories](https://github.com/khasang/FixMyNumber/blob/master/Roadmap.md)
+## [todo](https://github.com/khasang/FixMyNumber/blob/master/Todo.md)
