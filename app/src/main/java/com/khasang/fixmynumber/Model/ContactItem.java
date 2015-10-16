@@ -1,4 +1,4 @@
-package com.khasang.fixmynumber;
+package com.khasang.fixmynumber.Model;
 
 /**
  * Created by Raenar on 16.10.2015.

@@ -1,13 +1,15 @@
-package com.khasang.fixmynumber;
+package com.khasang.fixmynumber.Adapter;
 
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.RecyclerView.Adapter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.TextView;
+
+import com.khasang.fixmynumber.Model.ContactItem;
+import com.khasang.fixmynumber.R;
 
 import java.util.List;
 
