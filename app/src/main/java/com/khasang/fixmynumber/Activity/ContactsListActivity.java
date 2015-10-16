@@ -14,7 +14,7 @@ import com.khasang.fixmynumber.R;
 import java.util.ArrayList;
 
 public class ContactsListActivity extends AppCompatActivity {
-    ArrayList<ContactItem> contactList;
+    ArrayList<ContactItem> contactsList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,16 +26,16 @@ public class ContactsListActivity extends AppCompatActivity {
     }
 
     private void createDummyContacts() {
-        contactList = new ArrayList<ContactItem>();
+        contactsList = new ArrayList<ContactItem>();
         for (int i = 0; i < 8; i++) {
             ContactItem newItem = new ContactItem("qwerty", "12345", null, false);
-            contactList.add(newItem);
+            contactsList.add(newItem);
         }
     }
 
     private void setUpRecyclerView() {
         RecyclerView RecyclerViewContacts = (RecyclerView) findViewById(R.id.recyclerViewContacts);
-        ContactsListAdapter adapter = new ContactsListAdapter(contactList);
+        ContactsListAdapter adapter = new ContactsListAdapter(contactsList);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         RecyclerViewContacts.setAdapter(adapter);
         RecyclerViewContacts.setLayoutManager(layoutManager);
@@ -43,7 +43,7 @@ public class ContactsListActivity extends AppCompatActivity {
 
     public void buttonCheck(View view) {
         TextView textView = (TextView) findViewById(R.id.textView);
-        if (contactList.get(1).isChecked()) {
+        if (contactsList.get(1).isChecked()) {
             textView.setText("2nd contact is checked");
         } else {
             textView.setText("2nd contact is NOT checked");
