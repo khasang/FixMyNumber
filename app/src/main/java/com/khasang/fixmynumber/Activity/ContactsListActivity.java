@@ -1,5 +1,8 @@
 package com.khasang.fixmynumber.Activity;
 
+import android.database.Cursor;
+import android.os.AsyncTask;
+import android.provider.ContactsContract;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -21,7 +24,9 @@ public class ContactsListActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_contacts_list);
 
-        createDummyContacts();
+//        createDummyContacts();
+        contactsList = new ArrayList<>();
+        new ContactsLoader(contactsList).execute();
         setUpRecyclerView();
     }
 
@@ -48,5 +53,32 @@ public class ContactsListActivity extends AppCompatActivity {
         } else {
             textView.setText("2nd contact is NOT checked");
         }
+    }
+
+    class ContactsLoader extends AsyncTask<Void, Void, Void> {
+
+        ArrayList<ContactItem> contactItems;
+
+        public ContactsLoader(ArrayList<ContactItem> contactItems) {
+            this.contactItems = contactItems;
+        }
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+            Cursor numbersCursor = getContentResolver()
+                    .query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null, null, null, null);
+            while (numbersCursor.moveToNext()) {
+                String number = numbersCursor.getString(
+                        numbersCursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
+                String name = numbersCursor.getString(
+                        numbersCursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME));
+                String id = numbersCursor.getString(
+                        numbersCursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone._ID));
+                ContactItem contactItem = new ContactItem(name, number, null, false);
+                contactItems.add(contactItem);
+            }
+            return null;
+        }
+
     }
 }
