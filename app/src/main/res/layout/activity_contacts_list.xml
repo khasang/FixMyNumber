@@ -34,5 +34,5 @@
         android:layout_alignParentTop="true"
         android:layout_alignRight="@+id/recyclerViewContacts"
         android:onClick="buttonCheck"
-        android:text="New Button" />
+        android:text="Check 2nd contact" />
 </RelativeLayout>
