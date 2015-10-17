@@ -15,6 +15,7 @@ import com.khasang.fixmynumber.Model.ContactItem;
 import com.khasang.fixmynumber.R;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 public class ContactsListActivity extends AppCompatActivity {
     ArrayList<ContactItem> contactsList;
@@ -25,9 +26,25 @@ public class ContactsListActivity extends AppCompatActivity {
         setContentView(R.layout.activity_contacts_list);
 
 //        createDummyContacts();
-        contactsList = new ArrayList<>();
-        new ContactsLoader(contactsList).execute();
+        createMoreDummyContacts();
+//        contactsList = new ArrayList<>();
+//        new ContactsLoader(contactsList).execute();
         setUpRecyclerView();
+    }
+
+    private void createMoreDummyContacts() {
+        contactsList = new ArrayList<ContactItem>();
+        String[] namesArray = {"Alice","Bob","Clover","Dennis","Fred","George","Harold"};
+        String[] prefixArray = {"+7","8"};
+        for (int i = 0; i < 30; i++) {
+            Random random = new Random();
+            int nameID = random.nextInt(namesArray.length);
+            int prefixID = random.nextInt(prefixArray.length);
+            String generatedName = namesArray[nameID];
+            String generatedNumber = prefixArray[prefixID] + "800555-" + i;
+            ContactItem newItem = new ContactItem(generatedName, generatedNumber, null, false);
+            contactsList.add(newItem);
+        }
     }
 
     private void createDummyContacts() {
