@@ -41,7 +41,6 @@ public class ContactsListActivity extends AppCompatActivity {
 
     private void swapRrefix(String s1, String s2) {
         for (ContactItem contactItem : contactsList) {
-            System.out.println(contactItem.getNumberOriginal().substring(0, s1.length()));
             if (contactItem.getNumberOriginal().substring(0, s1.length()).equals(s1)) {
                 contactItem.setNumberOriginal(s2 + contactItem.getNumberOriginal().substring(s1.length()));
             }
