@@ -12,6 +12,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
 import com.khasang.fixmynumber.Adapter.ContactsListAdapter;
 import com.khasang.fixmynumber.Model.ContactItem;
@@ -20,6 +21,7 @@ import com.khasang.fixmynumber.R;
 import java.util.ArrayList;
 
 public class FragmentActivity extends AppCompatActivity {
+    RecyclerView recyclerViewContacts;
     ViewPager pager;
     ArrayList<ContactItem> contactsList;
 
@@ -33,7 +35,6 @@ public class FragmentActivity extends AppCompatActivity {
 
         setUpPager();
         createDummyContacts();
-        setUpRecyclerView();
 
 
     }
@@ -44,16 +45,6 @@ public class FragmentActivity extends AppCompatActivity {
             contactsList.add(newItem);
         }
     }
-
-    public void setUpRecyclerView() {
-        RecyclerView RecyclerViewContacts = (RecyclerView) findViewById(R.id.recyclerViewContacts);
-        ContactsListAdapter adapter = new ContactsListAdapter(contactsList);
-        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
-        RecyclerViewContacts.setAdapter(adapter);
-        RecyclerViewContacts.setLayoutManager(layoutManager);
-    }
-
-
 
     private void setUpPager() {
         pager = (ViewPager) findViewById(R.id.pager);
@@ -85,6 +76,7 @@ public class FragmentActivity extends AppCompatActivity {
         public Fragment getItem(int position) {
             StepFragment stepFragment = new StepFragment();
             stepFragment.setPageNumber(position);
+            stepFragment.setContactsList(contactsList);
             return stepFragment;
         }
 
