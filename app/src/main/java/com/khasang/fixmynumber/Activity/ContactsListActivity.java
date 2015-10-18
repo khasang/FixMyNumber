@@ -24,11 +24,27 @@ public class ContactsListActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_contacts_list);
-
 //        createDummyContacts();
         createMoreDummyContacts();
 //        contactsList = new ArrayList<>();
 //        new ContactsLoader(contactsList).execute();
+        setUpRecyclerView();
+    }
+
+    public void swapPrefix87(View view) {
+        swapRrefix("8", "+7");
+    }
+
+    public void swapPrefix78(View view) {
+        swapRrefix("+7", "8");
+    }
+
+    private void swapRrefix(String s1, String s2) {
+        for (ContactItem contactItem : contactsList) {
+            if (contactItem.getNumberOriginal().substring(0, s1.length()).equals(s1)) {
+                contactItem.setNumberOriginal(s2 + contactItem.getNumberOriginal().substring(s1.length()));
+            }
+        }
         setUpRecyclerView();
     }
 
