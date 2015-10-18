@@ -10,12 +10,6 @@
     tools:context=".MainActivity">
 
 
-    <TextView
-        android:id="@+id/textView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Hello World!" />
-
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recyclerViewContacts"
         android:layout_width="match_parent"
@@ -35,4 +29,32 @@
         android:layout_alignRight="@+id/recyclerViewContacts"
         android:onClick="buttonCheck"
         android:text="Check 2nd contact" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="8 to +7"
+        android:id="@+id/button_8to7"
+        android:layout_above="@+id/recyclerViewContacts"
+        android:layout_toLeftOf="@+id/button"
+        android:layout_toStartOf="@+id/button"
+        android:onClick="swapPrefix87"/>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="+7 to 8"
+        android:id="@+id/button_7to8"
+        android:layout_above="@+id/recyclerViewContacts"
+        android:layout_toStartOf="@+id/button_8to7"
+        android:layout_toLeftOf="@+id/button_8to7"
+        android:onClick="swapPrefix78"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="New Text"
+        android:id="@+id/textView"
+        android:layout_above="@+id/button"
+        android:layout_centerHorizontal="true" />
 </RelativeLayout>
