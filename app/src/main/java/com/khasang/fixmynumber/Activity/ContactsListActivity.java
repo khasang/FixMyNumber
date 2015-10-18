@@ -56,11 +56,11 @@ public class ContactsListActivity extends AppCompatActivity {
     }
 
     private void setUpRecyclerView() {
-        RecyclerView RecyclerViewContacts = (RecyclerView) findViewById(R.id.recyclerViewContacts);
+        RecyclerView recyclerViewContacts = (RecyclerView) findViewById(R.id.recyclerViewContacts);
         ContactsListAdapter adapter = new ContactsListAdapter(contactsList);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
-        RecyclerViewContacts.setAdapter(adapter);
-        RecyclerViewContacts.setLayoutManager(layoutManager);
+        recyclerViewContacts.setAdapter(adapter);
+        recyclerViewContacts.setLayoutManager(layoutManager);
     }
 
     public void buttonCheck(View view) {
