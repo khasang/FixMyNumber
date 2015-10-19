@@ -5,5 +5,5 @@
 Приложение, которое позволяет заменить первую цифру телефона ваших контактов на +7/8 или на свой вариант 
 и другие удобные функции для исправления ваших контактов.
 
-## [User stories](https://github.com/khasang/FixMyNumber/blob/master/Roadmap.md)
+## [roadmap](https://github.com/khasang/FixMyNumber/blob/master/Roadmap.md)
 ## [todo](https://github.com/khasang/FixMyNumber/blob/master/Todo.md)
