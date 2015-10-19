@@ -46,6 +46,9 @@ public class StepFragment extends Fragment {
             case 1:
                 rootView = (ViewGroup) inflater.inflate(R.layout.fragment_step2, container, false);
                 break;
+            case 2:
+                rootView = (ViewGroup) inflater.inflate(R.layout.fragment_step3, container, false);
+                break;
         }
         return rootView;
     }

@@ -4,17 +4,16 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
-import com.khasang.fixmynumber.Adapter.ContactsListAdapter;
 import com.khasang.fixmynumber.Model.ContactItem;
 import com.khasang.fixmynumber.R;
 
@@ -48,25 +47,51 @@ public class FragmentActivity extends AppCompatActivity {
 
     private void setUpPager() {
         pager = (ViewPager) findViewById(R.id.pager);
-        PagerAdapter pagerAdapter = new MyPagerAdapter(getSupportFragmentManager());
+        final PagerAdapter pagerAdapter = new MyPagerAdapter(getSupportFragmentManager());
         pager.setAdapter(pagerAdapter);
-        Button next = (Button) findViewById(R.id.next_button);
-        Button prev = (Button) findViewById(R.id.prev_button);
-        next.setOnClickListener(new View.OnClickListener() {
+        final Button backButton = (Button) findViewById(R.id.prev_button);
+        final Button nextButton = (Button) findViewById(R.id.next_button);
+        backButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                pager.setCurrentItem(1);
+                int page = pager.getCurrentItem();
+                if (page > 0) {
+                    pager.setCurrentItem(page - 1);
+                }
+                updateButtons(backButton, nextButton);
             }
         });
-        prev.setOnClickListener(new View.OnClickListener() {
+        nextButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                pager.setCurrentItem(0);
+                int page = pager.getCurrentItem();
+                if (page < pagerAdapter.getCount() - 1) {
+                    pager.setCurrentItem(page + 1);
+                }
+                updateButtons(backButton, nextButton);
             }
         });
     }
 
+    private void updateButtons(Button backButton, Button nextButton) {
+        int page = pager.getCurrentItem();
+        if (page == 0) {
+            backButton.setText("Cancel");
+        } else {
+            backButton.setText("Back");
+        }
+        if (page == 2) {
+            nextButton.setText("Finish");
+//            next.setBackgroundColor(ContextCompat.getColor(this, R.color.colorAccent));
+        } else {
+            nextButton.setText("Next");
+//            next.setBackgroundColor(ContextCompat.getColor(this, android.support.v7.appcompat.R.color.button_material_light));;
+        }
+    }
+
     private class MyPagerAdapter extends FragmentStatePagerAdapter{
+
+        public static final int FRAGMENTS_COUNT = 3;
 
         public MyPagerAdapter(FragmentManager fm) {
             super(fm);
@@ -82,7 +107,7 @@ public class FragmentActivity extends AppCompatActivity {
 
         @Override
         public int getCount() {
-            return 2;
+            return FRAGMENTS_COUNT;
         }
     }
 
