@@ -21,7 +21,7 @@ import java.util.ArrayList;
 
 public class FragmentActivity extends AppCompatActivity {
     RecyclerView recyclerViewContacts;
-    ViewPager pager;
+    CustomViewPager pager;
     ArrayList<ContactItem> contactsList;
 
     @Override
@@ -46,7 +46,7 @@ public class FragmentActivity extends AppCompatActivity {
     }
 
     private void setUpPager() {
-        pager = (ViewPager) findViewById(R.id.pager);
+        pager = (CustomViewPager) findViewById(R.id.pager);
         final PagerAdapter pagerAdapter = new MyPagerAdapter(getSupportFragmentManager());
         pager.setAdapter(pagerAdapter);
         final Button backButton = (Button) findViewById(R.id.prev_button);
