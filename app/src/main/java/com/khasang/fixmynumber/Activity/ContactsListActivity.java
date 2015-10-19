@@ -1,5 +1,6 @@
 package com.khasang.fixmynumber.Activity;
 
+import android.content.ContentProviderOperation;
 import android.database.Cursor;
 import android.os.AsyncTask;
 import android.provider.ContactsContract;
@@ -7,6 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
@@ -25,24 +27,26 @@ public class ContactsListActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_contacts_list);
 //        createDummyContacts();
-        createMoreDummyContacts();
-//        contactsList = new ArrayList<>();
-//        new ContactsLoader(contactsList).execute();
+//        createMoreDummyContacts();
+        contactsList = new ArrayList<>();
+        new ContactsLoader(contactsList).execute();
         setUpRecyclerView();
     }
 
     public void swapPrefix87(View view) {
         swapRrefix("8", "+7");
+        new ContactsSaver(contactsList).execute();
     }
 
     public void swapPrefix78(View view) {
         swapRrefix("+7", "8");
+        new ContactsSaver(contactsList).execute();
     }
 
     private void swapRrefix(String s1, String s2) {
         for (ContactItem contactItem : contactsList) {
             if (contactItem.getNumberOriginal().substring(0, s1.length()).equals(s1)) {
-                contactItem.setNumberOriginal(s2 + contactItem.getNumberOriginal().substring(s1.length()));
+                contactItem.setNumberNew(s2 + contactItem.getNumberOriginal().substring(s1.length()));
             }
         }
         setUpRecyclerView();
@@ -113,5 +117,32 @@ public class ContactsListActivity extends AppCompatActivity {
             return null;
         }
 
+    }
+
+    class ContactsSaver extends AsyncTask<Void, Void, Void> {
+
+        ArrayList<ContactItem> contactItems;
+
+        public ContactsSaver(ArrayList<ContactItem> contactItems) {
+            this.contactItems = contactItems;
+        }
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+            for (int i = 0; i < contactItems.size(); i++) {
+                ArrayList<ContentProviderOperation> op = new ArrayList<ContentProviderOperation>();
+                op.add(ContentProviderOperation.newUpdate(ContactsContract.Data.CONTENT_URI)
+                        .withSelection(ContactsContract.CommonDataKinds.Phone.NUMBER + "=?",
+                                new String[]{contactItems.get(i).getNumberOriginal()})
+                        .withValue(ContactsContract.CommonDataKinds.Phone.NUMBER, contactItems.get(i).getNumberNew())
+                        .build());
+                try {
+                    getContentResolver().applyBatch(ContactsContract.AUTHORITY, op);
+                } catch (Exception e) {
+                    Log.e("Exception: ", e.getMessage());
+                }
+            }
+            return null;
+        }
     }
 }
