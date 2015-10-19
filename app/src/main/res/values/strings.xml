@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Fix My Number</string>
+    <string name="title_activity_fragment">FragmentActivity</string>
 </resources>
