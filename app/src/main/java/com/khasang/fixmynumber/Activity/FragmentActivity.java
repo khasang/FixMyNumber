@@ -51,6 +51,7 @@ public class FragmentActivity extends AppCompatActivity {
         pager.setAdapter(pagerAdapter);
         final Button backButton = (Button) findViewById(R.id.prev_button);
         final Button nextButton = (Button) findViewById(R.id.next_button);
+        updateButtons(backButton,nextButton);
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
