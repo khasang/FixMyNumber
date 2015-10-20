@@ -8,7 +8,8 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.RadioButton;
+import android.widget.EditText;
+import android.widget.Toast;
 
 import com.khasang.fixmynumber.Adapter.ContactsListAdapter;
 import com.khasang.fixmynumber.Model.ContactItem;
@@ -22,6 +23,7 @@ import java.util.ArrayList;
 public class StepFragment extends Fragment {
     private int pageNumber;
     ArrayList<ContactItem> contactsList;
+    private FromFragmentToActivity fromFragmentToActivity;
 
     public StepFragment() {
     }
@@ -37,11 +39,18 @@ public class StepFragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
+        try {
+            fromFragmentToActivity = ((FromFragmentToActivity) context);
+        } catch (ClassCastException e){
+            throw new ClassCastException(context.toString()
+                    +"must implement FromFragmentToActivity");
+        }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.fragment_step1, container, false);
+
         switch (pageNumber) {
             case 0:
                 RecyclerView recyclerViewContacts = (RecyclerView) rootView.findViewById(R.id.recyclerViewContacts);
@@ -55,7 +64,34 @@ public class StepFragment extends Fragment {
                 rootView.findViewById(R.id.radioButtonSwap78).setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-
+                        fromFragmentToActivity.actionToActivity("+7","8");
+                    }
+                });
+                rootView.findViewById(R.id.radioButtonSwap87).setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        fromFragmentToActivity.actionToActivity("8", "+7");
+                    }
+                });
+                rootView.findViewById(R.id.radioButtonSwap700).setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        fromFragmentToActivity.actionToActivity("+7","00");
+                    }
+                });
+                rootView.findViewById(R.id.radioButtonSwap80).setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        fromFragmentToActivity.actionToActivity("8", "0");
+                    }
+                });
+                final ViewGroup finalRootView = rootView;
+                rootView.findViewById(R.id.radioButtonSwapCustom).setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        String s1 = ((EditText) finalRootView.findViewById(R.id.editTextS1)).getText().toString();
+                        String s2 = ((EditText) finalRootView.findViewById(R.id.editTextS2)).getText().toString();
+                        fromFragmentToActivity.actionToActivity(s1,s2);
                     }
                 });
                 break;

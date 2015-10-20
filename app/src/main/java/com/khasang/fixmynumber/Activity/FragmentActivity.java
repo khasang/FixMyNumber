@@ -12,14 +12,16 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
+import android.widget.RadioButton;
 import android.widget.Toast;
 
 import com.khasang.fixmynumber.Model.ContactItem;
 import com.khasang.fixmynumber.R;
 
 import java.util.ArrayList;
+import java.util.Random;
 
-public class FragmentActivity extends AppCompatActivity {
+public class FragmentActivity extends AppCompatActivity implements FromFragmentToActivity {
     RecyclerView recyclerViewContacts;
     CustomViewPager pager;
     ArrayList<ContactItem> contactsList;
@@ -34,7 +36,8 @@ public class FragmentActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         setUpPager();
-        createDummyContacts();
+//        createDummyContacts();
+        createMoreDummyContacts();
 
 
     }
@@ -47,8 +50,24 @@ public class FragmentActivity extends AppCompatActivity {
         }
     }
 
+    private void createMoreDummyContacts() {
+        contactsList = new ArrayList<ContactItem>();
+        String[] namesArray = {"Alice","Bob","Clover","Dennis","Fred","George","Harold"};
+        String[] prefixArray = {"+7","8"};
+        for (int i = 0; i < 30; i++) {
+            Random random = new Random();
+            int nameID = random.nextInt(namesArray.length);
+            int prefixID = random.nextInt(prefixArray.length);
+            String generatedName = namesArray[nameID];
+            String generatedNumber = prefixArray[prefixID] + "800555-" + i;
+            ContactItem newItem = new ContactItem(generatedName, generatedNumber, null, false);
+            contactsList.add(newItem);
+        }
+    }
+
     private void setUpPager() {
         pager = (CustomViewPager) findViewById(R.id.pager);
+//        pager.setOffscreenPageLimit(0);
         final PagerAdapter pagerAdapter = new MyPagerAdapter(getSupportFragmentManager());
         pager.setAdapter(pagerAdapter);
         final Button backButton = (Button) findViewById(R.id.prev_button);
@@ -96,9 +115,14 @@ public class FragmentActivity extends AppCompatActivity {
     private void swapPrefix(String s1, String s2) {
         for (ContactItem contactItem : contactsList) {
             if (contactItem.getNumberOriginal().substring(0, s1.length()).equals(s1)) {
-                contactItem.setNumberNew(s2 + contactItem.getNumberOriginal().substring(s1.length()));
+                contactItem.setNumberOriginal(s2 + contactItem.getNumberOriginal().substring(s1.length()));
             }
         }
+    }
+
+    @Override
+    public void actionToActivity(String s1, String s2) {
+        swapPrefix(s1,s2);
     }
 
     private class MyPagerAdapter extends FragmentStatePagerAdapter{
