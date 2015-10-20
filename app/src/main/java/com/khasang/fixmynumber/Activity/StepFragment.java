@@ -1,5 +1,6 @@
 package com.khasang.fixmynumber.Activity;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -7,6 +8,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RadioButton;
 
 import com.khasang.fixmynumber.Adapter.ContactsListAdapter;
 import com.khasang.fixmynumber.Model.ContactItem;
@@ -33,6 +35,11 @@ public class StepFragment extends Fragment {
     }
 
     @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.fragment_step1, container, false);
         switch (pageNumber) {
@@ -45,9 +52,20 @@ public class StepFragment extends Fragment {
                 break;
             case 1:
                 rootView = (ViewGroup) inflater.inflate(R.layout.fragment_step2, container, false);
+                rootView.findViewById(R.id.radioButtonSwap78).setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                    }
+                });
                 break;
             case 2:
                 rootView = (ViewGroup) inflater.inflate(R.layout.fragment_step3, container, false);
+                RecyclerView recyclerViewContactsToChange = (RecyclerView) rootView.findViewById(R.id.recyclerViewContactsToChange);
+                ContactsListAdapter adapter2 = new ContactsListAdapter(contactsList);
+                LinearLayoutManager layoutManager2 = new LinearLayoutManager(getActivity());
+                recyclerViewContactsToChange.setAdapter(adapter2);
+                recyclerViewContactsToChange.setLayoutManager(layoutManager2);
                 break;
         }
         return rootView;

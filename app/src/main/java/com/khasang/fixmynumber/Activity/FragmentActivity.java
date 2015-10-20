@@ -23,6 +23,7 @@ public class FragmentActivity extends AppCompatActivity {
     RecyclerView recyclerViewContacts;
     CustomViewPager pager;
     ArrayList<ContactItem> contactsList;
+    ArrayList<ContactItem> contactsListToChange;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,7 +40,8 @@ public class FragmentActivity extends AppCompatActivity {
     }
     public void createDummyContacts() {
         contactsList = new ArrayList<ContactItem>();
-        for (int i = 0; i < 8; i++) {
+        contactsListToChange = new ArrayList<ContactItem>();
+        for (int i = 0; i < 30; i++) {
             ContactItem newItem = new ContactItem("qwerty", "12345", null, false);
             contactsList.add(newItem);
         }
@@ -83,10 +85,19 @@ public class FragmentActivity extends AppCompatActivity {
         }
         if (page == 2) {
             nextButton.setText("Finish");
+
 //            next.setBackgroundColor(ContextCompat.getColor(this, R.color.colorAccent));
         } else {
             nextButton.setText("Next");
 //            next.setBackgroundColor(ContextCompat.getColor(this, android.support.v7.appcompat.R.color.button_material_light));;
+        }
+    }
+
+    private void swapPrefix(String s1, String s2) {
+        for (ContactItem contactItem : contactsList) {
+            if (contactItem.getNumberOriginal().substring(0, s1.length()).equals(s1)) {
+                contactItem.setNumberNew(s2 + contactItem.getNumberOriginal().substring(s1.length()));
+            }
         }
     }
 
