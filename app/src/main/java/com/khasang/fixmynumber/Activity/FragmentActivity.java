@@ -26,6 +26,8 @@ public class FragmentActivity extends AppCompatActivity implements FromFragmentT
     CustomViewPager pager;
     ArrayList<ContactItem> contactsList;
     ArrayList<ContactItem> contactsListToChange;
+    private String global_s1;
+    private String global_s2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,6 +91,8 @@ public class FragmentActivity extends AppCompatActivity implements FromFragmentT
                 int page = pager.getCurrentItem();
                 if (page < pagerAdapter.getCount() - 1) {
                     pager.setCurrentItem(page + 1);
+                } else {
+                    Toast.makeText(getApplicationContext(),"CHANGING NUMBERS", Toast.LENGTH_SHORT).show();
                 }
                 updateButtons(backButton, nextButton);
             }
@@ -103,8 +107,8 @@ public class FragmentActivity extends AppCompatActivity implements FromFragmentT
             backButton.setText("Back");
         }
         if (page == 2) {
+            swapPrefix(global_s1,global_s2);
             nextButton.setText("Finish");
-
 //            next.setBackgroundColor(ContextCompat.getColor(this, R.color.colorAccent));
         } else {
             nextButton.setText("Next");
@@ -114,15 +118,20 @@ public class FragmentActivity extends AppCompatActivity implements FromFragmentT
 
     private void swapPrefix(String s1, String s2) {
         for (ContactItem contactItem : contactsList) {
-            if (contactItem.getNumberOriginal().substring(0, s1.length()).equals(s1)) {
-                contactItem.setNumberOriginal(s2 + contactItem.getNumberOriginal().substring(s1.length()));
+            if (s1 != null){
+                if (contactItem.getNumberOriginal().substring(0, s1.length()).equals(s1)) {
+                    contactItem.setNumberNew(s2 + contactItem.getNumberOriginal().substring(s1.length()));
+                } else {
+                    contactItem.setNumberNew(contactItem.getNumberOriginal());
+                }
             }
         }
     }
 
     @Override
     public void actionToActivity(String s1, String s2) {
-        swapPrefix(s1,s2);
+        global_s1 = s1;
+        global_s2 = s2;
     }
 
     private class MyPagerAdapter extends FragmentStatePagerAdapter{

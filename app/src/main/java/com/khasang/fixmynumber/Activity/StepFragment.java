@@ -12,6 +12,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.khasang.fixmynumber.Adapter.ContactsListAdapter;
+import com.khasang.fixmynumber.Adapter.ContactsListToChangeAdapter;
 import com.khasang.fixmynumber.Model.ContactItem;
 import com.khasang.fixmynumber.R;
 
@@ -98,7 +99,7 @@ public class StepFragment extends Fragment {
             case 2:
                 rootView = (ViewGroup) inflater.inflate(R.layout.fragment_step3, container, false);
                 RecyclerView recyclerViewContactsToChange = (RecyclerView) rootView.findViewById(R.id.recyclerViewContactsToChange);
-                ContactsListAdapter adapter2 = new ContactsListAdapter(contactsList);
+                ContactsListToChangeAdapter adapter2 = new ContactsListToChangeAdapter(contactsList);
                 LinearLayoutManager layoutManager2 = new LinearLayoutManager(getActivity());
                 recyclerViewContactsToChange.setAdapter(adapter2);
                 recyclerViewContactsToChange.setLayoutManager(layoutManager2);
