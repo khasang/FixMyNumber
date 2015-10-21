@@ -25,13 +25,18 @@ public class StepFragment extends Fragment {
     ArrayList<ContactItem> contactsList;
     private Fragment1ViewsCreateListener fragment1ViewsCreateListener;
     private Fragment2ViewsCreateListener fragment2ViewsCreateListener;
+    private Fragment3ViewsCreateListener fragment3ViewsCreateListener;
 
     public interface Fragment1ViewsCreateListener {
-        public void onFragment1ViewsCreated(View v, EditText ed1, EditText ed2);
+        public void onFragment1ViewsCreated(ViewGroup v);
     }
 
     public interface Fragment2ViewsCreateListener {
-        public void onFragment2ViewsCreated(ViewGroup v);
+        public void onFragment2ViewsCreated(View v, EditText ed1, EditText ed2);
+    }
+
+    public interface Fragment3ViewsCreateListener {
+        public void onFragment3ViewsCreated(ViewGroup v);
     }
 
 
@@ -61,6 +66,12 @@ public class StepFragment extends Fragment {
             throw new ClassCastException(context.toString()
                     + "must implement Fragment2ViewsCreateListener");
         }
+        try {
+            fragment3ViewsCreateListener = ((Fragment3ViewsCreateListener) context);
+        } catch (ClassCastException e) {
+            throw new ClassCastException(context.toString()
+                    + "must implement Fragment3ViewsCreateListener");
+        }
     }
 
     @Override
@@ -74,6 +85,7 @@ public class StepFragment extends Fragment {
                 LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
                 recyclerViewContacts.setAdapter(adapter);
                 recyclerViewContacts.setLayoutManager(layoutManager);
+                fragment1ViewsCreateListener.onFragment1ViewsCreated(rootView);
                 break;
             case 1:
                 rootView = (ViewGroup) inflater.inflate(R.layout.fragment_step2, container, false);
@@ -82,31 +94,31 @@ public class StepFragment extends Fragment {
                 rootView.findViewById(R.id.radioButtonSwap78).setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        fragment1ViewsCreateListener.onFragment1ViewsCreated(v, editTextS1, editTextS2);
+                        fragment2ViewsCreateListener.onFragment2ViewsCreated(v, editTextS1, editTextS2);
                     }
                 });
                 rootView.findViewById(R.id.radioButtonSwap87).setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        fragment1ViewsCreateListener.onFragment1ViewsCreated(v, editTextS1, editTextS2);
+                        fragment2ViewsCreateListener.onFragment2ViewsCreated(v, editTextS1, editTextS2);
                     }
                 });
                 rootView.findViewById(R.id.radioButtonSwap700).setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        fragment1ViewsCreateListener.onFragment1ViewsCreated(v, editTextS1, editTextS2);
+                        fragment2ViewsCreateListener.onFragment2ViewsCreated(v, editTextS1, editTextS2);
                     }
                 });
                 rootView.findViewById(R.id.radioButtonSwap80).setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        fragment1ViewsCreateListener.onFragment1ViewsCreated(v, editTextS1, editTextS2);
+                        fragment2ViewsCreateListener.onFragment2ViewsCreated(v, editTextS1, editTextS2);
                     }
                 });
                 rootView.findViewById(R.id.radioButtonSwapCustom).setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        fragment1ViewsCreateListener.onFragment1ViewsCreated(v, editTextS1, editTextS2);
+                        fragment2ViewsCreateListener.onFragment2ViewsCreated(v, editTextS1, editTextS2);
                     }
                 });
                 break;
@@ -117,7 +129,7 @@ public class StepFragment extends Fragment {
                 LinearLayoutManager layoutManager2 = new LinearLayoutManager(getActivity());
                 recyclerViewContactsToChange.setAdapter(adapter2);
                 recyclerViewContactsToChange.setLayoutManager(layoutManager2);
-                fragment2ViewsCreateListener.onFragment2ViewsCreated(rootView);
+                fragment3ViewsCreateListener.onFragment3ViewsCreated(rootView);
                 break;
         }
         return rootView;
