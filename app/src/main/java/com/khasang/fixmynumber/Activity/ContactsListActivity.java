@@ -3,6 +3,7 @@ package com.khasang.fixmynumber.Activity;
 import android.content.ContentProviderOperation;
 import android.database.Cursor;
 import android.os.AsyncTask;
+import android.provider.BaseColumns;
 import android.provider.ContactsContract;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -21,7 +22,6 @@ import java.util.Random;
 
 public class ContactsListActivity extends AppCompatActivity {
     ArrayList<ContactItem> contactsList;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -45,8 +45,12 @@ public class ContactsListActivity extends AppCompatActivity {
 
     private void swapRrefix(String s1, String s2) {
         for (ContactItem contactItem : contactsList) {
-            if (contactItem.getNumberOriginal().substring(0, s1.length()).equals(s1)) {
-                contactItem.setNumberNew(s2 + contactItem.getNumberOriginal().substring(s1.length()));
+            if (contactItem.isChecked()) {
+                if (contactItem.getNumberOriginal().substring(0, s1.length()).equals(s1)) {
+                    contactItem.setNumberNew(s2 + contactItem.getNumberOriginal().substring(s1.length()));
+                }
+            } else {
+                contactItem.setNumberNew(contactItem.getNumberOriginal());
             }
         }
         setUpRecyclerView();
@@ -111,9 +115,12 @@ public class ContactsListActivity extends AppCompatActivity {
                         numbersCursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME));
                 String id = numbersCursor.getString(
                         numbersCursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone._ID));
-                ContactItem contactItem = new ContactItem(name, number, null, false);
-                contactItems.add(contactItem);
+                if (number != null) {
+                    ContactItem contactItem = new ContactItem(name, number, null, false);
+                    contactItems.add(contactItem);
+                }
             }
+            numbersCursor.close();
             return null;
         }
 
