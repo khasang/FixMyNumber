@@ -48,6 +48,8 @@ public class ContactsListActivity extends AppCompatActivity {
             if (contactItem.isChecked()) {
                 if (contactItem.getNumberOriginal().substring(0, s1.length()).equals(s1)) {
                     contactItem.setNumberNew(s2 + contactItem.getNumberOriginal().substring(s1.length()));
+                } else {
+                    contactItem.setNumberNew(contactItem.getNumberOriginal());
                 }
             } else {
                 contactItem.setNumberNew(contactItem.getNumberOriginal());
