@@ -31,18 +31,28 @@ public class ContactsListAdapter extends RecyclerView.Adapter<ContactsListAdapte
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder viewHolder, int i) {
+    public void onBindViewHolder(ViewHolder viewHolder, int position) {
+        final int i = position;
         final ContactItem contact = contactsList.get(i);
         viewHolder.checkBox.setChecked(contact.isChecked());
         viewHolder.name.setText(contact.getName());
         viewHolder.number.setText(contact.getNumberOriginal());
-
-        viewHolder.checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        viewHolder.checkBox.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+            public void onClick(View v) {
+                boolean isChecked = contact.isChecked();
+                isChecked = !isChecked;
                 contact.setIsChecked(isChecked);
             }
         });
+
+//        viewHolder.checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+//            @Override
+//            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+//                contactsList.get(i).setIsChecked(isChecked);
+//                contactsList.get(i).setName("qwe"+isChecked);
+//            }
+//        });
     }
 
     @Override
