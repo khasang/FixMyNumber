@@ -9,8 +9,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
-import android.widget.RadioButton;
-import android.widget.Toast;
 
 import com.khasang.fixmynumber.Adapter.ContactsListAdapter;
 import com.khasang.fixmynumber.Adapter.ContactsListToChangeAdapter;
@@ -25,15 +23,15 @@ import java.util.ArrayList;
 public class StepFragment extends Fragment {
     private int pageNumber;
     ArrayList<ContactItem> contactsList;
-    private FromFragmentToActivity fromFragmentToActivity;
-    private FragmentViewGroup fragmentViewGroup;
+    private Fragment1ViewsCreateListener fragment1ViewsCreateListener;
+    private Fragment2ViewsCreateListener fragment2ViewsCreateListener;
 
-    public interface FromFragmentToActivity {
-        public void actionToActivity(View v, EditText ed1, EditText ed2);
+    public interface Fragment1ViewsCreateListener {
+        public void onFragment1ViewsCreated(View v, EditText ed1, EditText ed2);
     }
 
-    public interface FragmentViewGroup {
-        public void useViewGroup(ViewGroup v);
+    public interface Fragment2ViewsCreateListener {
+        public void onFragment2ViewsCreated(ViewGroup v);
     }
 
 
@@ -52,16 +50,16 @@ public class StepFragment extends Fragment {
     public void onAttach(Context context) {
         super.onAttach(context);
         try {
-            fromFragmentToActivity = ((FromFragmentToActivity) context);
+            fragment1ViewsCreateListener = ((Fragment1ViewsCreateListener) context);
         } catch (ClassCastException e) {
             throw new ClassCastException(context.toString()
-                    + "must implement FromFragmentToActivity");
+                    + "must implement Fragment1ViewsCreateListener");
         }
         try {
-            fragmentViewGroup = ((FragmentViewGroup) context);
+            fragment2ViewsCreateListener = ((Fragment2ViewsCreateListener) context);
         } catch (ClassCastException e) {
             throw new ClassCastException(context.toString()
-                    + "must implement FragmentVIewGroup");
+                    + "must implement Fragment2ViewsCreateListener");
         }
     }
 
@@ -84,31 +82,31 @@ public class StepFragment extends Fragment {
                 rootView.findViewById(R.id.radioButtonSwap78).setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        fromFragmentToActivity.actionToActivity(v, editTextS1, editTextS2);
+                        fragment1ViewsCreateListener.onFragment1ViewsCreated(v, editTextS1, editTextS2);
                     }
                 });
                 rootView.findViewById(R.id.radioButtonSwap87).setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        fromFragmentToActivity.actionToActivity(v, editTextS1, editTextS2);
+                        fragment1ViewsCreateListener.onFragment1ViewsCreated(v, editTextS1, editTextS2);
                     }
                 });
                 rootView.findViewById(R.id.radioButtonSwap700).setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        fromFragmentToActivity.actionToActivity(v, editTextS1, editTextS2);
+                        fragment1ViewsCreateListener.onFragment1ViewsCreated(v, editTextS1, editTextS2);
                     }
                 });
                 rootView.findViewById(R.id.radioButtonSwap80).setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        fromFragmentToActivity.actionToActivity(v, editTextS1, editTextS2);
+                        fragment1ViewsCreateListener.onFragment1ViewsCreated(v, editTextS1, editTextS2);
                     }
                 });
                 rootView.findViewById(R.id.radioButtonSwapCustom).setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        fromFragmentToActivity.actionToActivity(v, editTextS1, editTextS2);
+                        fragment1ViewsCreateListener.onFragment1ViewsCreated(v, editTextS1, editTextS2);
                     }
                 });
                 break;
@@ -119,7 +117,7 @@ public class StepFragment extends Fragment {
                 LinearLayoutManager layoutManager2 = new LinearLayoutManager(getActivity());
                 recyclerViewContactsToChange.setAdapter(adapter2);
                 recyclerViewContactsToChange.setLayoutManager(layoutManager2);
-                fragmentViewGroup.useViewGroup(rootView);
+                fragment2ViewsCreateListener.onFragment2ViewsCreated(rootView);
                 break;
         }
         return rootView;

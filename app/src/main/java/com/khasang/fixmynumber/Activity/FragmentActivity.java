@@ -20,7 +20,7 @@ import com.khasang.fixmynumber.R;
 import java.util.ArrayList;
 import java.util.Random;
 
-public class FragmentActivity extends AppCompatActivity implements StepFragment.FromFragmentToActivity,StepFragment.FragmentViewGroup {
+public class FragmentActivity extends AppCompatActivity implements StepFragment.Fragment1ViewsCreateListener, StepFragment.Fragment2ViewsCreateListener {
     CustomViewPager pager;
     ArrayList<ContactItem> contactsList;
     private RecyclerView recyclerView;
@@ -37,23 +37,15 @@ public class FragmentActivity extends AppCompatActivity implements StepFragment.
         setSupportActionBar(toolbar);
 
         setUpPager();
-//        createDummyContacts();
         createMoreDummyContacts();
 
 
     }
-    public void createDummyContacts() {
-        contactsList = new ArrayList<ContactItem>();
-        for (int i = 0; i < 30; i++) {
-            ContactItem newItem = new ContactItem("qwerty", "12345", null, false);
-            contactsList.add(newItem);
-        }
-    }
 
     private void createMoreDummyContacts() {
         contactsList = new ArrayList<ContactItem>();
-        String[] namesArray = {"Alice","Bob","Clover","Dennis","Fred","George","Harold"};
-        String[] prefixArray = {"+7","8"};
+        String[] namesArray = {"Alice", "Bob", "Clover", "Dennis", "Fred", "George", "Harold"};
+        String[] prefixArray = {"+7", "8"};
         for (int i = 0; i < 30; i++) {
             Random random = new Random();
             int nameID = random.nextInt(namesArray.length);
@@ -72,7 +64,7 @@ public class FragmentActivity extends AppCompatActivity implements StepFragment.
         pager.setAdapter(pagerAdapter);
         final Button backButton = (Button) findViewById(R.id.prev_button);
         final Button nextButton = (Button) findViewById(R.id.next_button);
-        updateButtons(backButton,nextButton);
+        updateButtons(backButton, nextButton);
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -90,7 +82,7 @@ public class FragmentActivity extends AppCompatActivity implements StepFragment.
                 if (page < pagerAdapter.getCount() - 1) {
                     pager.setCurrentItem(page + 1);
                 } else {
-                    Toast.makeText(getApplicationContext(),"CHANGING NUMBERS", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), "CHANGING NUMBERS", Toast.LENGTH_SHORT).show();
                 }
                 updateButtons(backButton, nextButton);
             }
@@ -119,21 +111,21 @@ public class FragmentActivity extends AppCompatActivity implements StepFragment.
         if (radioButtonSelected != null) {
             switch (radioButtonSelected.getId()) {
                 case R.id.radioButtonSwap78:
-                    swapPrefix("+7","8");
+                    swapPrefix("+7", "8");
                     break;
                 case R.id.radioButtonSwap87:
                     swapPrefix("8", "+7");
                     break;
                 case R.id.radioButtonSwap700:
-                    swapPrefix("+7","00");
+                    swapPrefix("+7", "00");
                     break;
                 case R.id.radioButtonSwap80:
-                    swapPrefix("8","0");
+                    swapPrefix("8", "0");
                     break;
                 case R.id.radioButtonSwapCustom:
                     String s1 = editTextS1.getText().toString();
                     String s2 = editTextS2.getText().toString();
-                    swapPrefix(s1,s2);
+                    swapPrefix(s1, s2);
                     break;
             }
         }
@@ -141,7 +133,7 @@ public class FragmentActivity extends AppCompatActivity implements StepFragment.
 
     private void swapPrefix(String s1, String s2) {
         for (ContactItem contactItem : contactsList) {
-            if (s1 != null){
+            if (s1 != null) {
                 if (contactItem.getNumberOriginal().substring(0, s1.length()).equals(s1)) {
                     contactItem.setNumberNew(s2 + contactItem.getNumberOriginal().substring(s1.length()));
                 } else {
@@ -153,18 +145,18 @@ public class FragmentActivity extends AppCompatActivity implements StepFragment.
 
 
     @Override
-    public void useViewGroup(ViewGroup v) {
-        recyclerView = (RecyclerView) v.findViewById(R.id.recyclerViewContactsToChange);
-    }
-
-    @Override
-    public void actionToActivity(View v, EditText ed1, EditText ed2) {
+    public void onFragment1ViewsCreated(View v, EditText ed1, EditText ed2) {
         radioButtonSelected = v;
         editTextS1 = ed1;
         editTextS2 = ed2;
     }
 
-    private class MyPagerAdapter extends FragmentStatePagerAdapter{
+    @Override
+    public void onFragment2ViewsCreated(ViewGroup v) {
+        recyclerView = (RecyclerView) v.findViewById(R.id.recyclerViewContactsToChange);
+    }
+
+    private class MyPagerAdapter extends FragmentStatePagerAdapter {
 
         public static final int FRAGMENTS_COUNT = 3;
 
