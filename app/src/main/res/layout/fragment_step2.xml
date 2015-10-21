@@ -10,11 +10,91 @@
     tools:context=".MainActivity">
 
 
-    <ProgressBar
-        style="?android:attr/progressBarStyleLarge"
+    <RadioGroup
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/progressBar"
         android:layout_centerVertical="true"
-        android:layout_centerHorizontal="true" />
+        android:layout_centerHorizontal="true"
+        android:id="@+id/radioGroup">
+
+        <RadioButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Заменить +7 на 8"
+            android:id="@+id/radioButtonSwap78"
+            android:checked="false"
+ />
+
+        <RadioButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Заменить 8 на +7"
+            android:id="@+id/radioButtonSwap87"
+            android:checked="false" />
+
+        <RadioButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Заменить +7 на 00"
+            android:id="@+id/radioButtonSwap700" />
+
+        <RadioButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Заменить 8 на 0"
+            android:id="@+id/radioButtonSwap80" />
+
+        <RadioButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Своя замена"
+            android:id="@+id/radioButtonSwapCustom" />
+
+    </RadioGroup>
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="number"
+        android:ems="10"
+        android:id="@+id/editTextS1"
+        android:layout_below="@+id/radioGroup"
+        android:layout_alignLeft="@+id/radioGroup"
+        android:layout_alignStart="@+id/radioGroup"
+        android:layout_alignRight="@+id/radioGroup"
+        android:layout_alignEnd="@+id/radioGroup" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Заменить"
+        android:id="@+id/textView2"
+        android:gravity="center"
+        android:layout_alignBottom="@+id/editTextS1"
+        android:layout_toLeftOf="@+id/editTextS1"
+        android:layout_toStartOf="@+id/editTextS1"
+        android:layout_alignTop="@+id/editTextS1" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="На"
+        android:id="@+id/textView3"
+        android:gravity="center"
+        android:layout_alignBottom="@+id/editTextS2"
+        android:layout_toLeftOf="@+id/editTextS2"
+        android:layout_toStartOf="@+id/editTextS2"
+        android:layout_below="@+id/textView2" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="number"
+        android:ems="10"
+        android:id="@+id/editTextS2"
+        android:layout_below="@+id/editTextS1"
+        android:layout_toRightOf="@+id/textView2"
+        android:layout_alignRight="@+id/editTextS1"
+        android:layout_alignEnd="@+id/editTextS1" />
+
 </RelativeLayout>

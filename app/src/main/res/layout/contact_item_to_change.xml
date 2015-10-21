@@ -5,14 +5,6 @@
     android:orientation="horizontal"
     android:padding="4dp">
 
-    <CheckBox
-        android:id="@+id/checkBox"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_column="0"
-        android:layout_row="0"
-        android:checked="false" />
-
     <TextView
         android:id="@+id/contactName"
         android:layout_width="wrap_content"
@@ -23,13 +15,22 @@
         android:text="Name" />
 
     <TextView
-        android:id="@+id/contactNumber"
+        android:id="@+id/contactNumberOriginal"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_column="2"
         android:layout_marginLeft="5dp"
         android:layout_row="0"
         android:text="12345" />
+
+    <TextView
+        android:id="@+id/contactNumberNew"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_column="2"
+        android:layout_marginLeft="5dp"
+        android:layout_row="0"
+        android:text="=> 12345" />
 
 
 </LinearLayout>
