@@ -91,19 +91,6 @@ public class FragmentActivity extends AppCompatActivity implements StepFragment.
                 updateButtons(backButton, nextButton);
             }
         });
-
-        CheckBox checkBoxSelectAll = (CheckBox) findViewById(R.id.checkBoxSelectAll);
-        checkBoxSelectAll.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                areAllContactsSelected = !areAllContactsSelected;
-                for (ContactItem contactItem : contactsList) {
-                    contactItem.setIsChecked(areAllContactsSelected);
-                }
-                recyclerView.getAdapter().notifyDataSetChanged();
-            }
-        });
-
     }
 
     private void updateButtons(Button backButton, Button nextButton) {
@@ -153,9 +140,9 @@ public class FragmentActivity extends AppCompatActivity implements StepFragment.
             if ((s1 != null)&&(contactItem.isChecked())) {
                 if (contactItem.getNumberOriginal().substring(0, s1.length()).equals(s1)) {
                     contactItem.setNumberNew(s2 + contactItem.getNumberOriginal().substring(s1.length()));
-                } else {
-                    contactItem.setNumberNew(contactItem.getNumberOriginal());
                 }
+            } else {
+                contactItem.setNumberNew(contactItem.getNumberOriginal());
             }
         }
     }
@@ -164,6 +151,18 @@ public class FragmentActivity extends AppCompatActivity implements StepFragment.
     @Override
     public void onFragment1ViewsCreated(ViewGroup v) {
         recyclerView = (RecyclerView) v.findViewById(R.id.recyclerViewContacts);
+
+        CheckBox checkBoxSelectAll = (CheckBox) v.findViewById(R.id.checkBoxSelectAll);
+        checkBoxSelectAll.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                areAllContactsSelected = !areAllContactsSelected;
+                for (ContactItem contactItem : contactsList) {
+                    contactItem.setIsChecked(areAllContactsSelected);
+                }
+                recyclerView.getAdapter().notifyDataSetChanged();
+            }
+        });
     }
 
     @Override
