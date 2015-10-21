@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.RadioButton;
 import android.widget.Toast;
 
 import com.khasang.fixmynumber.Adapter.ContactsListAdapter;
@@ -25,6 +26,16 @@ public class StepFragment extends Fragment {
     private int pageNumber;
     ArrayList<ContactItem> contactsList;
     private FromFragmentToActivity fromFragmentToActivity;
+    private FragmentViewGroup fragmentViewGroup;
+
+    public interface FromFragmentToActivity {
+        public void actionToActivity(View v, EditText ed1, EditText ed2);
+    }
+
+    public interface FragmentViewGroup {
+        public void useViewGroup(ViewGroup v);
+    }
+
 
     public StepFragment() {
     }
@@ -42,9 +53,15 @@ public class StepFragment extends Fragment {
         super.onAttach(context);
         try {
             fromFragmentToActivity = ((FromFragmentToActivity) context);
-        } catch (ClassCastException e){
+        } catch (ClassCastException e) {
             throw new ClassCastException(context.toString()
-                    +"must implement FromFragmentToActivity");
+                    + "must implement FromFragmentToActivity");
+        }
+        try {
+            fragmentViewGroup = ((FragmentViewGroup) context);
+        } catch (ClassCastException e) {
+            throw new ClassCastException(context.toString()
+                    + "must implement FragmentVIewGroup");
         }
     }
 
@@ -62,37 +79,36 @@ public class StepFragment extends Fragment {
                 break;
             case 1:
                 rootView = (ViewGroup) inflater.inflate(R.layout.fragment_step2, container, false);
+                final EditText editTextS1 = ((EditText) rootView.findViewById(R.id.editTextS1));
+                final EditText editTextS2 = ((EditText) rootView.findViewById(R.id.editTextS2));
                 rootView.findViewById(R.id.radioButtonSwap78).setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        fromFragmentToActivity.actionToActivity("+7","8");
+                        fromFragmentToActivity.actionToActivity(v, editTextS1, editTextS2);
                     }
                 });
                 rootView.findViewById(R.id.radioButtonSwap87).setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        fromFragmentToActivity.actionToActivity("8", "+7");
+                        fromFragmentToActivity.actionToActivity(v, editTextS1, editTextS2);
                     }
                 });
                 rootView.findViewById(R.id.radioButtonSwap700).setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        fromFragmentToActivity.actionToActivity("+7","00");
+                        fromFragmentToActivity.actionToActivity(v, editTextS1, editTextS2);
                     }
                 });
                 rootView.findViewById(R.id.radioButtonSwap80).setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        fromFragmentToActivity.actionToActivity("8", "0");
+                        fromFragmentToActivity.actionToActivity(v, editTextS1, editTextS2);
                     }
                 });
-                final ViewGroup finalRootView = rootView;
                 rootView.findViewById(R.id.radioButtonSwapCustom).setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        String s1 = ((EditText) finalRootView.findViewById(R.id.editTextS1)).getText().toString();
-                        String s2 = ((EditText) finalRootView.findViewById(R.id.editTextS2)).getText().toString();
-                        fromFragmentToActivity.actionToActivity(s1,s2);
+                        fromFragmentToActivity.actionToActivity(v, editTextS1, editTextS2);
                     }
                 });
                 break;
@@ -103,6 +119,7 @@ public class StepFragment extends Fragment {
                 LinearLayoutManager layoutManager2 = new LinearLayoutManager(getActivity());
                 recyclerViewContactsToChange.setAdapter(adapter2);
                 recyclerViewContactsToChange.setLayoutManager(layoutManager2);
+                fragmentViewGroup.useViewGroup(rootView);
                 break;
         }
         return rootView;

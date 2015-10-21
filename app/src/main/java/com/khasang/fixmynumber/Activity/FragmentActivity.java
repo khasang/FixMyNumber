@@ -4,15 +4,14 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.view.PagerAdapter;
-import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.RadioButton;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import com.khasang.fixmynumber.Model.ContactItem;
@@ -21,13 +20,13 @@ import com.khasang.fixmynumber.R;
 import java.util.ArrayList;
 import java.util.Random;
 
-public class FragmentActivity extends AppCompatActivity implements FromFragmentToActivity {
-    RecyclerView recyclerViewContacts;
+public class FragmentActivity extends AppCompatActivity implements StepFragment.FromFragmentToActivity,StepFragment.FragmentViewGroup {
     CustomViewPager pager;
     ArrayList<ContactItem> contactsList;
-    ArrayList<ContactItem> contactsListToChange;
-    private String global_s1;
-    private String global_s2;
+    private RecyclerView recyclerView;
+    private EditText editTextS1;
+    private EditText editTextS2;
+    private View radioButtonSelected;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,7 +44,6 @@ public class FragmentActivity extends AppCompatActivity implements FromFragmentT
     }
     public void createDummyContacts() {
         contactsList = new ArrayList<ContactItem>();
-        contactsListToChange = new ArrayList<ContactItem>();
         for (int i = 0; i < 30; i++) {
             ContactItem newItem = new ContactItem("qwerty", "12345", null, false);
             contactsList.add(newItem);
@@ -107,12 +105,37 @@ public class FragmentActivity extends AppCompatActivity implements FromFragmentT
             backButton.setText("Back");
         }
         if (page == 2) {
-            swapPrefix(global_s1,global_s2);
+            changeNumbers();
             nextButton.setText("Finish");
+            recyclerView.getAdapter().notifyDataSetChanged();
 //            next.setBackgroundColor(ContextCompat.getColor(this, R.color.colorAccent));
         } else {
             nextButton.setText("Next");
 //            next.setBackgroundColor(ContextCompat.getColor(this, android.support.v7.appcompat.R.color.button_material_light));;
+        }
+    }
+
+    private void changeNumbers() {
+        if (radioButtonSelected != null) {
+            switch (radioButtonSelected.getId()) {
+                case R.id.radioButtonSwap78:
+                    swapPrefix("+7","8");
+                    break;
+                case R.id.radioButtonSwap87:
+                    swapPrefix("8", "+7");
+                    break;
+                case R.id.radioButtonSwap700:
+                    swapPrefix("+7","00");
+                    break;
+                case R.id.radioButtonSwap80:
+                    swapPrefix("8","0");
+                    break;
+                case R.id.radioButtonSwapCustom:
+                    String s1 = editTextS1.getText().toString();
+                    String s2 = editTextS2.getText().toString();
+                    swapPrefix(s1,s2);
+                    break;
+            }
         }
     }
 
@@ -128,10 +151,17 @@ public class FragmentActivity extends AppCompatActivity implements FromFragmentT
         }
     }
 
+
     @Override
-    public void actionToActivity(String s1, String s2) {
-        global_s1 = s1;
-        global_s2 = s2;
+    public void useViewGroup(ViewGroup v) {
+        recyclerView = (RecyclerView) v.findViewById(R.id.recyclerViewContactsToChange);
+    }
+
+    @Override
+    public void actionToActivity(View v, EditText ed1, EditText ed2) {
+        radioButtonSelected = v;
+        editTextS1 = ed1;
+        editTextS2 = ed2;
     }
 
     private class MyPagerAdapter extends FragmentStatePagerAdapter{
