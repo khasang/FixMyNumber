@@ -1,6 +1,10 @@
 package com.khasang.fixmynumber.Activity;
 
+import android.content.ContentProviderOperation;
+import android.database.Cursor;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
@@ -8,6 +12,7 @@ import android.support.v4.view.PagerAdapter;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -21,7 +26,7 @@ import com.khasang.fixmynumber.R;
 import java.util.ArrayList;
 import java.util.Random;
 
-public class FragmentActivity extends AppCompatActivity implements StepFragment.Fragment1ViewsCreateListener,StepFragment.Fragment2ViewsCreateListener, StepFragment.Fragment3ViewsCreateListener {
+public class FragmentActivity extends AppCompatActivity implements StepFragment.Fragment1ViewsCreateListener, StepFragment.Fragment2ViewsCreateListener, StepFragment.Fragment3ViewsCreateListener {
     CustomViewPager pager;
     ArrayList<ContactItem> contactsList;
     private RecyclerView recyclerView;
@@ -39,9 +44,11 @@ public class FragmentActivity extends AppCompatActivity implements StepFragment.
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        contactsList = new ArrayList<ContactItem>();
+        new ContactsLoader(contactsList).execute();
         areAllContactsSelected = false;
         setUpPager();
-        createMoreDummyContacts();
+//        createMoreDummyContacts();
 
 
     }
@@ -86,7 +93,10 @@ public class FragmentActivity extends AppCompatActivity implements StepFragment.
                 if (page < pagerAdapter.getCount() - 1) {
                     pager.setCurrentItem(page + 1);
                 } else {
-                    Toast.makeText(getApplicationContext(), "CHANGING NUMBERS", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(),
+                            "Numbers are changed. See debug log (Tag 'ContactsSaver')",
+                            Toast.LENGTH_LONG).show();
+                    new ContactsSaver(contactsList).execute();
                 }
                 updateButtons(backButton, nextButton);
             }
@@ -137,7 +147,7 @@ public class FragmentActivity extends AppCompatActivity implements StepFragment.
 
     private void swapPrefix(String s1, String s2) {
         for (ContactItem contactItem : contactsList) {
-            if ((s1 != null)&&(contactItem.isChecked())) {
+            if ((s1 != null) && (contactItem.isChecked())) {
                 if (contactItem.getNumberOriginal().substring(0, s1.length()).equals(s1)) {
                     contactItem.setNumberNew(s2 + contactItem.getNumberOriginal().substring(s1.length()));
                 }
@@ -196,6 +206,76 @@ public class FragmentActivity extends AppCompatActivity implements StepFragment.
         @Override
         public int getCount() {
             return FRAGMENTS_COUNT;
+        }
+    }
+
+    class ContactsLoader extends AsyncTask<Void, Void, Void> {
+
+        ArrayList<ContactItem> contactItems;
+
+        public ContactsLoader(ArrayList<ContactItem> contactItems) {
+            this.contactItems = contactItems;
+        }
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+
+            Cursor numbersCursor = getContentResolver()
+                    .query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null, null, null, null);
+            while (numbersCursor.moveToNext()) {
+                String number = numbersCursor.getString(
+                        numbersCursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
+                String name = numbersCursor.getString(
+                        numbersCursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME));
+                String id = numbersCursor.getString(
+                        numbersCursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone._ID));
+                if (number != null) {
+                    ContactItem contactItem = new ContactItem(name, number, null, false);
+                    contactItems.add(contactItem);
+                }
+            }
+            numbersCursor.close();
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+//            recyclerView.getAdapter().notifyDataSetChanged();
+        }
+    }
+
+    class ContactsSaver extends AsyncTask<Void, Void, Void> {
+
+        ArrayList<ContactItem> contactItems;
+
+        public ContactsSaver(ArrayList<ContactItem> contactItems) {
+            this.contactItems = contactItems;
+        }
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+            for (int i = 0; i < contactItems.size(); i++) {
+                if (contactItems.get(i).getNumberNew() != null){
+                    ArrayList<ContentProviderOperation> op = new ArrayList<ContentProviderOperation>();
+                    op.add(ContentProviderOperation.newUpdate(ContactsContract.Data.CONTENT_URI)
+                            .withSelection(ContactsContract.CommonDataKinds.Phone.NUMBER + "=?",
+                                    new String[]{contactItems.get(i).getNumberOriginal()})
+                            .withValue(ContactsContract.CommonDataKinds.Phone.NUMBER, contactItems.get(i).getNumberNew())
+                            .build());
+                    try {
+                        getContentResolver().applyBatch(ContactsContract.AUTHORITY, op);
+                        Log.d("ContactsSaver", "changed " + contactItems.get(i).getName()
+                                + " " + contactItems.get(i).getNumberOriginal()
+                                + " => to " + contactItems.get(i).getNumberNew());
+                    } catch (Exception e) {
+                        Log.e("Exception: ", e.getMessage());
+                    }
+                } else {
+                    Log.d("ContactsSaver", "Unchanged: " + contactItems.get(i).getName());
+                }
+            }
+            return null;
         }
     }
 
