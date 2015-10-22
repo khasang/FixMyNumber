@@ -256,19 +256,23 @@ public class FragmentActivity extends AppCompatActivity implements StepFragment.
         @Override
         protected Void doInBackground(Void... voids) {
             for (int i = 0; i < contactItems.size(); i++) {
-                ArrayList<ContentProviderOperation> op = new ArrayList<ContentProviderOperation>();
-                op.add(ContentProviderOperation.newUpdate(ContactsContract.Data.CONTENT_URI)
-                        .withSelection(ContactsContract.CommonDataKinds.Phone.NUMBER + "=?",
-                                new String[]{contactItems.get(i).getNumberOriginal()})
-                        .withValue(ContactsContract.CommonDataKinds.Phone.NUMBER, contactItems.get(i).getNumberNew())
-                        .build());
-                try {
-                    getContentResolver().applyBatch(ContactsContract.AUTHORITY, op);
-                    Log.d("ContactsSaver", "changed " + contactItems.get(i).getName()
-                            + " " + contactItems.get(i).getNumberOriginal()
-                            + " => to " + contactItems.get(i).getNumberNew());
-                } catch (Exception e) {
-                    Log.e("Exception: ", e.getMessage());
+                if (contactItems.get(i).getNumberNew() != null){
+                    ArrayList<ContentProviderOperation> op = new ArrayList<ContentProviderOperation>();
+                    op.add(ContentProviderOperation.newUpdate(ContactsContract.Data.CONTENT_URI)
+                            .withSelection(ContactsContract.CommonDataKinds.Phone.NUMBER + "=?",
+                                    new String[]{contactItems.get(i).getNumberOriginal()})
+                            .withValue(ContactsContract.CommonDataKinds.Phone.NUMBER, contactItems.get(i).getNumberNew())
+                            .build());
+                    try {
+                        getContentResolver().applyBatch(ContactsContract.AUTHORITY, op);
+                        Log.d("ContactsSaver", "changed " + contactItems.get(i).getName()
+                                + " " + contactItems.get(i).getNumberOriginal()
+                                + " => to " + contactItems.get(i).getNumberNew());
+                    } catch (Exception e) {
+                        Log.e("Exception: ", e.getMessage());
+                    }
+                } else {
+                    Log.d("ContactsSaver", "Unchanged: " + contactItems.get(i).getName());
                 }
             }
             return null;
