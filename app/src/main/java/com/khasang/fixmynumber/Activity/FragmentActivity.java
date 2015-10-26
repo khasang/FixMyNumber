@@ -1,7 +1,9 @@
 package com.khasang.fixmynumber.Activity;
 
 import android.content.ContentProviderOperation;
+import android.content.ContentValues;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.ContactsContract;
@@ -12,6 +14,7 @@ import android.support.v4.view.PagerAdapter;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,6 +24,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.khasang.fixmynumber.Model.ContactItem;
+import com.khasang.fixmynumber.Model.DBHelper;
 import com.khasang.fixmynumber.R;
 
 import java.util.ArrayList;
@@ -35,6 +39,7 @@ public class FragmentActivity extends AppCompatActivity implements StepFragment.
     private EditText editTextS1;
     private EditText editTextS2;
     private boolean areAllContactsSelected;
+    private DBHelper dbHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,7 +68,7 @@ public class FragmentActivity extends AppCompatActivity implements StepFragment.
             int prefixID = random.nextInt(prefixArray.length);
             String generatedName = namesArray[nameID];
             String generatedNumber = prefixArray[prefixID] + "800555-" + i;
-            ContactItem newItem = new ContactItem(generatedName, generatedNumber, null, false);
+            ContactItem newItem = new ContactItem(generatedName, generatedNumber, "" + i, null, false);
             contactsList.add(newItem);
         }
     }
@@ -96,6 +101,7 @@ public class FragmentActivity extends AppCompatActivity implements StepFragment.
                     Toast.makeText(getApplicationContext(),
                             "Numbers are changed. See debug log (Tag 'ContactsSaver')",
                             Toast.LENGTH_LONG).show();
+                    new ContactsBackup(contactsList).execute();
                     new ContactsSaver(contactsList).execute();
                 }
                 updateButtons(backButton, nextButton);
@@ -230,7 +236,7 @@ public class FragmentActivity extends AppCompatActivity implements StepFragment.
                 String id = numbersCursor.getString(
                         numbersCursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone._ID));
                 if (number != null) {
-                    ContactItem contactItem = new ContactItem(name, number, null, false);
+                    ContactItem contactItem = new ContactItem(name, number, id, null, false);
                     contactItems.add(contactItem);
                 }
             }
@@ -279,4 +285,39 @@ public class FragmentActivity extends AppCompatActivity implements StepFragment.
         }
     }
 
+    class ContactsBackup extends AsyncTask<Void, Void, Void> {
+
+        ArrayList<ContactItem> contactItems;
+        private String myTable;
+        private static final String PHONE = "PHONE";
+        private static final String PHONE_ID = "PHONE_ID";
+        private String phone;
+        private String phoneId;
+
+        public ContactsBackup(ArrayList<ContactItem> contactItems) {
+            this.contactItems = contactItems;
+        }
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+            dbHelper = new DBHelper(FragmentActivity.this);
+            SQLiteDatabase db = dbHelper.getWritableDatabase();
+            myTable = "contacts" + (String) DateFormat.format("ddMMyyyyhhmmss", System.currentTimeMillis());
+            db.execSQL("CREATE TABLE " + myTable + " (" +
+                    "ID INTEGER PRIMARY KEY AUTOINCREMENT, " + PHONE + " TEXT, " + PHONE_ID + " TEXT);");
+
+            for (int i = 0; i < contactItems.size(); i++) {
+                if (contactItems.get(i).isChecked()) {
+                    phone = contactItems.get(i).getNumberOriginal();
+                    phoneId = contactItems.get(i).getNumberOriginalId();
+                    ContentValues cv = new ContentValues();
+                    cv.put(DBHelper.PHONE, phone);
+                    cv.put(DBHelper.PHONE_ID, phoneId);
+                    long id = db.insert(myTable, null, cv);
+                }
+            }
+            dbHelper.close();
+            return null;
+        }
+    }
 }

@@ -3,10 +3,9 @@ package com.khasang.fixmynumber.Activity;
 import android.content.ContentProviderOperation;
 import android.database.Cursor;
 import android.os.AsyncTask;
-import android.provider.BaseColumns;
+import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -68,7 +67,7 @@ public class ContactsListActivity extends AppCompatActivity {
             int prefixID = random.nextInt(prefixArray.length);
             String generatedName = namesArray[nameID];
             String generatedNumber = prefixArray[prefixID] + "800555-" + i;
-            ContactItem newItem = new ContactItem(generatedName, generatedNumber, null, false);
+            ContactItem newItem = new ContactItem(generatedName, generatedNumber, "10" + i, null, false);
             contactsList.add(newItem);
         }
     }
@@ -76,7 +75,7 @@ public class ContactsListActivity extends AppCompatActivity {
     private void createDummyContacts() {
         contactsList = new ArrayList<ContactItem>();
         for (int i = 0; i < 8; i++) {
-            ContactItem newItem = new ContactItem("qwerty", "12345", null, false);
+            ContactItem newItem = new ContactItem("qwerty", "12345", "10" + i, null, false);
             contactsList.add(newItem);
         }
     }
@@ -118,7 +117,7 @@ public class ContactsListActivity extends AppCompatActivity {
                 String id = numbersCursor.getString(
                         numbersCursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone._ID));
                 if (number != null) {
-                    ContactItem contactItem = new ContactItem(name, number, null, false);
+                    ContactItem contactItem = new ContactItem(name, number, id, null, false);
                     contactItems.add(contactItem);
                 }
             }
