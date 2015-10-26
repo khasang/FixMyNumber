@@ -82,6 +82,8 @@ public class FragmentActivity extends AppCompatActivity implements StepFragment.
                 int page = pager.getCurrentItem();
                 if (page > 0) {
                     pager.setCurrentItem(page - 1);
+                } else {
+                    finish();
                 }
                 updateButtons(backButton, nextButton);
             }
