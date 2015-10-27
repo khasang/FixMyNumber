@@ -1,12 +1,13 @@
 package com.khasang.fixmynumber.Adapter;
 
 import android.content.Context;
+import android.graphics.Color;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.khasang.fixmynumber.R;
 
@@ -17,9 +18,10 @@ public class SavedContactsAdapter extends RecyclerView.Adapter<SavedContactsAdap
     private List<String> savedContactsList;
     Context context;
     private SavedContactsItemClickListener savedContactsItemClickListener;
+    private int selectedPos = -1;
 
     public interface SavedContactsItemClickListener {
-        public void onSavedContactsItemClick (String name);
+        public void onSavedContactsItemClick(String name);
     }
 
     public SavedContactsAdapter(List<String> savedContactsList, Context context) {
@@ -45,6 +47,12 @@ public class SavedContactsAdapter extends RecyclerView.Adapter<SavedContactsAdap
         String savedContactsName = savedContactsList.get(position);
         viewHolder.name.setText(savedContactsName);
         viewHolder.setPosition(position);
+//        viewHolder.itemView.setSelected(selectedPos == position);
+        if ((selectedPos == position) && (selectedPos != -1))
+            viewHolder.itemView.setBackgroundColor(ContextCompat.getColor(context, R.color.colorAccent));
+        else
+            viewHolder.itemView.setBackgroundColor(Color.TRANSPARENT);
+
     }
 
     @Override
@@ -66,7 +74,9 @@ public class SavedContactsAdapter extends RecyclerView.Adapter<SavedContactsAdap
             v.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Toast.makeText(context, "Selected table = "+savedContactsList.get(position), Toast.LENGTH_SHORT).show();
+                    notifyItemChanged(selectedPos);
+                    selectedPos = getLayoutPosition();
+                    notifyItemChanged(selectedPos);
                     savedContactsItemClickListener.onSavedContactsItemClick(savedContactsList.get(position));
                 }
             });

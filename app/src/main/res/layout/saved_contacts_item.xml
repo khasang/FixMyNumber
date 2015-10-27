@@ -9,6 +9,7 @@
         android:id="@+id/savedContactsName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:padding="5dp"
         android:layout_column="2"
         android:layout_marginLeft="5dp"
         android:layout_row="0"
