@@ -5,7 +5,10 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.os.AsyncTask;
+import android.support.v7.app.AlertDialog;
 
+import com.khasang.fixmynumber.Activity.RestoreContactsActivity;
+import com.khasang.fixmynumber.Helper.LoadingDialogCreator;
 import com.khasang.fixmynumber.Model.DBHelper;
 
 import java.util.ArrayList;
@@ -17,10 +20,19 @@ public class GetReserveContactsTask extends AsyncTask<Void, Void, Void> {
     private Activity activity;
     private ArrayList<String> savedContactsList;
     private String result;
+    AlertDialog dialog;
 
     public GetReserveContactsTask(Activity activity, ArrayList<String> savedContactsList) {
         this.activity = activity;
         this.savedContactsList = savedContactsList;
+    }
+
+    @Override
+    protected void onPreExecute() {
+        super.onPreExecute();
+        LoadingDialogCreator loadingDialogCreator = new LoadingDialogCreator(activity);
+        dialog = loadingDialogCreator.createLoadingDialog();
+        dialog.show();
     }
 
     @Override
@@ -42,5 +54,12 @@ public class GetReserveContactsTask extends AsyncTask<Void, Void, Void> {
 
         }
         return null;
+    }
+
+    @Override
+    protected void onPostExecute(Void aVoid) {
+        super.onPostExecute(aVoid);
+        dialog.dismiss();
+        ((RestoreContactsActivity) activity).updateUI();
     }
 }

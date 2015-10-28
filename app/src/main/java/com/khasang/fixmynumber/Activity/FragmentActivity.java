@@ -228,4 +228,8 @@ public class FragmentActivity extends AppCompatActivity implements StepFragment.
         }
     }
 
+    public void updateUI() {
+        recyclerView.getAdapter().notifyDataSetChanged();
+    }
+
 }

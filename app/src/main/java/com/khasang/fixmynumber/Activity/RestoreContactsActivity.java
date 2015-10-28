@@ -130,4 +130,7 @@ public class RestoreContactsActivity extends AppCompatActivity implements SavedC
         selectedTable = name;
     }
 
+    public void updateUI() {
+        recyclerViewSavedContacts.getAdapter().notifyDataSetChanged();
+    }
 }
