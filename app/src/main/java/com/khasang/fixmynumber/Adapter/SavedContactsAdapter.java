@@ -39,6 +39,11 @@ public class SavedContactsAdapter extends RecyclerView.Adapter<SavedContactsAdap
         }
     }
 
+    public void resetSelection(){
+        selectedPos = -1;
+        notifyItemChanged(selectedPos);
+    }
+
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.saved_contacts_item, parent, false);
