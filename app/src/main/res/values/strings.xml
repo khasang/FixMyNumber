@@ -21,4 +21,12 @@
     <string name="change_custom">Custom change</string>
     <string name="change_change">Change</string>
     <string name="change_to">To</string>
+    <string name="change_toolbar1">Select contacts to change</string>
+    <string name="change_toolbar2">Select action</string>
+    <string name="change_toolbar3">Confirm action</string>
+
+    <!--"restore contacts"-->
+    <string name="restore_delete">Delete</string>
+    <string name="restore_load">Load</string>
+    <string name="restore_toolbar">Chose contacts to restore</string>
 </resources>

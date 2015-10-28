@@ -74,6 +74,7 @@ public class FragmentActivity extends AppCompatActivity implements StepFragment.
         final Button backButton = (Button) findViewById(R.id.prev_button);
         final Button nextButton = (Button) findViewById(R.id.next_button);
         updateButtons(backButton, nextButton);
+        updateToolBar();
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -84,6 +85,7 @@ public class FragmentActivity extends AppCompatActivity implements StepFragment.
                     finish();
                 }
                 updateButtons(backButton, nextButton);
+                updateToolBar();
             }
         });
         nextButton.setOnClickListener(new View.OnClickListener() {
@@ -100,6 +102,7 @@ public class FragmentActivity extends AppCompatActivity implements StepFragment.
                     new ContactsSaverTask(FragmentActivity.this, contactsList).execute();
                 }
                 updateButtons(backButton, nextButton);
+                updateToolBar();
             }
         });
     }
@@ -117,8 +120,23 @@ public class FragmentActivity extends AppCompatActivity implements StepFragment.
             recyclerViewToChange.getAdapter().notifyDataSetChanged();
 //            next.setBackgroundColor(ContextCompat.getColor(this, R.color.colorAccent));
         } else {
-            nextButton.setText(R.string.button_next);
+            nextButton.setText("Next");
 //            next.setBackgroundColor(ContextCompat.getColor(this, android.support.v7.appcompat.R.color.button_material_light));;
+        }
+    }
+
+    private void updateToolBar() {
+        int page = pager.getCurrentItem();
+        switch (page){
+            case 0:
+                getSupportActionBar().setTitle(R.string.change_toolbar1);
+                break;
+            case 1:
+                getSupportActionBar().setTitle(R.string.change_toolbar2);
+                break;
+            case 2:
+                getSupportActionBar().setTitle(R.string.change_toolbar3);
+                break;
         }
     }
 

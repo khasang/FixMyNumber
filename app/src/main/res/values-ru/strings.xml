@@ -3,7 +3,7 @@
     <string name="app_name">Fix My Number</string>
     <string name="contacts">Контакты </string>
     <string name="menu_change_contacts">Заменить первую цифру в контактах</string>
-    <string name="menu_restore_contacts">Загрузить сохраненные контакты</string>
+    <string name="menu_restore_contacts">Восстановить сохраненные контакты</string>
     <string name="title_activity_fragment">FragmentActivity</string>
     <string name="button_back">Назад</string>
     <string name="button_cancel">Отмена</string>
@@ -16,4 +16,10 @@
     <string name="change_change">Заменить</string>
     <string name="change_custom">Своя замена</string>
     <string name="change_to">На</string>
+    <string name="change_toolbar1">Выберите контакты для изменения</string>
+    <string name="change_toolbar2">Выберите действие</string>
+    <string name="change_toolbar3">Подтвердите изменения</string>
+    <string name="restore_delete">Удалить</string>
+    <string name="restore_load">Загрузить</string>
+    <string name="restore_toolbar">Выберите контакты для восстановления</string>
 </resources>

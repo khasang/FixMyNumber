@@ -20,7 +20,6 @@ import java.util.ArrayList;
 public class RestoreContactsActivity extends AppCompatActivity implements SavedContactsAdapter.SavedContactsItemClickListener {
     ArrayList<String> savedContactsList;
     String selectedTable;
-    private DBHelper dbHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,6 +32,7 @@ public class RestoreContactsActivity extends AppCompatActivity implements SavedC
         new GetReserveContactsTask(this, savedContactsList).execute();
         setUpRecyclerView();
         setUpButtons();
+        setTitle(R.string.restore_toolbar);
     }
 
     private void getDummySavedContacts() {
