@@ -1,12 +1,6 @@
 package com.khasang.fixmynumber.Activity;
 
-import android.content.ContentProviderOperation;
-import android.content.ContentValues;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.provider.ContactsContract;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
@@ -14,8 +8,6 @@ import android.support.v4.view.PagerAdapter;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.text.format.DateFormat;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -24,8 +16,10 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.khasang.fixmynumber.Model.ContactItem;
-import com.khasang.fixmynumber.Model.DBHelper;
 import com.khasang.fixmynumber.R;
+import com.khasang.fixmynumber.Task.ContactsBackupTask;
+import com.khasang.fixmynumber.Task.ContactsLoaderTask;
+import com.khasang.fixmynumber.Task.ContactsSaverTask;
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -39,7 +33,6 @@ public class FragmentActivity extends AppCompatActivity implements StepFragment.
     private EditText editTextS1;
     private EditText editTextS2;
     private boolean areAllContactsSelected;
-    private DBHelper dbHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,7 +43,7 @@ public class FragmentActivity extends AppCompatActivity implements StepFragment.
         setSupportActionBar(toolbar);
 
         contactsList = new ArrayList<ContactItem>();
-        new ContactsLoader(contactsList).execute();
+        new ContactsLoaderTask(this, contactsList).execute();
         areAllContactsSelected = false;
         setUpPager();
 //        createMoreDummyContacts();
@@ -101,10 +94,10 @@ public class FragmentActivity extends AppCompatActivity implements StepFragment.
                     pager.setCurrentItem(page + 1);
                 } else {
                     Toast.makeText(getApplicationContext(),
-                            "Numbers are changed. See debug log (Tag 'ContactsSaver')",
+                            "Numbers are changed. See debug log (Tag 'ContactsSaverTask')",
                             Toast.LENGTH_LONG).show();
-                    new ContactsBackup(contactsList).execute();
-                    new ContactsSaver(contactsList).execute();
+                    new ContactsBackupTask(FragmentActivity.this, contactsList).execute();
+                    new ContactsSaverTask(FragmentActivity.this, contactsList).execute();
                 }
                 updateButtons(backButton, nextButton);
             }
@@ -217,110 +210,4 @@ public class FragmentActivity extends AppCompatActivity implements StepFragment.
         }
     }
 
-    class ContactsLoader extends AsyncTask<Void, Void, Void> {
-
-        ArrayList<ContactItem> contactItems;
-
-        public ContactsLoader(ArrayList<ContactItem> contactItems) {
-            this.contactItems = contactItems;
-        }
-
-        @Override
-        protected Void doInBackground(Void... voids) {
-
-            Cursor numbersCursor = getContentResolver()
-                    .query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null, null, null, null);
-            while (numbersCursor.moveToNext()) {
-                String number = numbersCursor.getString(
-                        numbersCursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
-                String name = numbersCursor.getString(
-                        numbersCursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME));
-                String id = numbersCursor.getString(
-                        numbersCursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone._ID));
-                if (number != null) {
-                    ContactItem contactItem = new ContactItem(name, number, id, null, false);
-                    contactItems.add(contactItem);
-                }
-            }
-            numbersCursor.close();
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Void aVoid) {
-            super.onPostExecute(aVoid);
-//            recyclerView.getAdapter().notifyDataSetChanged();
-        }
-    }
-
-    class ContactsSaver extends AsyncTask<Void, Void, Void> {
-
-        ArrayList<ContactItem> contactItems;
-
-        public ContactsSaver(ArrayList<ContactItem> contactItems) {
-            this.contactItems = contactItems;
-        }
-
-        @Override
-        protected Void doInBackground(Void... voids) {
-            for (int i = 0; i < contactItems.size(); i++) {
-                if (contactItems.get(i).getNumberNew() != null){
-                    ArrayList<ContentProviderOperation> op = new ArrayList<ContentProviderOperation>();
-                    op.add(ContentProviderOperation.newUpdate(ContactsContract.Data.CONTENT_URI)
-                            .withSelection(ContactsContract.CommonDataKinds.Phone.NUMBER + "=?",
-                                    new String[]{contactItems.get(i).getNumberOriginal()})
-                            .withValue(ContactsContract.CommonDataKinds.Phone.NUMBER, contactItems.get(i).getNumberNew())
-                            .build());
-                    try {
-                        getContentResolver().applyBatch(ContactsContract.AUTHORITY, op);
-                        Log.d("ContactsSaver", "changed " + contactItems.get(i).getName()
-                                + " " + contactItems.get(i).getNumberOriginal()
-                                + " => to " + contactItems.get(i).getNumberNew());
-                    } catch (Exception e) {
-                        Log.e("Exception: ", e.getMessage());
-                    }
-                } else {
-                    Log.d("ContactsSaver", "Unchanged: " + contactItems.get(i).getName());
-                }
-            }
-            return null;
-        }
-    }
-
-    class ContactsBackup extends AsyncTask<Void, Void, Void> {
-
-        ArrayList<ContactItem> contactItems;
-        private String myTable;
-        private static final String PHONE = "PHONE";
-        private static final String PHONE_ID = "PHONE_ID";
-        private String phone;
-        private String phoneId;
-        public static final String dateFormat = "ddMMyyyyhhmmss";
-
-        public ContactsBackup(ArrayList<ContactItem> contactItems) {
-            this.contactItems = contactItems;
-        }
-
-        @Override
-        protected Void doInBackground(Void... voids) {
-            dbHelper = new DBHelper(FragmentActivity.this);
-            SQLiteDatabase db = dbHelper.getWritableDatabase();
-            myTable = "contacts" + (String) DateFormat.format(dateFormat, System.currentTimeMillis());
-            db.execSQL("CREATE TABLE " + myTable + " (" +
-                    "ID INTEGER PRIMARY KEY AUTOINCREMENT, " + PHONE + " TEXT, " + PHONE_ID + " TEXT);");
-
-            for (int i = 0; i < contactItems.size(); i++) {
-                if (contactItems.get(i).isChecked()) {
-                    phone = contactItems.get(i).getNumberOriginal();
-                    phoneId = contactItems.get(i).getNumberOriginalId();
-                    ContentValues cv = new ContentValues();
-                    cv.put(DBHelper.PHONE, phone);
-                    cv.put(DBHelper.PHONE_ID, phoneId);
-                    long id = db.insert(myTable, null, cv);
-                }
-            }
-            dbHelper.close();
-            return null;
-        }
-    }
 }

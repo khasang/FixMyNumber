@@ -1,16 +1,9 @@
 package com.khasang.fixmynumber.Activity;
 
-import android.content.ContentProviderOperation;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteException;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.provider.ContactsContract;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
@@ -18,8 +11,10 @@ import android.widget.Toast;
 import com.khasang.fixmynumber.Adapter.SavedContactsAdapter;
 import com.khasang.fixmynumber.Model.DBHelper;
 import com.khasang.fixmynumber.R;
+import com.khasang.fixmynumber.Task.DeleteReserveContactsTask;
+import com.khasang.fixmynumber.Task.GetReserveContactsTask;
+import com.khasang.fixmynumber.Task.LoadReserveContactsTask;
 
-import java.sql.SQLException;
 import java.util.ArrayList;
 
 public class RestoreContactsActivity extends AppCompatActivity implements SavedContactsAdapter.SavedContactsItemClickListener {
@@ -35,7 +30,7 @@ public class RestoreContactsActivity extends AppCompatActivity implements SavedC
         selectedTable = null;
         savedContactsList = new ArrayList<>();
 //        getDummySavedContacts();
-        new TaskGetReserveContacts(savedContactsList).execute();
+        new GetReserveContactsTask(this, savedContactsList).execute();
         setUpRecyclerView();
         setUpButtons();
     }
@@ -63,7 +58,7 @@ public class RestoreContactsActivity extends AppCompatActivity implements SavedC
             public void onClick(View v) {
                 if (selectedTable != null) {
                     Toast.makeText(getApplicationContext(), "Loading " + selectedTable, Toast.LENGTH_SHORT).show();
-                    new TaskLoadReserveContacts(selectedTable).execute();
+                    new LoadReserveContactsTask(RestoreContactsActivity.this, selectedTable).execute();
                 }
             }
         });
@@ -72,7 +67,7 @@ public class RestoreContactsActivity extends AppCompatActivity implements SavedC
             public void onClick(View v) {
                 if (selectedTable != null) {
                     Toast.makeText(getApplicationContext(), "Deleting " + selectedTable, Toast.LENGTH_SHORT).show();
-                    new TaskDeleteReserveContacts(selectedTable).execute();
+                    new DeleteReserveContactsTask(RestoreContactsActivity.this, selectedTable).execute();
                 }
             }
         });
@@ -83,97 +78,4 @@ public class RestoreContactsActivity extends AppCompatActivity implements SavedC
         selectedTable = name;
     }
 
-    class TaskGetReserveContacts extends AsyncTask<Void, Void, Void> {
-        private ArrayList<String> savedContactsList;
-        private String result;
-
-        public TaskGetReserveContacts(ArrayList<String> savedContactsList) {
-            this.savedContactsList = savedContactsList;
-        }
-
-        @Override
-        protected Void doInBackground(Void... voids) {
-            dbHelper = new DBHelper(RestoreContactsActivity.this);
-            SQLiteDatabase db = dbHelper.getWritableDatabase();
-            try {
-                Cursor c = db.query(DBHelper.SQLITE_SEQUENCE, null, null, null, null, null, null);
-                if (c.moveToNext()) {
-                    int nameIndex = c.getColumnIndex("name");
-                    do {
-                        result = c.getString(nameIndex);
-                        savedContactsList.add(result);
-                    } while (c.moveToNext());
-                }
-                c.close();
-                dbHelper.close();
-            } catch (SQLiteException e) {
-
-            }
-            return null;
-        }
-    }
-
-    class TaskLoadReserveContacts extends AsyncTask<Void, Void, Void> {
-        private String selectedTable;
-        private ArrayList<String> reserveNumbers = new ArrayList<>();
-        private ArrayList<String> reserveNumberIds = new ArrayList<>();
-        private String number;
-        private String numberId;
-
-        public TaskLoadReserveContacts(String selectedTable) {
-            this.selectedTable = selectedTable;
-        }
-
-        @Override
-        protected Void doInBackground(Void... voids) {
-            dbHelper = new DBHelper(RestoreContactsActivity.this);
-            SQLiteDatabase db = dbHelper.getWritableDatabase();
-            Cursor c = db.query(selectedTable, null, null, null, null, null, null);
-            if (c.moveToNext()) {
-                int numberIndex = c.getColumnIndex(DBHelper.PHONE);
-                int numberIdIndex = c.getColumnIndex(DBHelper.PHONE_ID);
-                do {
-                    number = c.getString(numberIndex);
-                    reserveNumbers.add(number);
-                    numberId = c.getString(numberIdIndex);
-                    reserveNumberIds.add(numberId);
-                } while (c.moveToNext());
-            }
-            c.close();
-            dbHelper.close();
-
-            for (int i = 0; i < reserveNumbers.size(); i++) {
-                if (reserveNumbers.get(i) != null) {
-                    ArrayList<ContentProviderOperation> op = new ArrayList<ContentProviderOperation>();
-                    op.add(ContentProviderOperation.newUpdate(ContactsContract.Data.CONTENT_URI)
-                            .withSelection(ContactsContract.CommonDataKinds.Phone._ID + "=?",
-                                    new String[]{reserveNumberIds.get(i)})
-                            .withValue(ContactsContract.CommonDataKinds.Phone.NUMBER, reserveNumbers.get(i))
-                            .build());
-                    try {
-                        getContentResolver().applyBatch(ContactsContract.AUTHORITY, op);
-                    } catch (Exception e) {
-                        Log.e("Exception: ", e.getMessage());
-                    }
-                }
-            }
-            return null;
-        }
-    }
-
-    class TaskDeleteReserveContacts extends AsyncTask<Void, Void, Void> {
-        private String selectedTable;
-
-        public TaskDeleteReserveContacts(String selectedTable) {
-            this.selectedTable = selectedTable;
-        }
-
-        @Override
-        protected Void doInBackground(Void... voids) {
-            dbHelper = new DBHelper(RestoreContactsActivity.this);
-            SQLiteDatabase db = dbHelper.getWritableDatabase();
-            dbHelper.dropTable(db, selectedTable);
-            return null;
-        }
-    }
 }
