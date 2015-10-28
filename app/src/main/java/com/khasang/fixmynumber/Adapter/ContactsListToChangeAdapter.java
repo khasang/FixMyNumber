@@ -34,7 +34,7 @@ public class ContactsListToChangeAdapter extends RecyclerView.Adapter<ContactsLi
         viewHolder.name.setText(contact.getName());
         viewHolder.numberOriginal.setText(contact.getNumberOriginal());
         if ((contact.getNumberOriginal().equals(contact.getNumberNew())) || (contact.getNumberNew() == null)) {
-            viewHolder.numberNew.setText("UNCHANGED");
+            viewHolder.numberNew.setText(R.string.unchanged);
         } else {
             viewHolder.numberNew.setText("==> " + contact.getNumberNew());
         }

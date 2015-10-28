@@ -22,4 +22,6 @@
     <string name="restore_delete">Удалить</string>
     <string name="restore_load">Загрузить</string>
     <string name="restore_toolbar">Выберите контакты для восстановления</string>
+    <string name="unchanged">Нет изменений</string>
+    <string name="change_select_all">Выбрать все</string>
 </resources>

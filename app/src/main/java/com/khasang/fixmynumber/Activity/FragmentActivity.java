@@ -120,7 +120,7 @@ public class FragmentActivity extends AppCompatActivity implements StepFragment.
             recyclerViewToChange.getAdapter().notifyDataSetChanged();
 //            next.setBackgroundColor(ContextCompat.getColor(this, R.color.colorAccent));
         } else {
-            nextButton.setText("Next");
+            nextButton.setText(R.string.button_next);
 //            next.setBackgroundColor(ContextCompat.getColor(this, android.support.v7.appcompat.R.color.button_material_light));;
         }
     }

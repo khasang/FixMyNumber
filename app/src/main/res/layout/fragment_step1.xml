@@ -12,7 +12,7 @@
     <CheckBox
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Select all"
+        android:text="@string/change_select_all"
         android:id="@+id/checkBoxSelectAll"
         android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
