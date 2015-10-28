@@ -107,17 +107,17 @@ public class FragmentActivity extends AppCompatActivity implements StepFragment.
     private void updateButtons(Button backButton, Button nextButton) {
         int page = pager.getCurrentItem();
         if (page == 0) {
-            backButton.setText("Cancel");
+            backButton.setText(R.string.button_cancel);
         } else {
-            backButton.setText("Back");
+            backButton.setText(R.string.button_back);
         }
         if (page == 2) {
             changeNumbers();
-            nextButton.setText("Finish");
+            nextButton.setText(R.string.button_finish);
             recyclerViewToChange.getAdapter().notifyDataSetChanged();
 //            next.setBackgroundColor(ContextCompat.getColor(this, R.color.colorAccent));
         } else {
-            nextButton.setText("Next");
+            nextButton.setText(R.string.button_next);
 //            next.setBackgroundColor(ContextCompat.getColor(this, android.support.v7.appcompat.R.color.button_material_light));;
         }
     }

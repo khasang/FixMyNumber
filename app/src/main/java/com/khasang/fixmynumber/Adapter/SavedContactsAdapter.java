@@ -55,11 +55,10 @@ public class SavedContactsAdapter extends RecyclerView.Adapter<SavedContactsAdap
         try {
             Date newDate = format.parse(formattedName);
             format = new SimpleDateFormat("dd.MM.yyyy hh:mm:ss");
-            formattedName = "Contacts " + format.format(newDate);
+            formattedName = context.getString(R.string.contacts) + " " + format.format(newDate);
         } catch (ParseException e) {
             e.printStackTrace();
         }
-
 
         viewHolder.name.setText(formattedName);
         viewHolder.setPosition(position);

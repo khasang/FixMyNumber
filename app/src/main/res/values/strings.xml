@@ -1,4 +1,24 @@
 <resources>
     <string name="app_name">Fix My Number</string>
     <string name="title_activity_fragment">FragmentActivity</string>
+
+    <!--"menu"-->
+    <string name="menu_change_contacts">Change first digit in contacts</string>
+    <string name="menu_restore_contacts">Restore saved contacts</string>
+
+    <!--"general"-->
+    <string name="button_cancel">Cancel</string>
+    <string name="button_next">Next</string>
+    <string name="button_back">Back</string>
+    <string name="button_finish">Finish</string>
+    <string name="contacts">Contacts</string>
+
+    <!--"change contacts"-->
+    <string name="change_78">Change +7 to 8</string>
+    <string name="change_87">Change 8 to +7</string>
+    <string name="change_700">Change +7 to 00</string>
+    <string name="change_80">Change 8 to 0</string>
+    <string name="change_custom">Custom change</string>
+    <string name="change_change">Change</string>
+    <string name="change_to">To</string>
 </resources>

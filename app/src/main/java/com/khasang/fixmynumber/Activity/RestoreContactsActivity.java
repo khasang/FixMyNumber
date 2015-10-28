@@ -38,7 +38,7 @@ public class RestoreContactsActivity extends AppCompatActivity implements SavedC
     private void getDummySavedContacts() {
         savedContactsList = new ArrayList<String>();
         for (int i = 0; i < 20; i++) {
-            savedContactsList.add("Контакты " + i);
+            savedContactsList.add(getString(R.string.contacts) + i);
         }
     }
 
