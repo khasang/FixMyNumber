@@ -295,6 +295,7 @@ public class FragmentActivity extends AppCompatActivity implements StepFragment.
         private static final String PHONE_ID = "PHONE_ID";
         private String phone;
         private String phoneId;
+        public static final String dateFormat = "ddMMyyyyhhmmss";
 
         public ContactsBackup(ArrayList<ContactItem> contactItems) {
             this.contactItems = contactItems;
@@ -304,7 +305,7 @@ public class FragmentActivity extends AppCompatActivity implements StepFragment.
         protected Void doInBackground(Void... voids) {
             dbHelper = new DBHelper(FragmentActivity.this);
             SQLiteDatabase db = dbHelper.getWritableDatabase();
-            myTable = "contacts" + (String) DateFormat.format("ddMMyyyyhhmmss", System.currentTimeMillis());
+            myTable = "contacts" + (String) DateFormat.format(dateFormat, System.currentTimeMillis());
             db.execSQL("CREATE TABLE " + myTable + " (" +
                     "ID INTEGER PRIMARY KEY AUTOINCREMENT, " + PHONE + " TEXT, " + PHONE_ID + " TEXT);");
 

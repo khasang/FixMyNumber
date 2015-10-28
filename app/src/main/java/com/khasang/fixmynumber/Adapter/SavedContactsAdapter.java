@@ -9,8 +9,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.khasang.fixmynumber.Activity.FragmentActivity;
 import com.khasang.fixmynumber.R;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 public class SavedContactsAdapter extends RecyclerView.Adapter<SavedContactsAdapter.ViewHolder> {
@@ -45,7 +49,19 @@ public class SavedContactsAdapter extends RecyclerView.Adapter<SavedContactsAdap
     @Override
     public void onBindViewHolder(ViewHolder viewHolder, int position) {
         String savedContactsName = savedContactsList.get(position);
-        viewHolder.name.setText(savedContactsName);
+        String formattedName = savedContactsName.replace("contacts", "");
+
+        SimpleDateFormat format = new SimpleDateFormat("ddMMyyyyhhmmss");
+        try {
+            Date newDate = format.parse(formattedName);
+            format = new SimpleDateFormat("dd.MM.yyyy hh:mm:ss");
+            formattedName = "Contacts " + format.format(newDate);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+
+        viewHolder.name.setText(formattedName);
         viewHolder.setPosition(position);
 //        viewHolder.itemView.setSelected(selectedPos == position);
         if ((selectedPos == position) && (selectedPos != -1))
