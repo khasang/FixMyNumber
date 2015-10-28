@@ -1,6 +1,7 @@
 package com.khasang.fixmynumber.Model;
 
 import android.content.Context;
+import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
@@ -23,5 +24,19 @@ public class DBHelper extends SQLiteOpenHelper{
 
     @Override
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {
+    }
+
+    public static boolean dropTable(SQLiteDatabase db, String table) {
+        return DBHelper.execSQL(db, "DROP TABLE IF EXISTS " + table);
+    }
+
+    private static boolean execSQL(SQLiteDatabase db, String sql) {
+        if (db == null) return false;
+        try {
+            db.execSQL(sql);
+        } catch (SQLException e) {
+            return false;
+        }
+        return true;
     }
 }
