@@ -1,5 +1,6 @@
 package com.khasang.fixmynumber.Adapter;
 
+import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -35,8 +36,10 @@ public class ContactsListToChangeAdapter extends RecyclerView.Adapter<ContactsLi
         viewHolder.numberOriginal.setText(contact.getNumberOriginal());
         if ((contact.getNumberOriginal().equals(contact.getNumberNew())) || (contact.getNumberNew() == null)) {
             viewHolder.numberNew.setText(R.string.unchanged);
+            viewHolder.itemView.setBackgroundColor(Color.TRANSPARENT);
         } else {
             viewHolder.numberNew.setText(contact.getNumberNew());
+            viewHolder.itemView.setBackgroundColor(Color.LTGRAY);
         }
     }
 
