@@ -26,6 +26,9 @@
     <string name="change_toolbar1">Select contacts to change</string>
     <string name="change_toolbar2">Select action</string>
     <string name="change_toolbar3">Confirm action</string>
+    <string name="change_contact">Name</string>
+    <string name="change_old_number">Old number</string>
+    <string name="change_new_number">New Number</string>
 
     <!--"restore contacts"-->
     <string name="restore_delete">Delete</string>

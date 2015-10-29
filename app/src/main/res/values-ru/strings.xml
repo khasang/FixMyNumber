@@ -31,4 +31,7 @@
     <string name="dialog_load_message">Вы действительно хотите загрузить эти контакты?</string>
     <string name="dialog_load_title">Загрузить контакты?</string>
     <string name="dialog_loading">Загрузка</string>
+    <string name="change_contact">Имя</string>
+    <string name="change_new_number">Новый номер</string>
+    <string name="change_old_number">Старый номер</string>
 </resources>
