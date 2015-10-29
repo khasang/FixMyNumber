@@ -1,5 +1,7 @@
 package com.khasang.fixmynumber.Activity;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -15,11 +17,13 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.khasang.fixmynumber.Adapter.SavedContactsAdapter;
 import com.khasang.fixmynumber.Model.ContactItem;
 import com.khasang.fixmynumber.R;
 import com.khasang.fixmynumber.Task.ContactsBackupTask;
 import com.khasang.fixmynumber.Task.ContactsLoaderTask;
 import com.khasang.fixmynumber.Task.ContactsSaverTask;
+import com.khasang.fixmynumber.Task.DeleteReserveContactsTask;
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -33,6 +37,7 @@ public class FragmentActivity extends AppCompatActivity implements StepFragment.
     private EditText editTextS1;
     private EditText editTextS2;
     private boolean areAllContactsSelected;
+    private AlertDialog dialogConfirm;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,6 +72,7 @@ public class FragmentActivity extends AppCompatActivity implements StepFragment.
     }
 
     private void setUpPager() {
+        setUpDialogs();
         pager = (CustomViewPager) findViewById(R.id.pager);
 //        pager.setOffscreenPageLimit(0);
         final PagerAdapter pagerAdapter = new MyPagerAdapter(getSupportFragmentManager());
@@ -95,16 +101,37 @@ public class FragmentActivity extends AppCompatActivity implements StepFragment.
                 if (page < pagerAdapter.getCount() - 1) {
                     pager.setCurrentItem(page + 1);
                 } else {
-                    Toast.makeText(getApplicationContext(),
-                            "Numbers are changed. See debug log (Tag 'ContactsSaverTask')",
-                            Toast.LENGTH_LONG).show();
-                    new ContactsBackupTask(FragmentActivity.this, contactsList).execute();
-                    new ContactsSaverTask(FragmentActivity.this, contactsList).execute();
+                    dialogConfirm.show();
                 }
                 updateButtons(backButton, nextButton);
                 updateToolBar();
             }
         });
+    }
+
+    private void setUpDialogs() {
+        AlertDialog.Builder builderDelete = new AlertDialog.Builder(this, R.style.MyAlertDialogStyle);
+        builderDelete.setTitle(R.string.dialog_confirm_title)
+                .setMessage(R.string.dialog_confirm_message)
+                .setPositiveButton(R.string.dialog_yes, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Toast.makeText(getApplicationContext(),
+                                "Numbers are changed. See debug log (Tag 'ContactsSaverTask')",
+                                Toast.LENGTH_LONG).show();
+                        new ContactsBackupTask(FragmentActivity.this, contactsList).execute();
+                        new ContactsSaverTask(FragmentActivity.this, contactsList).execute();
+                        dialog.dismiss();
+                        finish();
+                    }
+                })
+                .setNegativeButton(R.string.dialog_no, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+        dialogConfirm = builderDelete.create();
     }
 
     private void updateButtons(Button backButton, Button nextButton) {
