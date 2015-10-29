@@ -1,15 +1,20 @@
 package com.khasang.fixmynumber.Adapter;
 
 import android.content.Context;
+import android.graphics.Color;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
+import com.khasang.fixmynumber.Activity.FragmentActivity;
 import com.khasang.fixmynumber.R;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 public class SavedContactsAdapter extends RecyclerView.Adapter<SavedContactsAdapter.ViewHolder> {
@@ -17,9 +22,10 @@ public class SavedContactsAdapter extends RecyclerView.Adapter<SavedContactsAdap
     private List<String> savedContactsList;
     Context context;
     private SavedContactsItemClickListener savedContactsItemClickListener;
+    private int selectedPos = -1;
 
     public interface SavedContactsItemClickListener {
-        public void onSavedContactsItemClick (String name);
+        public void onSavedContactsItemClick(String name);
     }
 
     public SavedContactsAdapter(List<String> savedContactsList, Context context) {
@@ -33,6 +39,11 @@ public class SavedContactsAdapter extends RecyclerView.Adapter<SavedContactsAdap
         }
     }
 
+    public void resetSelection(){
+        selectedPos = -1;
+        notifyItemChanged(selectedPos);
+    }
+
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.saved_contacts_item, parent, false);
@@ -43,8 +54,25 @@ public class SavedContactsAdapter extends RecyclerView.Adapter<SavedContactsAdap
     @Override
     public void onBindViewHolder(ViewHolder viewHolder, int position) {
         String savedContactsName = savedContactsList.get(position);
-        viewHolder.name.setText(savedContactsName);
+        String formattedName = savedContactsName.replace("contacts", "");
+
+        SimpleDateFormat format = new SimpleDateFormat("ddMMyyyyhhmmss");
+        try {
+            Date newDate = format.parse(formattedName);
+            format = new SimpleDateFormat("dd.MM.yyyy hh:mm:ss");
+            formattedName = context.getString(R.string.contacts) + " " + format.format(newDate);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        viewHolder.name.setText(formattedName);
         viewHolder.setPosition(position);
+//        viewHolder.itemView.setSelected(selectedPos == position);
+        if ((selectedPos == position) && (selectedPos != -1))
+            viewHolder.itemView.setBackgroundColor(ContextCompat.getColor(context, R.color.colorAccent));
+        else
+            viewHolder.itemView.setBackgroundColor(Color.TRANSPARENT);
+
     }
 
     @Override
@@ -66,7 +94,9 @@ public class SavedContactsAdapter extends RecyclerView.Adapter<SavedContactsAdap
             v.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Toast.makeText(context, "Selected table = "+savedContactsList.get(position), Toast.LENGTH_SHORT).show();
+                    notifyItemChanged(selectedPos);
+                    selectedPos = getLayoutPosition();
+                    notifyItemChanged(selectedPos);
                     savedContactsItemClickListener.onSavedContactsItemClick(savedContactsList.get(position));
                 }
             });

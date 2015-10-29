@@ -9,10 +9,10 @@
         android:id="@+id/savedContactsName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_column="2"
+        android:padding="5dp"
         android:layout_marginLeft="5dp"
-        android:layout_row="0"
         android:text="Контакты 15.10.2015_14.34.05" />
+
 
 
 </LinearLayout>

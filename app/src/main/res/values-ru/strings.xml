@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Fix My Number</string>
+    <string name="contacts">Контакты </string>
+    <string name="menu_change_contacts">Заменить первую цифру в контактах</string>
+    <string name="menu_restore_contacts">Восстановить сохраненные контакты</string>
+    <string name="title_activity_fragment">FragmentActivity</string>
+    <string name="button_back">Назад</string>
+    <string name="button_cancel">Отмена</string>
+    <string name="button_finish">Завершить</string>
+    <string name="button_next">Далее</string>
+    <string name="change_700">Заменить +7 на 00</string>
+    <string name="change_78">Заменить +7 на 8</string>
+    <string name="change_80">Заменить 8 на 0</string>
+    <string name="change_87">Заменить 8 на +7</string>
+    <string name="change_change">Заменить</string>
+    <string name="change_custom">Своя замена</string>
+    <string name="change_to">На</string>
+    <string name="change_toolbar1">Выберите контакты для изменения</string>
+    <string name="change_toolbar2">Выберите действие</string>
+    <string name="change_toolbar3">Подтвердите изменения</string>
+    <string name="restore_delete">Удалить</string>
+    <string name="restore_load">Загрузить</string>
+    <string name="restore_toolbar">Выберите контакты для восстановления</string>
+    <string name="unchanged">Нет изменений</string>
+    <string name="change_select_all">Выбрать все</string>
+    <string name="dialog_delete_message">Вы действительно хотите удалить эти контакты?</string>
+    <string name="dialog_delete_title">Удалить контакты?</string>
+    <string name="dialog_no">Нет</string>
+    <string name="dialog_yes">Да</string>
+    <string name="dialog_load_message">Вы действительно хотите загрузить эти контакты?</string>
+    <string name="dialog_load_title">Загрузить контакты?</string>
+    <string name="dialog_loading">Загрузка</string>
+    <string name="change_contact">Имя</string>
+    <string name="change_new_number">Новый номер</string>
+    <string name="change_old_number">Старый номер</string>
+    <string name="dialog_confirm_message">Применить эти изменения к вашим контактам?</string>
+    <string name="dialog_confirm_title">Подтвердите изменения</string>
+</resources>

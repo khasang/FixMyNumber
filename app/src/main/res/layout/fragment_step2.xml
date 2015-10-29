@@ -20,7 +20,7 @@
         <RadioButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Заменить +7 на 8"
+            android:text="@string/change_78"
             android:id="@+id/radioButtonSwap78"
             android:checked="false"
  />
@@ -28,26 +28,26 @@
         <RadioButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Заменить 8 на +7"
+            android:text="@string/change_87"
             android:id="@+id/radioButtonSwap87"
             android:checked="false" />
 
         <RadioButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Заменить +7 на 00"
+            android:text="@string/change_700"
             android:id="@+id/radioButtonSwap700" />
 
         <RadioButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Заменить 8 на 0"
+            android:text="@string/change_80"
             android:id="@+id/radioButtonSwap80" />
 
         <RadioButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Своя замена"
+            android:text="@string/change_custom"
             android:id="@+id/radioButtonSwapCustom" />
 
     </RadioGroup>
@@ -67,7 +67,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Заменить"
+        android:text="@string/change_change"
         android:id="@+id/textView2"
         android:gravity="center"
         android:layout_alignBottom="@+id/editTextS1"
@@ -78,7 +78,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="На"
+        android:text="@string/change_to"
         android:id="@+id/textView3"
         android:gravity="center"
         android:layout_alignBottom="@+id/editTextS2"

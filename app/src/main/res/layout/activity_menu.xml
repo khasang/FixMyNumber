@@ -10,7 +10,7 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Заменить первую цифру в контактах"
+        android:text="@string/menu_change_contacts"
         android:id="@+id/buttonStartChange"
         android:layout_centerVertical="true"
         android:layout_centerHorizontal="true" />
@@ -18,7 +18,7 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Загрузить сохраненные контакты"
+        android:text="@string/menu_restore_contacts"
         android:id="@+id/buttonStartRestore"
         android:layout_below="@+id/buttonStartChange"
         android:layout_alignLeft="@+id/buttonStartChange"

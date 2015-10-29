@@ -44,14 +44,14 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Delete" />
+            android:text="@string/restore_delete" />
 
         <Button
             android:id="@+id/buttonLoad"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Load" />
+            android:text="@string/restore_load" />
 
     </LinearLayout>
 </RelativeLayout>
