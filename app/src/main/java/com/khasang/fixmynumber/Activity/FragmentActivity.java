@@ -2,6 +2,7 @@ package com.khasang.fixmynumber.Activity;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -10,6 +11,7 @@ import android.support.v4.view.PagerAdapter;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -26,6 +28,8 @@ import com.khasang.fixmynumber.Task.ContactsSaverTask;
 import com.khasang.fixmynumber.Task.DeleteReserveContactsTask;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Random;
 
 public class FragmentActivity extends AppCompatActivity implements StepFragment.Fragment1ViewsCreateListener, StepFragment.Fragment2ViewsCreateListener, StepFragment.Fragment3ViewsCreateListener {
@@ -52,8 +56,6 @@ public class FragmentActivity extends AppCompatActivity implements StepFragment.
         areAllContactsSelected = false;
         setUpPager();
 //        createMoreDummyContacts();
-
-
     }
 
     private void createMoreDummyContacts() {
