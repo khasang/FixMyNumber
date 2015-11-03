@@ -17,13 +17,11 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.khasang.fixmynumber.Adapter.SavedContactsAdapter;
 import com.khasang.fixmynumber.Model.ContactItem;
 import com.khasang.fixmynumber.R;
 import com.khasang.fixmynumber.Task.ContactsBackupTask;
 import com.khasang.fixmynumber.Task.ContactsLoaderTask;
 import com.khasang.fixmynumber.Task.ContactsSaverTask;
-import com.khasang.fixmynumber.Task.DeleteReserveContactsTask;
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -52,8 +50,6 @@ public class FragmentActivity extends AppCompatActivity implements StepFragment.
         areAllContactsSelected = false;
         setUpPager();
 //        createMoreDummyContacts();
-
-
     }
 
     private void createMoreDummyContacts() {
@@ -154,7 +150,7 @@ public class FragmentActivity extends AppCompatActivity implements StepFragment.
 
     private void updateToolBar() {
         int page = pager.getCurrentItem();
-        switch (page){
+        switch (page) {
             case 0:
                 getSupportActionBar().setTitle(R.string.change_toolbar1);
                 break;

@@ -11,6 +11,8 @@ import com.khasang.fixmynumber.Helper.LoadingDialogCreator;
 import com.khasang.fixmynumber.Model.ContactItem;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
 /**
  * Created by Raenar on 28.10.2015.
@@ -52,6 +54,11 @@ public class ContactsLoaderTask extends AsyncTask<Void, Void, Void> {
             }
         }
         numbersCursor.close();
+        Collections.sort(contactItems, new Comparator<ContactItem>() {
+            public int compare(ContactItem o1, ContactItem o2) {
+                return o1.getName().compareTo(o2.getName());
+            }
+        });
         return null;
     }
 
