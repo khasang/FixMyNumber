@@ -39,14 +39,12 @@ public class ContactsBackupTask extends AsyncTask<Void, Void, Void> {
                 "ID INTEGER PRIMARY KEY AUTOINCREMENT, " + PHONE + " TEXT, " + PHONE_ID + " TEXT);");
 
         for (int i = 0; i < contactItems.size(); i++) {
-            if (contactItems.get(i).isChecked()) {
                 phone = contactItems.get(i).getNumberOriginal();
                 phoneId = contactItems.get(i).getNumberOriginalId();
                 ContentValues cv = new ContentValues();
                 cv.put(DBHelper.PHONE, phone);
                 cv.put(DBHelper.PHONE_ID, phoneId);
                 long id = db.insert(myTable, null, cv);
-            }
         }
         dbHelper.close();
         return null;

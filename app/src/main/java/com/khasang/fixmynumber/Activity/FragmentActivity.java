@@ -118,7 +118,7 @@ public class FragmentActivity extends AppCompatActivity implements StepFragment.
                                 "Numbers are changed. See debug log (Tag 'ContactsSaverTask')",
                                 Toast.LENGTH_LONG).show();
                         new ContactsBackupTask(FragmentActivity.this, contactsList).execute();
-                        new ContactsSaverTask(FragmentActivity.this, contactsList).execute();
+                        new ContactsSaverTask(FragmentActivity.this, contactsListToShow).execute();
                         dialog.dismiss();
                         finish();
                     }
