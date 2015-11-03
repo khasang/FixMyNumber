@@ -29,6 +29,7 @@ import java.util.Random;
 public class FragmentActivity extends AppCompatActivity implements StepFragment.Fragment1ViewsCreateListener, StepFragment.Fragment2ViewsCreateListener, StepFragment.Fragment3ViewsCreateListener {
     CustomViewPager pager;
     ArrayList<ContactItem> contactsList;
+    ArrayList<ContactItem> contactsListToShow;
     private RecyclerView recyclerView;
     private RecyclerView recyclerViewToChange;
     private View radioButtonSelected;
@@ -46,7 +47,8 @@ public class FragmentActivity extends AppCompatActivity implements StepFragment.
         setSupportActionBar(toolbar);
 
         contactsList = new ArrayList<ContactItem>();
-        new ContactsLoaderTask(this, contactsList).execute();
+        contactsListToShow = new ArrayList<ContactItem>();
+        new ContactsLoaderTask(this, contactsList, contactsListToShow).execute();
         areAllContactsSelected = false;
         setUpPager();
 //        createMoreDummyContacts();
@@ -241,7 +243,7 @@ public class FragmentActivity extends AppCompatActivity implements StepFragment.
         public Fragment getItem(int position) {
             StepFragment stepFragment = new StepFragment();
             stepFragment.setPageNumber(position);
-            stepFragment.setContactsList(contactsList);
+            stepFragment.setContactsList(contactsListToShow);
             return stepFragment;
         }
 
