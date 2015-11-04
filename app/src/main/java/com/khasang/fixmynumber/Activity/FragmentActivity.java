@@ -190,7 +190,7 @@ public class FragmentActivity extends AppCompatActivity implements StepFragment.
     }
 
     private void swapPrefix(String s1, String s2) {
-        for (ContactItem contactItem : contactsList) {
+        for (ContactItem contactItem : contactsListToShow) {
             if ((s1 != null) && (contactItem.isChecked())) {
                 if (contactItem.getNumberOriginal().substring(0, s1.length()).equals(s1)) {
                     contactItem.setNumberNew(s2 + contactItem.getNumberOriginal().substring(s1.length()));
