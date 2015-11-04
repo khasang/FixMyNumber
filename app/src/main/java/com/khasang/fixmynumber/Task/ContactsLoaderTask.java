@@ -40,7 +40,7 @@ public class ContactsLoaderTask extends AsyncTask<Void, Void, Void> {
 
     @Override
     protected Void doInBackground(Void... voids) {
-        ArrayList<String> usedNamesList = new ArrayList<>();
+        ArrayList<String> usedNumbersList = new ArrayList<>();
 
         Cursor numbersCursor = activity.getContentResolver()
                 .query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null, null, null, null);
@@ -54,9 +54,9 @@ public class ContactsLoaderTask extends AsyncTask<Void, Void, Void> {
             if (number != null) {
                 ContactItem contactItem = new ContactItem(name, number, id, null, false);
                 contactsList.add(contactItem);
-                if (!usedNamesList.contains(name)) {
+                if (!usedNumbersList.contains(number)) {
                     contactsListToShow.add(contactItem);
-                    usedNamesList.add(name);
+                    usedNumbersList.add(number);
                 }
             }
         }
