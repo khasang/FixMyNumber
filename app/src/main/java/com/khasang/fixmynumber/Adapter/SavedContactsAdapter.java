@@ -39,7 +39,7 @@ public class SavedContactsAdapter extends RecyclerView.Adapter<SavedContactsAdap
         }
     }
 
-    public void resetSelection(){
+    public void resetSelection() {
         selectedPos = -1;
         notifyItemChanged(selectedPos);
     }
@@ -68,11 +68,13 @@ public class SavedContactsAdapter extends RecyclerView.Adapter<SavedContactsAdap
         viewHolder.name.setText(formattedName);
         viewHolder.setPosition(position);
 //        viewHolder.itemView.setSelected(selectedPos == position);
-        if ((selectedPos == position) && (selectedPos != -1))
+        if ((selectedPos == position) && (selectedPos != -1)) {
             viewHolder.itemView.setBackgroundColor(ContextCompat.getColor(context, R.color.colorAccent));
-        else
+            viewHolder.name.setTextColor(Color.WHITE);
+        } else {
             viewHolder.itemView.setBackgroundColor(Color.TRANSPARENT);
-
+            viewHolder.name.setTextColor(Color.BLACK);
+        }
     }
 
     @Override
