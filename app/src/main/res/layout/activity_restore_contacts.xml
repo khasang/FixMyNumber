@@ -40,6 +40,7 @@
         <!--style="?android:attr/borderlessButtonStyle"-->
 
         <Button
+            style="@style/MyButtonStyle"
             android:id="@+id/buttonDelete"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -47,6 +48,7 @@
             android:text="@string/restore_delete" />
 
         <Button
+            style="@style/MyButtonStyle"
             android:id="@+id/buttonLoad"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
