@@ -20,12 +20,14 @@ import java.util.Comparator;
 public class ContactsLoaderTask extends AsyncTask<Void, Void, Void> {
 
     private Activity activity;
-    ArrayList<ContactItem> contactItems;
+    ArrayList<ContactItem> contactsList;
+    ArrayList<ContactItem> contactsListToShow;
     AlertDialog dialog;
 
-    public ContactsLoaderTask(Activity activity, ArrayList<ContactItem> contactItems) {
+    public ContactsLoaderTask(Activity activity, ArrayList<ContactItem> contactsList, ArrayList<ContactItem> contactsListToShow) {
         this.activity = activity;
-        this.contactItems = contactItems;
+        this.contactsList = contactsList;
+        this.contactsListToShow = contactsListToShow;
     }
 
     @Override
@@ -38,6 +40,7 @@ public class ContactsLoaderTask extends AsyncTask<Void, Void, Void> {
 
     @Override
     protected Void doInBackground(Void... voids) {
+        ArrayList<String> usedNumbersList = new ArrayList<>();
 
         Cursor numbersCursor = activity.getContentResolver()
                 .query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null, null, null, null);
@@ -50,11 +53,15 @@ public class ContactsLoaderTask extends AsyncTask<Void, Void, Void> {
                     numbersCursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone._ID));
             if (number != null) {
                 ContactItem contactItem = new ContactItem(name, number, id, null, false);
-                contactItems.add(contactItem);
+                contactsList.add(contactItem);
+                if (!usedNumbersList.contains(number)) {
+                    contactsListToShow.add(contactItem);
+                    usedNumbersList.add(number);
+                }
             }
         }
         numbersCursor.close();
-        Collections.sort(contactItems, new Comparator<ContactItem>() {
+        Collections.sort(contactsListToShow, new Comparator<ContactItem>() {
             public int compare(ContactItem o1, ContactItem o2) {
                 return o1.getName().compareTo(o2.getName());
             }

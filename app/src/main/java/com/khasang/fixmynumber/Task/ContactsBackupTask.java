@@ -17,7 +17,7 @@ import java.util.ArrayList;
 public class ContactsBackupTask extends AsyncTask<Void, Void, Void> {
 
     private Activity activity;
-    ArrayList<ContactItem> contactItems;
+    ArrayList<ContactItem> contactList;
     private String myTable;
     private static final String PHONE = "PHONE";
     private static final String PHONE_ID = "PHONE_ID";
@@ -25,9 +25,9 @@ public class ContactsBackupTask extends AsyncTask<Void, Void, Void> {
     private String phoneId;
     public static final String dateFormat = "ddMMyyyyhhmmss";
 
-    public ContactsBackupTask(Activity activity, ArrayList<ContactItem> contactItems) {
+    public ContactsBackupTask(Activity activity, ArrayList<ContactItem> contactList) {
         this.activity = activity;
-        this.contactItems = contactItems;
+        this.contactList = contactList;
     }
 
     @Override
@@ -38,15 +38,13 @@ public class ContactsBackupTask extends AsyncTask<Void, Void, Void> {
         db.execSQL("CREATE TABLE " + myTable + " (" +
                 "ID INTEGER PRIMARY KEY AUTOINCREMENT, " + PHONE + " TEXT, " + PHONE_ID + " TEXT);");
 
-        for (int i = 0; i < contactItems.size(); i++) {
-            if (contactItems.get(i).isChecked()) {
-                phone = contactItems.get(i).getNumberOriginal();
-                phoneId = contactItems.get(i).getNumberOriginalId();
+        for (int i = 0; i < contactList.size(); i++) {
+                phone = contactList.get(i).getNumberOriginal();
+                phoneId = contactList.get(i).getNumberOriginalId();
                 ContentValues cv = new ContentValues();
                 cv.put(DBHelper.PHONE, phone);
                 cv.put(DBHelper.PHONE_ID, phoneId);
                 long id = db.insert(myTable, null, cv);
-            }
         }
         dbHelper.close();
         return null;
