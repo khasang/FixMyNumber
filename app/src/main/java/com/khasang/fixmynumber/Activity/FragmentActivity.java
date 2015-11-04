@@ -114,9 +114,9 @@ public class FragmentActivity extends AppCompatActivity implements StepFragment.
                 .setPositiveButton(R.string.dialog_yes, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        Toast.makeText(getApplicationContext(),
-                                "Numbers are changed. See debug log (Tag 'ContactsSaverTask')",
-                                Toast.LENGTH_LONG).show();
+//                        Toast.makeText(getApplicationContext(),
+//                                "Numbers are changed. See debug log (Tag 'ContactsSaverTask')",
+//                                Toast.LENGTH_LONG).show();
                         new ContactsBackupTask(FragmentActivity.this, contactsList).execute();
                         new ContactsSaverTask(FragmentActivity.this, contactsListToShow).execute();
                         dialog.dismiss();

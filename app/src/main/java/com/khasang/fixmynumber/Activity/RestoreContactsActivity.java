@@ -85,7 +85,7 @@ public class RestoreContactsActivity extends AppCompatActivity implements SavedC
                 .setPositiveButton(R.string.dialog_yes, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        Toast.makeText(getApplicationContext(), "Deleting " + selectedTable, Toast.LENGTH_SHORT).show();
+//                        Toast.makeText(getApplicationContext(), "Deleting " + selectedTable, Toast.LENGTH_SHORT).show();
                         new DeleteReserveContactsTask(RestoreContactsActivity.this, selectedTable).execute();
                         for (int i = 0; i < savedContactsList.size(); i++) {
                             if (savedContactsList.get(i).equals(selectedTable)) {
@@ -111,9 +111,10 @@ public class RestoreContactsActivity extends AppCompatActivity implements SavedC
                 .setPositiveButton(R.string.dialog_yes, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        Toast.makeText(getApplicationContext(), "Loading " + selectedTable, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(), R.string.restore_contacts_loaded, Toast.LENGTH_SHORT).show();
                         new LoadReserveContactsTask(RestoreContactsActivity.this, selectedTable).execute();
                         dialog.dismiss();
+                        finish();
                     }
                 })
                 .setNegativeButton(R.string.dialog_no, new DialogInterface.OnClickListener() {
