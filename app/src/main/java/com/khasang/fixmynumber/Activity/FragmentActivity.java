@@ -174,12 +174,12 @@ public class FragmentActivity extends AppCompatActivity implements StepFragment.
                 case R.id.radioButtonSwap87:
                     swapPrefix("8", "+7");
                     break;
-                case R.id.radioButtonSwap700:
-                    swapPrefix("+7", "00");
-                    break;
-                case R.id.radioButtonSwap80:
-                    swapPrefix("8", "0");
-                    break;
+//                case R.id.radioButtonSwap700:
+//                    swapPrefix("+7", "00");
+//                    break;
+//                case R.id.radioButtonSwap80:
+//                    swapPrefix("8", "0");
+//                    break;
                 case R.id.radioButtonSwapCustom:
                     String s1 = editTextS1.getText().toString();
                     String s2 = editTextS2.getText().toString();
