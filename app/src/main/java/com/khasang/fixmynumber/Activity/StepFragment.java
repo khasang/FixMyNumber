@@ -103,18 +103,18 @@ public class StepFragment extends Fragment {
                         fragment2ViewsCreateListener.onFragment2ViewsCreated(v, editTextS1, editTextS2);
                     }
                 });
-                rootView.findViewById(R.id.radioButtonSwap700).setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        fragment2ViewsCreateListener.onFragment2ViewsCreated(v, editTextS1, editTextS2);
-                    }
-                });
-                rootView.findViewById(R.id.radioButtonSwap80).setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        fragment2ViewsCreateListener.onFragment2ViewsCreated(v, editTextS1, editTextS2);
-                    }
-                });
+//                rootView.findViewById(R.id.radioButtonSwap700).setOnClickListener(new View.OnClickListener() {
+//                    @Override
+//                    public void onClick(View v) {
+//                        fragment2ViewsCreateListener.onFragment2ViewsCreated(v, editTextS1, editTextS2);
+//                    }
+//                });
+//                rootView.findViewById(R.id.radioButtonSwap80).setOnClickListener(new View.OnClickListener() {
+//                    @Override
+//                    public void onClick(View v) {
+//                        fragment2ViewsCreateListener.onFragment2ViewsCreated(v, editTextS1, editTextS2);
+//                    }
+//                });
                 rootView.findViewById(R.id.radioButtonSwapCustom).setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {

@@ -34,6 +34,7 @@
     <string name="restore_delete">Delete</string>
     <string name="restore_load">Load</string>
     <string name="restore_toolbar">Chose contacts to restore</string>
+    <string name="restore_contacts_loaded">Contacts loaded</string>
 
     <!--"dialogs"-->
     <string name="dialog_delete_title">Delete these contacts?</string>
