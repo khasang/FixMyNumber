@@ -28,17 +28,17 @@
         android:layout_alignRight="@+id/buttonStartChange"
         android:layout_alignEnd="@+id/buttonStartChange" />
 
-    <!--<TextView-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:padding="5dp"-->
-        <!--android:text="Khasang team 2015"-->
-        <!--android:textColor="@android:color/white"-->
-        <!--android:background="@color/colorFooter"-->
-        <!--android:gravity="center"-->
-        <!--android:layout_alignParentBottom="true"-->
-        <!--android:layout_alignParentRight="true"-->
-        <!--android:layout_alignParentEnd="true" />-->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="5dp"
+        android:text="I.Svirin, I.Voitcekhovskii \n Khasang team 2015"
+        android:textColor="@android:color/white"
+        android:background="@color/colorFooter"
+        android:gravity="center"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
 
     <ImageView
         android:layout_width="wrap_content"
