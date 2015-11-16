@@ -33,6 +33,7 @@ public class FragmentActivity extends AppCompatActivity implements StepFragment1
     CustomViewPager pager;
     ArrayList<ContactItem> contactsList;
     ArrayList<ContactItem> contactsListToShow;
+    ArrayList<ContactItem> contactsListChanged;
     private RecyclerView recyclerView;
     private RecyclerView recyclerViewToChange;
     private View radioButtonSelected;
@@ -51,6 +52,7 @@ public class FragmentActivity extends AppCompatActivity implements StepFragment1
 
         contactsList = new ArrayList<ContactItem>();
         contactsListToShow = new ArrayList<ContactItem>();
+        contactsListChanged = new ArrayList<ContactItem>();
         new ContactsLoaderTask(this, contactsList, contactsListToShow).execute();
         areAllContactsSelected = false;
         setUpPager();
@@ -145,6 +147,12 @@ public class FragmentActivity extends AppCompatActivity implements StepFragment1
         if (page == 2) {
             changeNumbers();
             nextButton.setText(R.string.button_finish);
+            contactsListChanged.clear();
+            for (ContactItem contactItem : contactsListToShow) {
+                if ((!contactItem.getNumberNew().equals(contactItem.getNumberOriginal()))) {
+                    contactsListChanged.add(contactItem);
+                }
+            }
             recyclerViewToChange.getAdapter().notifyDataSetChanged();
 //            next.setBackgroundColor(ContextCompat.getColor(this, R.color.colorAccent));
         } else {
@@ -255,7 +263,7 @@ public class FragmentActivity extends AppCompatActivity implements StepFragment1
                     return stepFragment2;
                 case 2:
                     StepFragment3 stepFragment3 = new StepFragment3();
-                    stepFragment3.setContactsList(contactsListToShow);
+                    stepFragment3.setContactsList(contactsListChanged);
                     return stepFragment3;
             }
             return null;
