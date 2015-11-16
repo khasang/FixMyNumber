@@ -1,4 +1,4 @@
-package com.khasang.fixmynumber.Activity;
+package com.khasang.fixmynumber.View;
 
 import android.content.Context;
 import android.support.v4.view.ViewPager;

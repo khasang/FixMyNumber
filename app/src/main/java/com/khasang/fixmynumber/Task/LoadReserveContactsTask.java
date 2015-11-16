@@ -8,7 +8,7 @@ import android.os.AsyncTask;
 import android.provider.ContactsContract;
 import android.util.Log;
 
-import com.khasang.fixmynumber.Model.DBHelper;
+import com.khasang.fixmynumber.Helper.DBHelper;
 
 import java.util.ArrayList;
 

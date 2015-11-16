@@ -24,6 +24,7 @@ import com.khasang.fixmynumber.R;
 import com.khasang.fixmynumber.Task.ContactsBackupTask;
 import com.khasang.fixmynumber.Task.ContactsLoaderTask;
 import com.khasang.fixmynumber.Task.ContactsSaverTask;
+import com.khasang.fixmynumber.View.CustomViewPager;
 
 import java.util.ArrayList;
 import java.util.Random;
