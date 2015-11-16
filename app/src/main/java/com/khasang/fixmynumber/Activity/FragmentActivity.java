@@ -15,7 +15,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import com.khasang.fixmynumber.Model.ContactItem;
 import com.khasang.fixmynumber.R;
@@ -26,7 +25,7 @@ import com.khasang.fixmynumber.Task.ContactsSaverTask;
 import java.util.ArrayList;
 import java.util.Random;
 
-public class FragmentActivity extends AppCompatActivity implements StepFragment.Fragment1ViewsCreateListener, StepFragment.Fragment2ViewsCreateListener, StepFragment.Fragment3ViewsCreateListener {
+public class FragmentActivity extends AppCompatActivity implements StepFragment.Fragment1ViewsCreateListener, StepFragment.Fragment2ViewsUpdateListener, StepFragment.Fragment3ViewsCreateListener {
     CustomViewPager pager;
     ArrayList<ContactItem> contactsList;
     ArrayList<ContactItem> contactsListToShow;
@@ -220,7 +219,7 @@ public class FragmentActivity extends AppCompatActivity implements StepFragment.
     }
 
     @Override
-    public void onFragment2ViewsCreated(View v, EditText ed1, EditText ed2) {
+    public void onFragment2ViewsUpdated(View v, EditText ed1, EditText ed2) {
         radioButtonSelected = v;
         editTextS1 = ed1;
         editTextS2 = ed2;

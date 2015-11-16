@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import com.khasang.fixmynumber.Adapter.ContactsListAdapter;
 import com.khasang.fixmynumber.Adapter.ContactsListToChangeAdapter;
@@ -24,15 +25,15 @@ public class StepFragment extends Fragment {
     private int pageNumber;
     ArrayList<ContactItem> contactsList;
     private Fragment1ViewsCreateListener fragment1ViewsCreateListener;
-    private Fragment2ViewsCreateListener fragment2ViewsCreateListener;
+    private Fragment2ViewsUpdateListener fragment2ViewsUpdateListener;
     private Fragment3ViewsCreateListener fragment3ViewsCreateListener;
 
     public interface Fragment1ViewsCreateListener {
         public void onFragment1ViewsCreated(ViewGroup v);
     }
 
-    public interface Fragment2ViewsCreateListener {
-        public void onFragment2ViewsCreated(View v, EditText ed1, EditText ed2);
+    public interface Fragment2ViewsUpdateListener {
+        public void onFragment2ViewsUpdated(View v, EditText ed1, EditText ed2);
     }
 
     public interface Fragment3ViewsCreateListener {
@@ -61,10 +62,10 @@ public class StepFragment extends Fragment {
                     + "must implement Fragment1ViewsCreateListener");
         }
         try {
-            fragment2ViewsCreateListener = ((Fragment2ViewsCreateListener) context);
+            fragment2ViewsUpdateListener = ((Fragment2ViewsUpdateListener) context);
         } catch (ClassCastException e) {
             throw new ClassCastException(context.toString()
-                    + "must implement Fragment2ViewsCreateListener");
+                    + "must implement Fragment2ViewsUpdateListener");
         }
         try {
             fragment3ViewsCreateListener = ((Fragment3ViewsCreateListener) context);
@@ -91,34 +92,41 @@ public class StepFragment extends Fragment {
                 rootView = (ViewGroup) inflater.inflate(R.layout.fragment_step2, container, false);
                 final EditText editTextS1 = ((EditText) rootView.findViewById(R.id.editTextS1));
                 final EditText editTextS2 = ((EditText) rootView.findViewById(R.id.editTextS2));
+                final TextView textViewChange = ((TextView) rootView.findViewById(R.id.textViewChange));
+                final TextView textViewTo = ((TextView) rootView.findViewById(R.id.textViewTo));
+                setCustomTextVisible(false, editTextS1, editTextS2, textViewChange, textViewTo);
+
                 rootView.findViewById(R.id.radioButtonSwap78).setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        fragment2ViewsCreateListener.onFragment2ViewsCreated(v, editTextS1, editTextS2);
+                        fragment2ViewsUpdateListener.onFragment2ViewsUpdated(v, editTextS1, editTextS2);
+                        setCustomTextVisible(false, editTextS1, editTextS2, textViewChange, textViewTo);
                     }
                 });
                 rootView.findViewById(R.id.radioButtonSwap87).setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        fragment2ViewsCreateListener.onFragment2ViewsCreated(v, editTextS1, editTextS2);
+                        fragment2ViewsUpdateListener.onFragment2ViewsUpdated(v, editTextS1, editTextS2);
+                        setCustomTextVisible(false, editTextS1, editTextS2, textViewChange, textViewTo);
                     }
                 });
 //                rootView.findViewById(R.id.radioButtonSwap700).setOnClickListener(new View.OnClickListener() {
 //                    @Override
 //                    public void onClick(View v) {
-//                        fragment2ViewsCreateListener.onFragment2ViewsCreated(v, editTextS1, editTextS2);
+//                        fragment2ViewsUpdateListener.onFragment2ViewsUpdated(v, editTextS1, editTextS2);
 //                    }
 //                });
 //                rootView.findViewById(R.id.radioButtonSwap80).setOnClickListener(new View.OnClickListener() {
 //                    @Override
 //                    public void onClick(View v) {
-//                        fragment2ViewsCreateListener.onFragment2ViewsCreated(v, editTextS1, editTextS2);
+//                        fragment2ViewsUpdateListener.onFragment2ViewsUpdated(v, editTextS1, editTextS2);
 //                    }
 //                });
                 rootView.findViewById(R.id.radioButtonSwapCustom).setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        fragment2ViewsCreateListener.onFragment2ViewsCreated(v, editTextS1, editTextS2);
+                        fragment2ViewsUpdateListener.onFragment2ViewsUpdated(v, editTextS1, editTextS2);
+                        setCustomTextVisible(true, editTextS1, editTextS2, textViewChange, textViewTo);
                     }
                 });
                 break;
@@ -133,5 +141,20 @@ public class StepFragment extends Fragment {
                 break;
         }
         return rootView;
+    }
+
+    private void setCustomTextVisible(boolean isVisible, EditText editTextS1, EditText editTextS2,
+                                      TextView textViewChange, TextView textViewTo) {
+        if (isVisible) {
+            editTextS1.setVisibility(View.VISIBLE);
+            editTextS2.setVisibility(View.VISIBLE);
+            textViewChange.setVisibility(View.VISIBLE);
+            textViewTo.setVisibility(View.VISIBLE);
+        } else {
+            editTextS1.setVisibility(View.INVISIBLE);
+            editTextS2.setVisibility(View.INVISIBLE);
+            textViewChange.setVisibility(View.INVISIBLE);
+            textViewTo.setVisibility(View.INVISIBLE);
+        }
     }
 }
