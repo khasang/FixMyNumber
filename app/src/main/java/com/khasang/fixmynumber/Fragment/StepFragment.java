@@ -1,4 +1,4 @@
-package com.khasang.fixmynumber.Activity;
+package com.khasang.fixmynumber.Fragment;
 
 import android.content.Context;
 import android.os.Bundle;

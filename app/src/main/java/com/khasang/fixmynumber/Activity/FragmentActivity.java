@@ -16,6 +16,9 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 
+import com.khasang.fixmynumber.Fragment.StepFragment1;
+import com.khasang.fixmynumber.Fragment.StepFragment2;
+import com.khasang.fixmynumber.Fragment.StepFragment3;
 import com.khasang.fixmynumber.Model.ContactItem;
 import com.khasang.fixmynumber.R;
 import com.khasang.fixmynumber.Task.ContactsBackupTask;
@@ -25,7 +28,7 @@ import com.khasang.fixmynumber.Task.ContactsSaverTask;
 import java.util.ArrayList;
 import java.util.Random;
 
-public class FragmentActivity extends AppCompatActivity implements StepFragment.Fragment1ViewsCreateListener, StepFragment.Fragment2ViewsUpdateListener, StepFragment.Fragment3ViewsCreateListener {
+public class FragmentActivity extends AppCompatActivity implements StepFragment1.Fragment1ViewsCreateListener, StepFragment2.Fragment2ViewsUpdateListener, StepFragment3.Fragment3ViewsCreateListener {
     CustomViewPager pager;
     ArrayList<ContactItem> contactsList;
     ArrayList<ContactItem> contactsListToShow;
@@ -240,10 +243,21 @@ public class FragmentActivity extends AppCompatActivity implements StepFragment.
 
         @Override
         public Fragment getItem(int position) {
-            StepFragment stepFragment = new StepFragment();
-            stepFragment.setPageNumber(position);
-            stepFragment.setContactsList(contactsListToShow);
-            return stepFragment;
+            switch (position) {
+                case 0:
+                    StepFragment1 stepFragment1 = new StepFragment1();
+                    stepFragment1.setContactsList(contactsListToShow);
+                    return stepFragment1;
+                case 1:
+                    StepFragment2 stepFragment2 = new StepFragment2();
+                    stepFragment2.setContactsList(contactsListToShow);
+                    return stepFragment2;
+                case 2:
+                    StepFragment3 stepFragment3 = new StepFragment3();
+                    stepFragment3.setContactsList(contactsListToShow);
+                    return stepFragment3;
+            }
+            return null;
         }
 
         @Override
