@@ -10,11 +10,13 @@ import android.support.v4.view.PagerAdapter;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.format.DateFormat;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.khasang.fixmynumber.Fragment.StepFragment1;
 import com.khasang.fixmynumber.Fragment.StepFragment2;
@@ -119,9 +121,12 @@ public class FragmentActivity extends AppCompatActivity implements StepFragment1
                 .setPositiveButton(R.string.dialog_yes, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-//                        Toast.makeText(getApplicationContext(),
-//                                "Numbers are changed. See debug log (Tag 'ContactsSaverTask')",
-//                                Toast.LENGTH_LONG).show();
+                        String date = DateFormat.format("dd.MM.yyyy hh:mm:ss", System.currentTimeMillis()).toString();
+                        String backupName = getApplicationContext().getString(R.string.contacts) + date;
+                        String backupMessage = getString(R.string.backup_message) +"\n" +backupName;
+                        Toast.makeText(getApplicationContext(),
+                                backupMessage,
+                                Toast.LENGTH_LONG).show();
                         new ContactsBackupTask(FragmentActivity.this, contactsList).execute();
                         new ContactsSaverTask(FragmentActivity.this, contactsListToShow).execute();
                         dialog.dismiss();
@@ -277,7 +282,7 @@ public class FragmentActivity extends AppCompatActivity implements StepFragment1
         }
     }
 
-    public void updateUI() {
+    public void updateContactsList() {
         recyclerView.getAdapter().notifyDataSetChanged();
     }
 
