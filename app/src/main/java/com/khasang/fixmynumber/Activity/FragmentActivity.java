@@ -31,7 +31,7 @@ import com.khasang.fixmynumber.View.CustomViewPager;
 import java.util.ArrayList;
 import java.util.Random;
 
-public class FragmentActivity extends AppCompatActivity implements StepFragment1.Fragment1ViewsCreateListener, StepFragment2.Fragment2ViewsUpdateListener, StepFragment3.Fragment3ViewsCreateListener {
+public class FragmentActivity extends AppCompatActivity implements StepFragment1.Fragment1ViewsCreateListener, StepFragment1.Fragment1ContactClickListener, StepFragment2.Fragment2ViewsUpdateListener, StepFragment3.Fragment3ViewsCreateListener {
     CustomViewPager pager;
     ArrayList<ContactItem> contactsList;
     ArrayList<ContactItem> contactsListToShow;
@@ -43,6 +43,7 @@ public class FragmentActivity extends AppCompatActivity implements StepFragment1
     private EditText editTextS2;
     private boolean areAllContactsSelected;
     private AlertDialog dialogConfirm;
+    private CheckBox checkBoxSelectAll;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -228,7 +229,7 @@ public class FragmentActivity extends AppCompatActivity implements StepFragment1
     public void onFragment1ViewsCreated(ViewGroup v) {
         recyclerView = (RecyclerView) v.findViewById(R.id.recyclerViewContacts);
 
-        CheckBox checkBoxSelectAll = (CheckBox) v.findViewById(R.id.checkBoxSelectAll);
+        checkBoxSelectAll = (CheckBox) v.findViewById(R.id.checkBoxSelectAll);
         checkBoxSelectAll.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -239,6 +240,17 @@ public class FragmentActivity extends AppCompatActivity implements StepFragment1
                 recyclerView.getAdapter().notifyDataSetChanged();
             }
         });
+    }
+
+    @Override
+    public void onFragment1ContactClick() {
+        areAllContactsSelected = true;
+        for (ContactItem contactItem : contactsList) {
+            if (!contactItem.isChecked()) {
+                areAllContactsSelected = false;
+            }
+        }
+        checkBoxSelectAll.setChecked(areAllContactsSelected);
     }
 
     @Override

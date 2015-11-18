@@ -26,6 +26,10 @@ public class StepFragment1 extends Fragment {
         public void onFragment1ViewsCreated(ViewGroup v);
     }
 
+    public interface Fragment1ContactClickListener {
+        public void onFragment1ContactClick();
+    }
+
 
     public StepFragment1() {
     }
@@ -51,7 +55,7 @@ public class StepFragment1 extends Fragment {
         ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.fragment_step1, container, false);
 
         RecyclerView recyclerViewContacts = (RecyclerView) rootView.findViewById(R.id.recyclerViewContacts);
-        ContactsListAdapter adapter = new ContactsListAdapter(contactsList);
+        ContactsListAdapter adapter = new ContactsListAdapter(getActivity(), contactsList);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
         recyclerViewContacts.setAdapter(adapter);
         recyclerViewContacts.setLayoutManager(layoutManager);
