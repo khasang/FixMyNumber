@@ -10,8 +10,10 @@ public class DBHelper extends SQLiteOpenHelper{
     public static final String RESERVE_DB = "reserve.db";
     public static final int DB_VERSION = 1;
     public static final String MY_TABLE = "MY_TABLE";
+    public static final String NAME = "NAME";
     public static final String PHONE = "PHONE";
     public static final String PHONE_ID = "PHONE_ID";
+    public static final String ACCOUNT_TYPE = "ACCOUNT_TYPE";
     public static final String SQLITE_SEQUENCE = "sqlite_sequence";
 
     public DBHelper(Context context) {

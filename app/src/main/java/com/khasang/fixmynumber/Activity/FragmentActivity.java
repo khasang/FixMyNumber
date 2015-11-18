@@ -15,7 +15,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import com.khasang.fixmynumber.Model.ContactItem;
 import com.khasang.fixmynumber.R;
@@ -64,7 +63,7 @@ public class FragmentActivity extends AppCompatActivity implements StepFragment.
             int prefixID = random.nextInt(prefixArray.length);
             String generatedName = namesArray[nameID];
             String generatedNumber = prefixArray[prefixID] + "800555-" + i;
-            ContactItem newItem = new ContactItem(generatedName, generatedNumber, "" + i, null, false);
+            ContactItem newItem = new ContactItem(generatedName, generatedNumber, "" + i, null, false, null);
             contactsList.add(newItem);
         }
     }

@@ -67,7 +67,7 @@ public class ContactsListActivity extends AppCompatActivity {
             int prefixID = random.nextInt(prefixArray.length);
             String generatedName = namesArray[nameID];
             String generatedNumber = prefixArray[prefixID] + "800555-" + i;
-            ContactItem newItem = new ContactItem(generatedName, generatedNumber, "10" + i, null, false);
+            ContactItem newItem = new ContactItem(generatedName, generatedNumber, "10" + i, null, false, null);
             contactsList.add(newItem);
         }
     }
@@ -75,7 +75,7 @@ public class ContactsListActivity extends AppCompatActivity {
     private void createDummyContacts() {
         contactsList = new ArrayList<ContactItem>();
         for (int i = 0; i < 8; i++) {
-            ContactItem newItem = new ContactItem("qwerty", "12345", "10" + i, null, false);
+            ContactItem newItem = new ContactItem("qwerty", "12345", "10" + i, null, false, null);
             contactsList.add(newItem);
         }
     }
@@ -117,7 +117,7 @@ public class ContactsListActivity extends AppCompatActivity {
                 String id = numbersCursor.getString(
                         numbersCursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone._ID));
                 if (number != null) {
-                    ContactItem contactItem = new ContactItem(name, number, id, null, false);
+                    ContactItem contactItem = new ContactItem(name, number, id, null, false, null);
                     contactItems.add(contactItem);
                 }
             }
