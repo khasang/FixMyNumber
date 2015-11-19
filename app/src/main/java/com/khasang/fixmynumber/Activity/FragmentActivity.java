@@ -156,8 +156,10 @@ public class FragmentActivity extends AppCompatActivity implements StepFragment1
             nextButton.setText(R.string.button_finish);
             contactsListChanged.clear();
             for (ContactItem contactItem : contactsListToShow) {
-                if ((!contactItem.getNumberNew().equals(contactItem.getNumberOriginal()))) {
-                    contactsListChanged.add(contactItem);
+                if (contactItem.getNumberNew()!=null){
+                    if ((!contactItem.getNumberNew().equals(contactItem.getNumberOriginal()))) {
+                        contactsListChanged.add(contactItem);
+                    }
                 }
             }
             if (contactsListChanged.size() == 0){
