@@ -144,7 +144,7 @@ public class FragmentActivity extends AppCompatActivity implements StepFragment1
     }
 
     private void updateButtons(Button backButton, Button nextButton) {
-        nextButton.setVisibility(View.VISIBLE);
+        nextButton.setEnabled(true);
         int page = pager.getCurrentItem();
         if (page == 0) {
             backButton.setText(R.string.button_cancel);
@@ -163,7 +163,7 @@ public class FragmentActivity extends AppCompatActivity implements StepFragment1
                 }
             }
             if (contactsListChanged.size() == 0){
-                nextButton.setVisibility(View.INVISIBLE);
+                nextButton.setEnabled(false);
             }
             recyclerViewToChange.getAdapter().notifyDataSetChanged();
 //            next.setBackgroundColor(ContextCompat.getColor(this, R.color.colorAccent));
