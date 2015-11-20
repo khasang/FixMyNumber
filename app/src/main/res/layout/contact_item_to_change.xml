@@ -13,6 +13,7 @@
         android:layout_marginLeft="5dp"
         android:layout_weight="0.5"
         android:text="Name"
+        android:paddingBottom="3dp"
         android:gravity="center" />
 
     <TextView

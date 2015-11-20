@@ -1,4 +1,4 @@
-package com.khasang.fixmynumber.Model;
+package com.khasang.fixmynumber.Helper;
 
 import android.content.Context;
 import android.database.SQLException;

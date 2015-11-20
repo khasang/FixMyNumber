@@ -73,6 +73,6 @@ public class ContactsLoaderTask extends AsyncTask<Void, Void, Void> {
     protected void onPostExecute(Void aVoid) {
         super.onPostExecute(aVoid);
         dialog.dismiss();
-        ((FragmentActivity) activity).updateUI();
+        ((FragmentActivity) activity).updateContactsList();
     }
 }

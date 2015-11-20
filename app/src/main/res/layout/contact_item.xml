@@ -19,7 +19,8 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="5dp"
         android:text="Name"
-        android:gravity="center" />
+        android:gravity="center"
+        android:paddingBottom="3dp"/>
 
     <TextView
         android:id="@+id/contactNumber"

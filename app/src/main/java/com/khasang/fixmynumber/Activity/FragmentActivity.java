@@ -10,6 +10,7 @@ import android.support.v4.view.PagerAdapter;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.format.DateFormat;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -17,19 +18,24 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.khasang.fixmynumber.Fragment.StepFragment1;
+import com.khasang.fixmynumber.Fragment.StepFragment2;
+import com.khasang.fixmynumber.Fragment.StepFragment3;
 import com.khasang.fixmynumber.Model.ContactItem;
 import com.khasang.fixmynumber.R;
 import com.khasang.fixmynumber.Task.ContactsBackupTask;
 import com.khasang.fixmynumber.Task.ContactsLoaderTask;
 import com.khasang.fixmynumber.Task.ContactsSaverTask;
+import com.khasang.fixmynumber.View.CustomViewPager;
 
 import java.util.ArrayList;
 import java.util.Random;
 
-public class FragmentActivity extends AppCompatActivity implements StepFragment.Fragment1ViewsCreateListener, StepFragment.Fragment2ViewsCreateListener, StepFragment.Fragment3ViewsCreateListener {
+public class FragmentActivity extends AppCompatActivity implements StepFragment1.Fragment1ViewsCreateListener, StepFragment1.Fragment1ContactClickListener, StepFragment2.Fragment2ViewsUpdateListener, StepFragment3.Fragment3ViewsCreateListener {
     CustomViewPager pager;
     ArrayList<ContactItem> contactsList;
     ArrayList<ContactItem> contactsListToShow;
+    ArrayList<ContactItem> contactsListChanged;
     private RecyclerView recyclerView;
     private RecyclerView recyclerViewToChange;
     private View radioButtonSelected;
@@ -37,6 +43,7 @@ public class FragmentActivity extends AppCompatActivity implements StepFragment.
     private EditText editTextS2;
     private boolean areAllContactsSelected;
     private AlertDialog dialogConfirm;
+    private CheckBox checkBoxSelectAll;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,6 +55,7 @@ public class FragmentActivity extends AppCompatActivity implements StepFragment.
 
         contactsList = new ArrayList<ContactItem>();
         contactsListToShow = new ArrayList<ContactItem>();
+        contactsListChanged = new ArrayList<ContactItem>();
         new ContactsLoaderTask(this, contactsList, contactsListToShow).execute();
         areAllContactsSelected = false;
         setUpPager();
@@ -114,9 +122,12 @@ public class FragmentActivity extends AppCompatActivity implements StepFragment.
                 .setPositiveButton(R.string.dialog_yes, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-//                        Toast.makeText(getApplicationContext(),
-//                                "Numbers are changed. See debug log (Tag 'ContactsSaverTask')",
-//                                Toast.LENGTH_LONG).show();
+                        String date = DateFormat.format("dd.MM.yyyy hh:mm:ss", System.currentTimeMillis()).toString();
+                        String backupName = getApplicationContext().getString(R.string.contacts) + date;
+                        String backupMessage = getString(R.string.backup_message) +"\n" +backupName;
+                        Toast.makeText(getApplicationContext(),
+                                backupMessage,
+                                Toast.LENGTH_LONG).show();
                         new ContactsBackupTask(FragmentActivity.this, contactsList).execute();
                         new ContactsSaverTask(FragmentActivity.this, contactsListToShow).execute();
                         dialog.dismiss();
@@ -133,6 +144,7 @@ public class FragmentActivity extends AppCompatActivity implements StepFragment.
     }
 
     private void updateButtons(Button backButton, Button nextButton) {
+        nextButton.setEnabled(true);
         int page = pager.getCurrentItem();
         if (page == 0) {
             backButton.setText(R.string.button_cancel);
@@ -142,6 +154,17 @@ public class FragmentActivity extends AppCompatActivity implements StepFragment.
         if (page == 2) {
             changeNumbers();
             nextButton.setText(R.string.button_finish);
+            contactsListChanged.clear();
+            for (ContactItem contactItem : contactsListToShow) {
+                if (contactItem.getNumberNew()!=null){
+                    if ((!contactItem.getNumberNew().equals(contactItem.getNumberOriginal()))) {
+                        contactsListChanged.add(contactItem);
+                    }
+                }
+            }
+            if (contactsListChanged.size() == 0){
+                nextButton.setEnabled(false);
+            }
             recyclerViewToChange.getAdapter().notifyDataSetChanged();
 //            next.setBackgroundColor(ContextCompat.getColor(this, R.color.colorAccent));
         } else {
@@ -194,6 +217,8 @@ public class FragmentActivity extends AppCompatActivity implements StepFragment.
             if ((s1 != null) && (contactItem.isChecked())) {
                 if (contactItem.getNumberOriginal().substring(0, s1.length()).equals(s1)) {
                     contactItem.setNumberNew(s2 + contactItem.getNumberOriginal().substring(s1.length()));
+                } else {
+                    contactItem.setNumberNew(contactItem.getNumberOriginal());
                 }
             } else {
                 contactItem.setNumberNew(contactItem.getNumberOriginal());
@@ -206,7 +231,7 @@ public class FragmentActivity extends AppCompatActivity implements StepFragment.
     public void onFragment1ViewsCreated(ViewGroup v) {
         recyclerView = (RecyclerView) v.findViewById(R.id.recyclerViewContacts);
 
-        CheckBox checkBoxSelectAll = (CheckBox) v.findViewById(R.id.checkBoxSelectAll);
+        checkBoxSelectAll = (CheckBox) v.findViewById(R.id.checkBoxSelectAll);
         checkBoxSelectAll.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -220,7 +245,18 @@ public class FragmentActivity extends AppCompatActivity implements StepFragment.
     }
 
     @Override
-    public void onFragment2ViewsCreated(View v, EditText ed1, EditText ed2) {
+    public void onFragment1ContactClick() {
+        areAllContactsSelected = true;
+        for (ContactItem contactItem : contactsList) {
+            if (!contactItem.isChecked()) {
+                areAllContactsSelected = false;
+            }
+        }
+        checkBoxSelectAll.setChecked(areAllContactsSelected);
+    }
+
+    @Override
+    public void onFragment2ViewsUpdated(View v, EditText ed1, EditText ed2) {
         radioButtonSelected = v;
         editTextS1 = ed1;
         editTextS2 = ed2;
@@ -241,10 +277,21 @@ public class FragmentActivity extends AppCompatActivity implements StepFragment.
 
         @Override
         public Fragment getItem(int position) {
-            StepFragment stepFragment = new StepFragment();
-            stepFragment.setPageNumber(position);
-            stepFragment.setContactsList(contactsListToShow);
-            return stepFragment;
+            switch (position) {
+                case 0:
+                    StepFragment1 stepFragment1 = new StepFragment1();
+                    stepFragment1.setContactsList(contactsListToShow);
+                    return stepFragment1;
+                case 1:
+                    StepFragment2 stepFragment2 = new StepFragment2();
+                    stepFragment2.setContactsList(contactsListToShow);
+                    return stepFragment2;
+                case 2:
+                    StepFragment3 stepFragment3 = new StepFragment3();
+                    stepFragment3.setContactsList(contactsListChanged);
+                    return stepFragment3;
+            }
+            return null;
         }
 
         @Override
@@ -253,7 +300,7 @@ public class FragmentActivity extends AppCompatActivity implements StepFragment.
         }
     }
 
-    public void updateUI() {
+    public void updateContactsList() {
         recyclerView.getAdapter().notifyDataSetChanged();
     }
 
