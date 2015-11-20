@@ -29,8 +29,7 @@ public class ContactsSaverTask extends AsyncTask<Void, Void, Void> {
     protected Void doInBackground(Void... voids) {
         for (int i = 0; i < contactList.size(); i++) {
             if (contactList.get(i).getNumberNew() != null) {
-                if ((contactList.get(i).getAccountType().equals("USIM Account")) ||
-                        (contactList.get(i).getAccountType().equals("SIM Account"))) {
+                if (contactList.get(i).getAccountType().equals("sim")) {
                     Uri uri = Uri.parse("content://icc/adn");
                     ContentValues cv = new ContentValues();
                     cv.put("tag", contactList.get(i).getName());

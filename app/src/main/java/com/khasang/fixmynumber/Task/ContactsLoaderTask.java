@@ -52,7 +52,7 @@ public class ContactsLoaderTask extends AsyncTask<Void, Void, Void> {
 //            String accountType = numbersCursor.getString(
 //                    numbersCursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.ACCOUNT_TYPE_AND_DATA_SET));
             String accountType = null;
-            Cursor rawCursor = activity.getContentResolver().query(ContactsContract.RawContacts.CONTENT_URI,null,null,null,null);
+            Cursor rawCursor = activity.getContentResolver().query(ContactsContract.RawContacts.CONTENT_URI, null, null, null, null);
             while (rawCursor.moveToNext()) {
                 String thisRawID = rawCursor.getString(rawCursor.getColumnIndex(ContactsContract.RawContacts._ID));
                 if (thisRawID.equals(rawID)) {
@@ -62,8 +62,15 @@ public class ContactsLoaderTask extends AsyncTask<Void, Void, Void> {
             }
             rawCursor.close();
             if (number != null) {
-                if ((accountType.equals("USIM Account")) || (accountType.equals("SIM Account"))) {
-                    number = Util.onlyDigits(number);
+                for (int i = 0; i < accountType.length() - 2; i++) {
+                    if (accountType.charAt(i) == 's' || accountType.charAt(i) == 'S') {
+                        if (accountType.charAt(i + 1) == 'i' || accountType.charAt(i + 1) == 'I') {
+                            if (accountType.charAt(i + 2) == 'm' || accountType.charAt(i + 2) == 'M') {
+                                accountType = "sim";
+                                number = Util.onlyDigits(number);
+                            }
+                        }
+                    }
                 }
                 ContactItem contactItem = new ContactItem(name, number, id, null, false, accountType);
                 contactsList.add(contactItem);

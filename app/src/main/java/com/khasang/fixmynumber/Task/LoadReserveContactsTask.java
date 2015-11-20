@@ -60,8 +60,7 @@ public class LoadReserveContactsTask extends AsyncTask<Void, Void, Void> {
 
         for (int i = 0; i < reserveNumbers.size(); i++) {
             if (reserveNumbers.get(i) != null) {
-                if ((reserveNumberAccountTypes.get(i).equals("USIM Account")) ||
-                        (reserveNumberAccountTypes.get(i).equals("SIM Account"))) {
+                if (reserveNumberAccountTypes.get(i).equals("sim")) {
                     String presentNumber = null;
                     Cursor cursor = activity.getContentResolver().query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
                             null, null, null, null);
