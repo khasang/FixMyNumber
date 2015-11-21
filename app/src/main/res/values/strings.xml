@@ -14,7 +14,6 @@
     <string name="contacts">Contacts</string>
     <string name="change_select_all">Select all</string>
     <string name="unchanged">UNCHANGED</string>
-    <string name="backup_message">Created backup copy:</string>
 
     <!--"change contacts"-->
     <string name="change_78">Change +7 to 8</string>

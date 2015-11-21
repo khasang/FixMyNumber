@@ -4,7 +4,7 @@ import android.app.Activity;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
 
-import com.khasang.fixmynumber.Helper.DBHelper;
+import com.khasang.fixmynumber.Model.DBHelper;
 
 /**
  * Created by Raenar on 28.10.2015.
