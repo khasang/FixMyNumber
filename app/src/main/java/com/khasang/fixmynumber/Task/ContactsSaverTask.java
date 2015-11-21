@@ -2,6 +2,8 @@ package com.khasang.fixmynumber.Task;
 
 import android.app.Activity;
 import android.content.ContentProviderOperation;
+import android.content.ContentValues;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.provider.ContactsContract;
 import android.util.Log;
@@ -27,6 +29,15 @@ public class ContactsSaverTask extends AsyncTask<Void, Void, Void> {
     protected Void doInBackground(Void... voids) {
         for (int i = 0; i < contactList.size(); i++) {
             if (contactList.get(i).getNumberNew() != null) {
+                if (contactList.get(i).getAccountType().equals("sim")) {
+                    Uri uri = Uri.parse("content://icc/adn");
+                    ContentValues cv = new ContentValues();
+                    cv.put("tag", contactList.get(i).getName());
+                    cv.put("number", contactList.get(i).getNumberOriginal());
+                    cv.put("newTag", contactList.get(i).getName());
+                    cv.put("newNumber", contactList.get(i).getNumberNew());
+                    activity.getContentResolver().update(uri, cv, null, null);
+                }
                 ArrayList<ContentProviderOperation> op = new ArrayList<ContentProviderOperation>();
                 op.add(ContentProviderOperation.newUpdate(ContactsContract.Data.CONTENT_URI)
                         .withSelection(ContactsContract.CommonDataKinds.Phone.NUMBER + "=?",
