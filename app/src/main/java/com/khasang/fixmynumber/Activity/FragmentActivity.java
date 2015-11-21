@@ -16,6 +16,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.khasang.fixmynumber.Fragment.StepFragment1;
 import com.khasang.fixmynumber.Fragment.StepFragment2;
