@@ -1,6 +1,5 @@
 package com.khasang.fixmynumber.Adapter;
 
-import android.app.Activity;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,7 +7,6 @@ import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.TextView;
 
-import com.khasang.fixmynumber.Fragment.StepFragment1;
 import com.khasang.fixmynumber.Model.ContactItem;
 import com.khasang.fixmynumber.R;
 
@@ -19,17 +17,9 @@ import java.util.List;
  */
 public class ContactsListAdapter extends RecyclerView.Adapter<ContactsListAdapter.ViewHolder> {
 
-    private StepFragment1.Fragment1ContactClickListener contactClickListener;
     private List<ContactItem> contactsList;
 
-    public ContactsListAdapter(Activity activity, List<ContactItem> contactsList) {
-        this.contactClickListener = null;
-        try {
-            contactClickListener = (StepFragment1.Fragment1ContactClickListener) activity;
-        } catch (ClassCastException e) {
-            throw new ClassCastException(activity.toString()
-                    + "must implement Fragment1ContactClickListener");
-        }
+    public ContactsListAdapter(List<ContactItem> contactsList) {
         this.contactsList = contactsList;
     }
 
@@ -52,7 +42,6 @@ public class ContactsListAdapter extends RecyclerView.Adapter<ContactsListAdapte
                 boolean isChecked = contact.isChecked();
                 isChecked = !isChecked;
                 contact.setIsChecked(isChecked);
-                contactClickListener.onFragment1ContactClick();
             }
         });
 

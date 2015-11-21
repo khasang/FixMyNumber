@@ -9,7 +9,7 @@ import android.support.v7.app.AlertDialog;
 
 import com.khasang.fixmynumber.Activity.RestoreContactsActivity;
 import com.khasang.fixmynumber.Helper.LoadingDialogCreator;
-import com.khasang.fixmynumber.Helper.DBHelper;
+import com.khasang.fixmynumber.Model.DBHelper;
 
 import java.util.ArrayList;
 

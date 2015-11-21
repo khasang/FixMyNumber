@@ -68,7 +68,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/change_change"
-        android:id="@+id/textViewChange"
+        android:id="@+id/textView2"
         android:gravity="center"
         android:layout_alignBottom="@+id/editTextS1"
         android:layout_toLeftOf="@+id/editTextS1"
@@ -79,12 +79,12 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/change_to"
-        android:id="@+id/textViewTo"
+        android:id="@+id/textView3"
         android:gravity="center"
         android:layout_alignBottom="@+id/editTextS2"
         android:layout_toLeftOf="@+id/editTextS2"
         android:layout_toStartOf="@+id/editTextS2"
-        android:layout_below="@+id/textViewChange" />
+        android:layout_below="@+id/textView2" />
 
     <EditText
         android:layout_width="wrap_content"
@@ -93,7 +93,7 @@
         android:ems="10"
         android:id="@+id/editTextS2"
         android:layout_below="@+id/editTextS1"
-        android:layout_toRightOf="@+id/textViewChange"
+        android:layout_toRightOf="@+id/textView2"
         android:layout_alignRight="@+id/editTextS1"
         android:layout_alignEnd="@+id/editTextS1" />
 

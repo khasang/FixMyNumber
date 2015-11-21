@@ -7,7 +7,7 @@ import android.os.AsyncTask;
 import android.text.format.DateFormat;
 
 import com.khasang.fixmynumber.Model.ContactItem;
-import com.khasang.fixmynumber.Helper.DBHelper;
+import com.khasang.fixmynumber.Model.DBHelper;
 
 import java.util.ArrayList;
 
