@@ -82,18 +82,17 @@ public class LoadReserveContactsTask extends AsyncTask<Void, Void, Void> {
                     cv.put("newTag", reserveNumberNames.get(i));
                     cv.put("newNumber", reserveNumbers.get(i));
                     activity.getContentResolver().update(uri, cv, null, null);
-                } else {
-                    ArrayList<ContentProviderOperation> op = new ArrayList<ContentProviderOperation>();
-                    op.add(ContentProviderOperation.newUpdate(ContactsContract.Data.CONTENT_URI)
-                            .withSelection(ContactsContract.CommonDataKinds.Phone._ID + "=?",
-                                    new String[]{reserveNumberIds.get(i)})
-                            .withValue(ContactsContract.CommonDataKinds.Phone.NUMBER, reserveNumbers.get(i))
-                            .build());
-                    try {
-                        activity.getContentResolver().applyBatch(ContactsContract.AUTHORITY, op);
-                    } catch (Exception e) {
-                        Log.e("Exception: ", e.getMessage());
-                    }
+                }
+                ArrayList<ContentProviderOperation> op = new ArrayList<ContentProviderOperation>();
+                op.add(ContentProviderOperation.newUpdate(ContactsContract.Data.CONTENT_URI)
+                        .withSelection(ContactsContract.CommonDataKinds.Phone._ID + "=?",
+                                new String[]{reserveNumberIds.get(i)})
+                        .withValue(ContactsContract.CommonDataKinds.Phone.NUMBER, reserveNumbers.get(i))
+                        .build());
+                try {
+                    activity.getContentResolver().applyBatch(ContactsContract.AUTHORITY, op);
+                } catch (Exception e) {
+                    Log.e("Exception: ", e.getMessage());
                 }
             }
         }

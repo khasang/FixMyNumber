@@ -37,21 +37,20 @@ public class ContactsSaverTask extends AsyncTask<Void, Void, Void> {
                     cv.put("newTag", contactList.get(i).getName());
                     cv.put("newNumber", contactList.get(i).getNumberNew());
                     activity.getContentResolver().update(uri, cv, null, null);
-                } else {
-                    ArrayList<ContentProviderOperation> op = new ArrayList<ContentProviderOperation>();
-                    op.add(ContentProviderOperation.newUpdate(ContactsContract.Data.CONTENT_URI)
-                            .withSelection(ContactsContract.CommonDataKinds.Phone.NUMBER + "=?",
-                                    new String[]{contactList.get(i).getNumberOriginal()})
-                            .withValue(ContactsContract.CommonDataKinds.Phone.NUMBER, contactList.get(i).getNumberNew())
-                            .build());
-                    try {
-                        activity.getContentResolver().applyBatch(ContactsContract.AUTHORITY, op);
-                        Log.d("ContactsSaverTask", "changed " + contactList.get(i).getName()
-                                + " " + contactList.get(i).getNumberOriginal()
-                                + " => to " + contactList.get(i).getNumberNew());
-                    } catch (Exception e) {
-                        Log.e("Exception: ", e.getMessage());
-                    }
+                }
+                ArrayList<ContentProviderOperation> op = new ArrayList<ContentProviderOperation>();
+                op.add(ContentProviderOperation.newUpdate(ContactsContract.Data.CONTENT_URI)
+                        .withSelection(ContactsContract.CommonDataKinds.Phone.NUMBER + "=?",
+                                new String[]{contactList.get(i).getNumberOriginal()})
+                        .withValue(ContactsContract.CommonDataKinds.Phone.NUMBER, contactList.get(i).getNumberNew())
+                        .build());
+                try {
+                    activity.getContentResolver().applyBatch(ContactsContract.AUTHORITY, op);
+                    Log.d("ContactsSaverTask", "changed " + contactList.get(i).getName()
+                            + " " + contactList.get(i).getNumberOriginal()
+                            + " => to " + contactList.get(i).getNumberNew());
+                } catch (Exception e) {
+                    Log.e("Exception: ", e.getMessage());
                 }
             } else {
                 Log.d("ContactsSaverTask", "Unchanged: " + contactList.get(i).getName());
