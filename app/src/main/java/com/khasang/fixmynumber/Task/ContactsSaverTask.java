@@ -28,7 +28,7 @@ public class ContactsSaverTask extends AsyncTask<Void, Void, Void> {
     @Override
     protected Void doInBackground(Void... voids) {
         for (int i = 0; i < contactList.size(); i++) {
-            if (contactList.get(i).getNumberNew() != null) {
+            if (contactList.get(i).getNumberNew() != null && contactList.get(i).isChecked()) {
                 if (contactList.get(i).getAccountType().equals("sim")) {
                     Uri uri = Uri.parse("content://icc/adn");
                     ContentValues cv = new ContentValues();
@@ -37,6 +37,10 @@ public class ContactsSaverTask extends AsyncTask<Void, Void, Void> {
                     cv.put("newTag", contactList.get(i).getName());
                     cv.put("newNumber", Util.onlyDigits(contactList.get(i).getNumberNew()));
                     activity.getContentResolver().update(uri, cv, null, null);
+
+                    Log.d("SIM", "Saved Name= " + contactList.get(i).getName() + " number = "
+                            + Util.onlyDigits(contactList.get(i).getNumberOriginal())
+                            +" new number = "+ Util.onlyDigits(contactList.get(i).getNumberNew()));
                 }
                 ArrayList<ContentProviderOperation> op = new ArrayList<ContentProviderOperation>();
                 op.add(ContentProviderOperation.newUpdate(ContactsContract.Data.CONTENT_URI)
