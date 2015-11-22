@@ -61,13 +61,14 @@ public class ContactsLoaderTask extends AsyncTask<Void, Void, Void> {
                 }
             }
             rawCursor.close();
-            if (number != null) {
+            if (number != null && number.length() > 5) {
+//                number = Util.onlyDigits(number);
                 for (int i = 0; i < accountType.length() - 2; i++) {
                     if (accountType.charAt(i) == 's' || accountType.charAt(i) == 'S') {
                         if (accountType.charAt(i + 1) == 'i' || accountType.charAt(i + 1) == 'I') {
                             if (accountType.charAt(i + 2) == 'm' || accountType.charAt(i + 2) == 'M') {
                                 accountType = "sim";
-                                number = Util.onlyDigits(number);
+//                                number = Util.onlyDigits(number);
                             }
                         }
                     }
@@ -77,6 +78,12 @@ public class ContactsLoaderTask extends AsyncTask<Void, Void, Void> {
                 if (!usedNumbersList.contains(number)) {
                     contactsListToShow.add(contactItem);
                     usedNumbersList.add(number);
+                } else if (accountType.equals("sim")) {
+                    for (ContactItem contact : contactsListToShow) {
+                        if (contact.getNumberOriginal().equals(number)) {
+                            contact.setAccountType("sim");
+                        }
+                    }
                 }
             }
         }

@@ -80,7 +80,7 @@ public class LoadReserveContactsTask extends AsyncTask<Void, Void, Void> {
                     cv.put("tag", reserveNumberNames.get(i));
                     cv.put("number", presentNumber);
                     cv.put("newTag", reserveNumberNames.get(i));
-                    cv.put("newNumber", reserveNumbers.get(i));
+                    cv.put("newNumber", Util.onlyDigits(reserveNumbers.get(i)));
                     activity.getContentResolver().update(uri, cv, null, null);
                 }
                 ArrayList<ContentProviderOperation> op = new ArrayList<ContentProviderOperation>();
