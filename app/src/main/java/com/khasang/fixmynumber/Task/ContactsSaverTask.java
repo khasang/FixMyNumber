@@ -33,14 +33,16 @@ public class ContactsSaverTask extends AsyncTask<Void, Void, Void> {
                     Uri uri = Uri.parse("content://icc/adn");
                     ContentValues cv = new ContentValues();
                     cv.put("tag", contactList.get(i).getName());
-                    cv.put("number", Util.onlyDigits(contactList.get(i).getNumberOriginal()));
+                    String number = Util.onlyDigits(contactList.get(i).getNumberOriginal());
+                    cv.put("number", number);
                     cv.put("newTag", contactList.get(i).getName());
-                    cv.put("newNumber", Util.onlyDigits(contactList.get(i).getNumberNew()));
+                    String numberNew = Util.onlyDigits(contactList.get(i).getNumberNew());
+                    cv.put("newNumber", numberNew);
                     activity.getContentResolver().update(uri, cv, null, null);
 
-                    Log.d("SIM", "Saved Name= " + contactList.get(i).getName() + " number = "
-                            + Util.onlyDigits(contactList.get(i).getNumberOriginal())
-                            +" new number = "+ Util.onlyDigits(contactList.get(i).getNumberNew()));
+                    Log.d("SIM", "Saved Name=" + contactList.get(i).getName() + ";number ="
+                            + number
+                            +";new number ="+ numberNew);
                 }
                 ArrayList<ContentProviderOperation> op = new ArrayList<ContentProviderOperation>();
                 op.add(ContentProviderOperation.newUpdate(ContactsContract.Data.CONTENT_URI)
