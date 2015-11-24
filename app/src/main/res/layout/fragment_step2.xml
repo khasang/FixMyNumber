@@ -15,35 +15,33 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignEnd="@+id/radioGroup"
-        android:layout_alignLeft="@+id/radioGroup"
         android:layout_alignParentBottom="true"
         android:layout_alignRight="@+id/radioGroup"
-        android:layout_alignStart="@+id/radioGroup"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="60dp"
+        android:layout_marginBottom="50dp"
         android:ems="10"
-        android:inputType="phone" />
+        android:inputType="phone"
+        android:layout_toRightOf="@+id/textViewChange"
+        android:layout_toEndOf="@+id/textViewChange" />
 
     <EditText
         android:id="@+id/editTextS1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_above="@id/editTextS2"
-        android:layout_alignEnd="@+id/radioGroup"
-        android:layout_alignLeft="@+id/radioGroup"
-        android:layout_alignRight="@+id/radioGroup"
-        android:layout_alignStart="@+id/radioGroup"
         android:ems="10"
-        android:inputType="phone" />
+        android:inputType="phone"
+        android:layout_alignRight="@+id/radioGroup"
+        android:layout_alignEnd="@+id/radioGroup"
+        android:layout_toRightOf="@+id/textViewChange"
+        android:layout_toEndOf="@+id/textViewChange" />
 
     <TextView
         android:id="@+id/textViewChange"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/editTextS1"
-        android:layout_alignTop="@+id/editTextS1"
-        android:layout_toLeftOf="@+id/editTextS1"
-        android:layout_toStartOf="@+id/editTextS1"
+        android:layout_alignLeft="@id/radioGroup"
+        android:layout_alignTop="@id/editTextS1"
+        android:layout_alignBottom="@id/editTextS1"
         android:gravity="center"
         android:text="@string/change_change" />
 
@@ -51,10 +49,9 @@
         android:id="@+id/textViewTo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/editTextS2"
-        android:layout_below="@+id/textViewChange"
-        android:layout_toLeftOf="@+id/editTextS2"
-        android:layout_toStartOf="@+id/editTextS2"
+        android:layout_alignRight="@id/textViewChange"
+        android:layout_alignTop="@id/editTextS2"
+        android:layout_alignBottom="@id/editTextS2"
         android:gravity="center"
         android:text="@string/change_to" />
 
@@ -62,10 +59,10 @@
         android:id="@+id/radioGroup"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@id/editTextS2"
+        android:layout_above="@id/editTextS1"
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
-        android:layout_marginBottom="40dp">
+        android:layout_marginBottom="10dp">
 
         <RadioButton
             android:id="@+id/radioButtonSwap78"
