@@ -63,12 +63,14 @@ public class ContactsLoaderTask extends AsyncTask<Void, Void, Void> {
             rawCursor.close();
             if (number != null && number.length() > 5) {
 //                number = Util.onlyDigits(number);
-                for (int i = 0; i < accountType.length() - 2; i++) {
-                    if (accountType.charAt(i) == 's' || accountType.charAt(i) == 'S') {
-                        if (accountType.charAt(i + 1) == 'i' || accountType.charAt(i + 1) == 'I') {
-                            if (accountType.charAt(i + 2) == 'm' || accountType.charAt(i + 2) == 'M') {
-                                accountType = "sim";
+                if (accountType!= null) {
+                    for (int i = 0; i < accountType.length() - 2; i++) {
+                        if (accountType.charAt(i) == 's' || accountType.charAt(i) == 'S') {
+                            if (accountType.charAt(i + 1) == 'i' || accountType.charAt(i + 1) == 'I') {
+                                if (accountType.charAt(i + 2) == 'm' || accountType.charAt(i + 2) == 'M') {
+                                    accountType = "sim";
 //                                number = Util.onlyDigits(number);
+                                }
                             }
                         }
                     }
