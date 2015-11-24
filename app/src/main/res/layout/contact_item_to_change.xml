@@ -3,8 +3,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="horizontal"
-    android:paddingTop="4dp"
-    android:paddingBottom="4dp">
+    android:paddingBottom="4dp"
+    android:paddingTop="4dp">
 
     <TextView
         android:id="@+id/contactName"
@@ -12,9 +12,9 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="5dp"
         android:layout_weight="0.5"
-        android:text="Name"
+        android:gravity="center"
         android:paddingBottom="3dp"
-        android:gravity="center" />
+        android:text="Name" />
 
     <TextView
         android:id="@+id/contactNumberOriginal"
@@ -22,8 +22,8 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="5dp"
         android:layout_weight="1"
-        android:text="12345"
-        android:gravity="center" />
+        android:gravity="center"
+        android:text="12345" />
 
     <TextView
         android:id="@+id/contactNumberNew"
@@ -31,8 +31,8 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="5dp"
         android:layout_weight="1"
-        android:text="=> 12345"
-        android:gravity="center" />
+        android:gravity="center"
+        android:text="=> 12345" />
 
 
 </LinearLayout>

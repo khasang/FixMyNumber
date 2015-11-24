@@ -1,50 +1,51 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:paddingTop="@dimen/activity_vertical_margin"
 
     tools:context="com.khasang.fixmynumber.Activity.MenuActivity">
 
     <Button
+        android:id="@+id/buttonStartChange"
         style="@style/MyButtonStyle"
-        android:layout_margin="@dimen/activity_horizontal_margin"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/menu_change_contacts"
-        android:id="@+id/buttonStartChange"
+        android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
-        android:layout_centerHorizontal="true" />
+        android:layout_margin="@dimen/activity_horizontal_margin"
+        android:text="@string/menu_change_contacts" />
 
     <Button
+        android:id="@+id/buttonStartRestore"
         style="@style/MyButtonStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/menu_restore_contacts"
-        android:id="@+id/buttonStartRestore"
-        android:layout_below="@+id/buttonStartChange"
+        android:layout_alignEnd="@+id/buttonStartChange"
         android:layout_alignLeft="@+id/buttonStartChange"
-        android:layout_alignStart="@+id/buttonStartChange"
         android:layout_alignRight="@+id/buttonStartChange"
-        android:layout_alignEnd="@+id/buttonStartChange" />
+        android:layout_alignStart="@+id/buttonStartChange"
+        android:layout_below="@+id/buttonStartChange"
+        android:text="@string/menu_restore_contacts" />
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="5dp"
-        android:text="I.Svirin, I.Voitcekhovskii \n Khasang team 2015"
-        android:textColor="@android:color/white"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
         android:background="@color/colorFooter"
         android:gravity="center"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />
+        android:padding="5dp"
+        android:text="I.Svirin, I.Voitcekhovskii \n Khasang team 2015"
+        android:textColor="@android:color/white" />
 
     <ImageView
+        android:id="@+id/imageView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/imageView"
-        android:src="@drawable/menulogo"
         android:layout_above="@+id/buttonStartChange"
-        android:layout_centerHorizontal="true" />
+        android:layout_centerHorizontal="true"
+        android:src="@drawable/menulogo" />
 </RelativeLayout>
