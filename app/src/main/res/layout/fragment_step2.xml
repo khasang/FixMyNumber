@@ -17,7 +17,7 @@
         android:layout_alignEnd="@+id/radioGroup"
         android:layout_alignParentBottom="true"
         android:layout_alignRight="@+id/radioGroup"
-        android:layout_marginBottom="50dp"
+        android:layout_marginBottom="40dp"
         android:ems="10"
         android:inputType="phone"
         android:layout_toRightOf="@+id/textViewChange"
