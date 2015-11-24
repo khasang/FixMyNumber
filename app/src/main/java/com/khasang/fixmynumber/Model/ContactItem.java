@@ -9,16 +9,18 @@ public class ContactItem {
     private String numberOriginalId;
     private String numberNew;
     private boolean isChecked;
+    private String accountType;
 
     public ContactItem() {
     }
 
-    public ContactItem(String name, String numberOriginal, String numberOriginalId, String numberNew, boolean isChecked) {
+    public ContactItem(String name, String numberOriginal, String numberOriginalId, String numberNew, boolean isChecked, String accountType) {
         this.name = name;
         this.numberOriginal = numberOriginal;
         this.numberOriginalId = numberOriginalId;
         this.numberNew = numberNew;
         this.isChecked = isChecked;
+        this.accountType = accountType;
     }
 
     public String getName() {
@@ -59,5 +61,13 @@ public class ContactItem {
 
     public void setIsChecked(boolean isChecked) {
         this.isChecked = isChecked;
+    }
+
+    public String getAccountType() {
+        return accountType;
+    }
+
+    public void setAccountType(String accountType) {
+        this.accountType = accountType;
     }
 }

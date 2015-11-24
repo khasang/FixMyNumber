@@ -72,7 +72,7 @@ public class FragmentActivity extends AppCompatActivity implements StepFragment1
             int prefixID = random.nextInt(prefixArray.length);
             String generatedName = namesArray[nameID];
             String generatedNumber = prefixArray[prefixID] + "800555-" + i;
-            ContactItem newItem = new ContactItem(generatedName, generatedNumber, "" + i, null, false);
+            ContactItem newItem = new ContactItem(generatedName, generatedNumber, "" + i, null, false, null);
             contactsList.add(newItem);
         }
     }

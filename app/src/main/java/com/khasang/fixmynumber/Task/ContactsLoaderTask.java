@@ -45,18 +45,45 @@ public class ContactsLoaderTask extends AsyncTask<Void, Void, Void> {
         Cursor numbersCursor = activity.getContentResolver()
                 .query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null, null, null, null);
         while (numbersCursor.moveToNext()) {
-            String number = numbersCursor.getString(
-                    numbersCursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
-            String name = numbersCursor.getString(
-                    numbersCursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME));
-            String id = numbersCursor.getString(
-                    numbersCursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone._ID));
-            if (number != null) {
-                ContactItem contactItem = new ContactItem(name, number, id, null, false);
+            String number = numbersCursor.getString(numbersCursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
+            String name = numbersCursor.getString(numbersCursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME));
+            String id = numbersCursor.getString(numbersCursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone._ID));
+            String rawID = numbersCursor.getString(numbersCursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.RAW_CONTACT_ID));
+//            String accountType = numbersCursor.getString(
+//                    numbersCursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.ACCOUNT_TYPE_AND_DATA_SET));
+            String accountType = null;
+            Cursor rawCursor = activity.getContentResolver().query(ContactsContract.RawContacts.CONTENT_URI, null, null, null, null);
+            while (rawCursor.moveToNext()) {
+                String thisRawID = rawCursor.getString(rawCursor.getColumnIndex(ContactsContract.RawContacts._ID));
+                if (thisRawID.equals(rawID)) {
+                    accountType = rawCursor.getString(rawCursor.getColumnIndex(ContactsContract.RawContacts.ACCOUNT_TYPE));
+                    break;
+                }
+            }
+            rawCursor.close();
+            if (number != null && number.length() > 5) {
+//                number = Util.onlyDigits(number);
+                for (int i = 0; i < accountType.length() - 2; i++) {
+                    if (accountType.charAt(i) == 's' || accountType.charAt(i) == 'S') {
+                        if (accountType.charAt(i + 1) == 'i' || accountType.charAt(i + 1) == 'I') {
+                            if (accountType.charAt(i + 2) == 'm' || accountType.charAt(i + 2) == 'M') {
+                                accountType = "sim";
+//                                number = Util.onlyDigits(number);
+                            }
+                        }
+                    }
+                }
+                ContactItem contactItem = new ContactItem(name, number, id, null, false, accountType);
                 contactsList.add(contactItem);
                 if (!usedNumbersList.contains(number)) {
                     contactsListToShow.add(contactItem);
                     usedNumbersList.add(number);
+                } else if (accountType.equals("sim")) {
+                    for (ContactItem contact : contactsListToShow) {
+                        if (contact.getNumberOriginal().equals(number)) {
+                            contact.setAccountType("sim");
+                        }
+                    }
                 }
             }
         }
