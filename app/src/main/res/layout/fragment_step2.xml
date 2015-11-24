@@ -10,91 +10,95 @@
     tools:context=".MainActivity">
 
 
-    <RadioGroup
+    <EditText
+        android:id="@+id/editTextS2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
+        android:layout_alignEnd="@+id/radioGroup"
+        android:layout_alignLeft="@+id/radioGroup"
+        android:layout_alignParentBottom="true"
+        android:layout_alignRight="@+id/radioGroup"
+        android:layout_alignStart="@+id/radioGroup"
         android:layout_centerHorizontal="true"
-        android:id="@+id/radioGroup">
-
-        <RadioButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/change_78"
-            android:id="@+id/radioButtonSwap78"
-            android:checked="false"
- />
-
-        <RadioButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/change_87"
-            android:id="@+id/radioButtonSwap87"
-            android:checked="false" />
-
-        <!--<RadioButton-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:text="@string/change_700"-->
-            <!--android:id="@+id/radioButtonSwap700" />-->
-
-        <!--<RadioButton-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:text="@string/change_80"-->
-            <!--android:id="@+id/radioButtonSwap80" />-->
-
-        <RadioButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/change_custom"
-            android:id="@+id/radioButtonSwapCustom" />
-
-    </RadioGroup>
+        android:layout_marginBottom="60dp"
+        android:ems="10"
+        android:inputType="phone" />
 
     <EditText
+        android:id="@+id/editTextS1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:inputType="number"
-        android:ems="10"
-        android:id="@+id/editTextS1"
-        android:layout_below="@+id/radioGroup"
+        android:layout_above="@id/editTextS2"
+        android:layout_alignEnd="@+id/radioGroup"
         android:layout_alignLeft="@+id/radioGroup"
-        android:layout_alignStart="@+id/radioGroup"
         android:layout_alignRight="@+id/radioGroup"
-        android:layout_alignEnd="@+id/radioGroup" />
+        android:layout_alignStart="@+id/radioGroup"
+        android:ems="10"
+        android:inputType="phone" />
 
     <TextView
+        android:id="@+id/textViewChange"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/change_change"
-        android:id="@+id/textViewChange"
-        android:gravity="center"
         android:layout_alignBottom="@+id/editTextS1"
+        android:layout_alignTop="@+id/editTextS1"
         android:layout_toLeftOf="@+id/editTextS1"
         android:layout_toStartOf="@+id/editTextS1"
-        android:layout_alignTop="@+id/editTextS1" />
+        android:gravity="center"
+        android:text="@string/change_change" />
 
     <TextView
+        android:id="@+id/textViewTo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/change_to"
-        android:id="@+id/textViewTo"
-        android:gravity="center"
         android:layout_alignBottom="@+id/editTextS2"
+        android:layout_below="@+id/textViewChange"
         android:layout_toLeftOf="@+id/editTextS2"
         android:layout_toStartOf="@+id/editTextS2"
-        android:layout_below="@+id/textViewChange" />
+        android:gravity="center"
+        android:text="@string/change_to" />
 
-    <EditText
+    <RadioGroup
+        android:id="@+id/radioGroup"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:inputType="number"
-        android:ems="10"
-        android:id="@+id/editTextS2"
-        android:layout_below="@+id/editTextS1"
-        android:layout_toRightOf="@+id/textViewChange"
-        android:layout_alignRight="@+id/editTextS1"
-        android:layout_alignEnd="@+id/editTextS1" />
+        android:layout_above="@id/editTextS2"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:layout_marginBottom="40dp">
+
+        <RadioButton
+            android:id="@+id/radioButtonSwap78"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:checked="false"
+            android:text="@string/change_78" />
+
+        <RadioButton
+            android:id="@+id/radioButtonSwap87"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:checked="false"
+            android:text="@string/change_87" />
+
+        <!--<RadioButton-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:text="@string/change_700"-->
+        <!--android:id="@+id/radioButtonSwap700" />-->
+
+        <!--<RadioButton-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:text="@string/change_80"-->
+        <!--android:id="@+id/radioButtonSwap80" />-->
+
+        <RadioButton
+            android:id="@+id/radioButtonSwapCustom"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/change_custom" />
+
+    </RadioGroup>
 
 </RelativeLayout>
