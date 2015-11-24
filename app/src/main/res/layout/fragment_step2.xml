@@ -14,7 +14,7 @@
     <EditText
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:inputType="number"
+        android:inputType="phone"
         android:ems="10"
         android:id="@+id/editTextS2"
         android:layout_centerHorizontal="true"
@@ -27,7 +27,7 @@
     <EditText
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:inputType="number"
+        android:inputType="phone"
         android:ems="10"
         android:id="@+id/editTextS1"
         android:layout_above="@id/editTextS2"
