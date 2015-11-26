@@ -13,7 +13,7 @@ import com.octo.android.robospice.persistence.CacheManager;
  * @author sni
  *
  */
-public class TestOfflineSpiceRequest extends SpiceService {
+public class TestOfflineSpiceService extends SpiceService {
 
     @Override
     public CacheManager createCacheManager( Application application ) {

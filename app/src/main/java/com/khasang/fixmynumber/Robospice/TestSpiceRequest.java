@@ -14,8 +14,8 @@ public class TestSpiceRequest extends SpiceRequest<String> {
     @Override
     public String loadDataFromNetwork() throws Exception {
         for (int i = 0; i < 5; i++) {
-            Thread.sleep(100);
-            publishProgress(i);
+            publishProgress(i+1);
+            Thread.sleep(1000);
         }
         return "ok";
     }

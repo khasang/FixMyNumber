@@ -10,13 +10,17 @@ android {
         targetSdkVersion 23
         versionCode 3
         versionName "1.0.2"
-        resConfigs "en","ru"
+        resConfigs "en", "ru"
     }
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
+    }
+    packagingOptions {
+        exclude 'META-INF/LICENSE.txt'
+        exclude 'META-INF/NOTICE.txt'
     }
 }
 
@@ -27,4 +31,5 @@ dependencies {
     compile 'com.android.support:recyclerview-v7:23.0.1'
     compile 'com.android.support:design:23.0.1'
     compile 'com.octo.android.robospice:robospice:1.4.14'
+
 }

@@ -8,15 +8,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.khasang.fixmynumber.R;
-import com.khasang.fixmynumber.Robospice.TestOfflineSpiceRequest;
+import com.khasang.fixmynumber.Robospice.TestOfflineSpiceService;
 import com.khasang.fixmynumber.Robospice.TestSpiceRequest;
 import com.octo.android.robospice.SpiceManager;
 import com.octo.android.robospice.persistence.exception.SpiceException;
 import com.octo.android.robospice.request.listener.RequestListener;
 import com.octo.android.robospice.request.listener.RequestProgress;
 import com.octo.android.robospice.request.listener.RequestProgressListener;
-
-import roboguice.util.temp.Ln;
 
 public class TestActivity extends AppCompatActivity {
     Button testButton;
@@ -31,7 +29,7 @@ public class TestActivity extends AppCompatActivity {
         testButton = (Button) findViewById(R.id.buttonTest);
         progressText = (TextView) findViewById(R.id.textViewProgress);
         resultText = (TextView) findViewById(R.id.textViewResult);
-        spiceManager = new SpiceManager(TestOfflineSpiceRequest.class);
+        spiceManager = new SpiceManager(TestOfflineSpiceService.class);
     }
 
     public void testClick(View view) {
