@@ -12,11 +12,12 @@ import com.khasang.fixmynumber.Service.ServiceHelper;
  * Created by Raenar on 01.12.2015.
  */
 public abstract class BaseServiceActivity extends AppCompatActivity implements ServiceCallbackListener {
-    private ServiceHelper serviceHelper;
+    private ServiceHelper serviceHelper ;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        serviceHelper = getServiceHelper();
+        serviceHelper = new ServiceHelper(getApplication());
+        //todo make custom app class to store ServiceHelper
     }
 
     protected void onResume() {
