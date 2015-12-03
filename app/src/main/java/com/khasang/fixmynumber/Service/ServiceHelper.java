@@ -60,13 +60,14 @@ public class ServiceHelper {
             protected void onReceiveResult(int resultCode, Bundle resultData) {
                 Intent originalIntent = pendingActivities.get(requestId);
                 if (isPending(requestId)) {
+                    if (resultCode != TestIntentHandler.PROGRESS_CODE){
                     pendingActivities.remove(requestId);
-
-                    for (ServiceCallbackListener currentListener : currentListeners) {
-                        if (currentListener != null) {
-                            currentListener.onServiceCallback(requestId, originalIntent, resultCode, resultData);
-                        }
                     }
+                        for (ServiceCallbackListener currentListener : currentListeners) {
+                            if (currentListener != null) {
+                                currentListener.onServiceCallback(requestId, originalIntent, resultCode, resultData);
+                            }
+                        }
                 }
             }
         });

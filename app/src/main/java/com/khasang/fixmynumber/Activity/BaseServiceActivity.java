@@ -4,6 +4,7 @@ import android.app.Application;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.test.mock.MockApplication;
 
 import com.khasang.fixmynumber.Service.ServiceCallbackListener;
 import com.khasang.fixmynumber.Service.ServiceHelper;
@@ -16,7 +17,7 @@ public abstract class BaseServiceActivity extends AppCompatActivity implements S
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        serviceHelper = new ServiceHelper(getApplication());
+        serviceHelper = ((TestApplication) getApplication()).getServiceHelper();
         //todo make custom app class to store ServiceHelper
     }
 
