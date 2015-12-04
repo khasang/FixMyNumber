@@ -2,12 +2,12 @@ package com.khasang.fixmynumber.Activity;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.PagerAdapter;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.format.DateFormat;
@@ -23,6 +23,7 @@ import com.khasang.fixmynumber.Fragment.StepFragment2;
 import com.khasang.fixmynumber.Fragment.StepFragment3;
 import com.khasang.fixmynumber.Model.ContactItem;
 import com.khasang.fixmynumber.R;
+import com.khasang.fixmynumber.Service.TestIntentHandler;
 import com.khasang.fixmynumber.Task.ContactsBackupTask;
 import com.khasang.fixmynumber.Task.ContactsLoaderTask;
 import com.khasang.fixmynumber.Task.ContactsSaverTask;
@@ -31,7 +32,7 @@ import com.khasang.fixmynumber.View.CustomViewPager;
 import java.util.ArrayList;
 import java.util.Random;
 
-public class FragmentActivity extends AppCompatActivity implements StepFragment1.Fragment1ViewsCreateListener, StepFragment1.Fragment1ContactClickListener, StepFragment2.Fragment2ViewsUpdateListener, StepFragment3.Fragment3ViewsCreateListener {
+public class FragmentActivity extends BaseServiceActivity implements StepFragment1.Fragment1ViewsCreateListener, StepFragment1.Fragment1ContactClickListener, StepFragment2.Fragment2ViewsUpdateListener, StepFragment3.Fragment3ViewsCreateListener {
     CustomViewPager pager;
     ArrayList<ContactItem> contactsList;
     ArrayList<ContactItem> contactsListToShow;
@@ -60,6 +61,12 @@ public class FragmentActivity extends AppCompatActivity implements StepFragment1
         areAllContactsSelected = false;
         setUpPager();
 //        createMoreDummyContacts();
+    }
+
+    @Override
+    public void onServiceCallback(int requestId, Intent requestIntent, int resultCode, Bundle resultData) {
+        int progress = resultData.getInt(TestIntentHandler.PROGRESS_KEY);
+        contactsListToShow = resultData.getParcelableArrayList();
     }
 
     private void createMoreDummyContacts() {
