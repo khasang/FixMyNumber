@@ -27,7 +27,7 @@
         android:layout_height="match_parent"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_below="@id/divider"
+        android:layout_below="@id/checkBoxSelectAll"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
         tools:context=".FragmentActivity"
         tools:listitem="@layout/contact_item" />

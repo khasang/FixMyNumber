@@ -36,10 +36,10 @@ public class ContactsListToChangeAdapter extends RecyclerView.Adapter<ContactsLi
         viewHolder.numberOriginal.setText(contact.getNumberOriginal());
         if ((contact.getNumberOriginal().equals(contact.getNumberNew())) || (contact.getNumberNew() == null)) {
             viewHolder.numberNew.setText(R.string.unchanged);
-            viewHolder.itemView.setBackgroundColor(Color.TRANSPARENT);
+//            viewHolder.itemView.setBackgroundColor(Color.TRANSPARENT);
         } else {
             viewHolder.numberNew.setText(contact.getNumberNew());
-            viewHolder.itemView.setBackgroundColor(Color.LTGRAY);
+//            viewHolder.itemView.setBackgroundColor(Color.LTGRAY);
         }
     }
 
