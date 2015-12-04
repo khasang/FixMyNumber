@@ -43,7 +43,7 @@ public class ContactsLoaderTask extends AsyncTask<Void, Void, Void> {
         ArrayList<String> usedNumbersList = new ArrayList<>();
 
         Cursor numbersCursor = activity.getContentResolver()
-                .query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null, null, null, null);
+                .query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null, null, null,ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME );
         while (numbersCursor.moveToNext()) {
             String number = numbersCursor.getString(numbersCursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
             String name = numbersCursor.getString(numbersCursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME));
@@ -90,11 +90,6 @@ public class ContactsLoaderTask extends AsyncTask<Void, Void, Void> {
             }
         }
         numbersCursor.close();
-        Collections.sort(contactsListToShow, new Comparator<ContactItem>() {
-            public int compare(ContactItem o1, ContactItem o2) {
-                return o1.getName().compareTo(o2.getName());
-            }
-        });
         return null;
     }
 
