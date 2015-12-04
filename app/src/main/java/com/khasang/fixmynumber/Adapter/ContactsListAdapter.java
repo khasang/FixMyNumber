@@ -55,7 +55,15 @@ public class ContactsListAdapter extends RecyclerView.Adapter<ContactsListAdapte
                 contactClickListener.onFragment1ContactClick();
             }
         });
-
+        viewHolder.firstLetter.setText(" ");
+        String firstLetter = contactsList.get(i).getName().substring(0,1);
+        if (i != 0) {
+            if (!firstLetter.equals(contactsList.get(i-1).getName().substring(0,1))) {
+                viewHolder.firstLetter.setText(firstLetter);
+            }
+        } else {
+            viewHolder.firstLetter.setText(firstLetter);
+        }
 //        viewHolder.checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
 //            @Override
 //            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -74,12 +82,14 @@ public class ContactsListAdapter extends RecyclerView.Adapter<ContactsListAdapte
     class ViewHolder extends RecyclerView.ViewHolder {
         private CheckBox checkBox;
         private TextView name;
+        private TextView firstLetter;
         private TextView number;
 
         public ViewHolder(View v) {
             super(v);
             checkBox = (CheckBox) v.findViewById(R.id.checkBox);
             name = (TextView) v.findViewById(R.id.contactName);
+            firstLetter = (TextView) v.findViewById(R.id.contactFirstLetter);
             number = (TextView) v.findViewById(R.id.contactNumber);
         }
     }
