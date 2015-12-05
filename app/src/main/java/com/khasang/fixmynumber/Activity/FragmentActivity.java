@@ -25,7 +25,6 @@ import com.khasang.fixmynumber.Model.ContactItem;
 import com.khasang.fixmynumber.R;
 import com.khasang.fixmynumber.Service.TestIntentHandler;
 import com.khasang.fixmynumber.Task.ContactsBackupTask;
-import com.khasang.fixmynumber.Task.ContactsSaverTask;
 import com.khasang.fixmynumber.View.CustomViewPager;
 
 import java.util.ArrayList;
@@ -57,7 +56,7 @@ public class FragmentActivity extends BaseServiceActivity implements StepFragmen
         contactsListToShow = new ArrayList<ContactItem>();
         contactsListChanged = new ArrayList<ContactItem>();
 //        new ContactsLoaderTask(this, contactsList, contactsListToShow).execute();
-        getServiceHelper().doAwesomeAction(1);
+        getServiceHelper().doLoadAction(1);
         areAllContactsSelected = false;
 //        setUpPager();
 //        createMoreDummyContacts();
@@ -65,9 +64,16 @@ public class FragmentActivity extends BaseServiceActivity implements StepFragmen
 
     @Override
     public void onServiceCallback(int requestId, Intent requestIntent, int resultCode, Bundle resultData) {
-        contactsList = resultData.getParcelableArrayList(TestIntentHandler.RESULT_KEY_LIST);
-        contactsListToShow = resultData.getParcelableArrayList(TestIntentHandler.RESULT_KEY_LIST_TO_SHOW);
-        setUpPager();
+        String action = requestIntent.getAction();
+        switch (action) {
+            case TestIntentHandler.ACTION_LOAD: {
+                contactsList = resultData.getParcelableArrayList(TestIntentHandler.RESULT_KEY_LOAD_LIST);
+                contactsListToShow = resultData.getParcelableArrayList(TestIntentHandler.RESULT_KEY_LOAD_LIST_TO_SHOW);
+                setUpPager();
+            }
+            break;
+        }
+
     }
 
     private void createMoreDummyContacts() {
@@ -137,7 +143,8 @@ public class FragmentActivity extends BaseServiceActivity implements StepFragmen
                                 backupMessage,
                                 Toast.LENGTH_LONG).show();
                         new ContactsBackupTask(FragmentActivity.this, contactsList).execute();
-                        new ContactsSaverTask(FragmentActivity.this, contactsListToShow).execute();
+//                        new ContactsSaverTask(FragmentActivity.this, contactsListToShow).execute();
+                        getServiceHelper().doSaveAction(2, contactsListToShow);
                         dialog.dismiss();
                         finish();
                     }

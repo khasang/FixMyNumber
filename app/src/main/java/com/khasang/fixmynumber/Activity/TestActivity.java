@@ -1,7 +1,6 @@
 package com.khasang.fixmynumber.Activity;
 
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -27,7 +26,7 @@ public class TestActivity extends BaseServiceActivity {
         testButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                getServiceHelper().doAwesomeAction(1);
+                getServiceHelper().doLoadAction(1);
             }
         });
     }
@@ -37,7 +36,7 @@ public class TestActivity extends BaseServiceActivity {
         Log.d("TestService", "id " + requestId);
         Log.d("TestService", "intent " + requestIntent.toString());
         Log.d("TestService", "result code " + resultCode);
-        int progress = resultData.getInt(TestIntentHandler.PROGRESS_KEY);
+        int progress = resultData.getInt(TestIntentHandler.PROGRESS_KEY_LOAD);
         Log.d("TestService", "progress " + progress );
         testProgress.setText("" +progress);
 

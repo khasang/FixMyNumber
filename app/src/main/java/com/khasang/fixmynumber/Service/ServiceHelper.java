@@ -6,8 +6,9 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.ResultReceiver;
-import android.util.Log;
 import android.util.SparseArray;
+
+import com.khasang.fixmynumber.Model.ContactItem;
 
 import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -46,7 +47,6 @@ public class ServiceHelper {
 
     private int runRequest(final int requestId, Intent i) {
         pendingActivities.append(requestId, i);
-        Log.d("TestService", "Starting service");
         application.startService(i);
         return requestId;
     }
@@ -60,30 +60,32 @@ public class ServiceHelper {
             protected void onReceiveResult(int resultCode, Bundle resultData) {
                 Intent originalIntent = pendingActivities.get(requestId);
                 if (isPending(requestId)) {
-                    if (resultCode != TestIntentHandler.PROGRESS_CODE){
-                    pendingActivities.remove(requestId);
+                    if (resultCode != TestIntentHandler.PROGRESS_CODE) {
+                        pendingActivities.remove(requestId);
                     }
-                        for (ServiceCallbackListener currentListener : currentListeners) {
-                            if (currentListener != null) {
-                                currentListener.onServiceCallback(requestId, originalIntent, resultCode, resultData);
-                            }
+                    for (ServiceCallbackListener currentListener : currentListeners) {
+                        if (currentListener != null) {
+                            currentListener.onServiceCallback(requestId, originalIntent, resultCode, resultData);
                         }
+                    }
                 }
             }
         });
         return i;
     }
 
-    public int doAwesomeAction(long testID) {
-        Log.d("TestService", "doing awesome action");
+    public int doLoadAction(long loadID) {
         final int requestId = createId();
-        Intent i = createIntent(application, TestIntentHandler.ACTION_TEST, requestId);
-        if (i != null) {
-            Log.d("TestService", "intent " + i.toString());
-        } else {
-            Log.d("TestService", "intent = null ");
-        }
-        i.putExtra(TestIntentHandler.TEST_ID, testID);
+        Intent i = createIntent(application, TestIntentHandler.ACTION_LOAD, requestId);
+        i.putExtra(TestIntentHandler.LOAD_ID, loadID);
+        return runRequest(requestId, i);
+    }
+
+    public int doSaveAction(long saveID, ArrayList<ContactItem> contacts) {
+        final int requestId = createId();
+        Intent i = createIntent(application, TestIntentHandler.ACTION_SAVE, requestId);
+        i.putExtra(TestIntentHandler.SAVE_ID, saveID);
+        i.putParcelableArrayListExtra(TestIntentHandler.SAVED_LIST_NAME, contacts);
         return runRequest(requestId, i);
     }
 }
