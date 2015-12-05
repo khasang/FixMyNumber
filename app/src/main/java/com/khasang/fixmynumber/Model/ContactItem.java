@@ -107,7 +107,17 @@ public class ContactItem implements Parcelable{
     }
 
     @Override
-    public void writeToParcel(Parcel dest, int flags) {
-
+    public void writeToParcel(Parcel parcel, int flags) {
+        parcel.writeString(name);
+        parcel.writeString(numberOriginal);
+        parcel.writeString(numberOriginalId);
+        parcel.writeString(numberNew);
+        parcel.writeString(accountType);
+        if (isChecked) {
+            isCheckedInt = 1;
+        } else {
+            isCheckedInt = 0;
+        }
+        parcel.writeInt(isCheckedInt);
     }
 }

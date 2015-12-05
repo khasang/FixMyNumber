@@ -25,7 +25,6 @@ import com.khasang.fixmynumber.Model.ContactItem;
 import com.khasang.fixmynumber.R;
 import com.khasang.fixmynumber.Service.TestIntentHandler;
 import com.khasang.fixmynumber.Task.ContactsBackupTask;
-import com.khasang.fixmynumber.Task.ContactsLoaderTask;
 import com.khasang.fixmynumber.Task.ContactsSaverTask;
 import com.khasang.fixmynumber.View.CustomViewPager;
 
@@ -57,16 +56,18 @@ public class FragmentActivity extends BaseServiceActivity implements StepFragmen
         contactsList = new ArrayList<ContactItem>();
         contactsListToShow = new ArrayList<ContactItem>();
         contactsListChanged = new ArrayList<ContactItem>();
-        new ContactsLoaderTask(this, contactsList, contactsListToShow).execute();
+//        new ContactsLoaderTask(this, contactsList, contactsListToShow).execute();
+        getServiceHelper().doAwesomeAction(1);
         areAllContactsSelected = false;
-        setUpPager();
+//        setUpPager();
 //        createMoreDummyContacts();
     }
 
     @Override
     public void onServiceCallback(int requestId, Intent requestIntent, int resultCode, Bundle resultData) {
-        int progress = resultData.getInt(TestIntentHandler.PROGRESS_KEY);
-        contactsListToShow = resultData.getParcelableArrayList();
+        contactsList = resultData.getParcelableArrayList(TestIntentHandler.RESULT_KEY_LIST);
+        contactsListToShow = resultData.getParcelableArrayList(TestIntentHandler.RESULT_KEY_LIST_TO_SHOW);
+        setUpPager();
     }
 
     private void createMoreDummyContacts() {
