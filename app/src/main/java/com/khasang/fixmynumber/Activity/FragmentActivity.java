@@ -128,8 +128,8 @@ public class FragmentActivity extends BaseServiceActivity implements StepFragmen
     }
 
     private void setUpDialogs() {
-        AlertDialog.Builder builderDelete = new AlertDialog.Builder(this, R.style.MyAlertDialogStyle);
-        builderDelete.setTitle(R.string.dialog_confirm_title)
+        AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.MyAlertDialogStyle);
+        builder.setTitle(R.string.dialog_confirm_title)
                 .setMessage(R.string.dialog_confirm_message)
                 .setPositiveButton(R.string.dialog_yes, new DialogInterface.OnClickListener() {
                     @Override
@@ -153,7 +153,7 @@ public class FragmentActivity extends BaseServiceActivity implements StepFragmen
                         dialog.dismiss();
                     }
                 });
-        dialogConfirm = builderDelete.create();
+        dialogConfirm = builder.create();
     }
 
     private void updateButtons(Button backButton, Button nextButton) {
@@ -188,16 +188,18 @@ public class FragmentActivity extends BaseServiceActivity implements StepFragmen
 
     private void updateToolBar() {
         int page = pager.getCurrentItem();
-        switch (page) {
-            case 0:
-                getSupportActionBar().setTitle(R.string.change_toolbar1);
-                break;
-            case 1:
-                getSupportActionBar().setTitle(R.string.change_toolbar2);
-                break;
-            case 2:
-                getSupportActionBar().setTitle(R.string.change_toolbar3);
-                break;
+        if (getSupportActionBar() != null){
+            switch (page) {
+                case 0:
+                    getSupportActionBar().setTitle(R.string.change_toolbar1);
+                    break;
+                case 1:
+                    getSupportActionBar().setTitle(R.string.change_toolbar2);
+                    break;
+                case 2:
+                    getSupportActionBar().setTitle(R.string.change_toolbar3);
+                    break;
+            }
         }
     }
 
