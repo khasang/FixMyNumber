@@ -41,6 +41,13 @@ public class TestIntentHandler extends BaseIntentHandler {
                 contactsList = new ArrayList<>();
                 contactsListToShow = new ArrayList<>();
                 getContacts(context);
+                for (int i = 0; i < 3 ; i++) {
+                    try {
+                        Thread.sleep(1000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
                 Bundle bundle = new Bundle();
                 bundle.putParcelableArrayList(LOAD_LIST_KEY, contactsList);
                 bundle.putParcelableArrayList(LIST_TO_SHOW_KEY, contactsListToShow);

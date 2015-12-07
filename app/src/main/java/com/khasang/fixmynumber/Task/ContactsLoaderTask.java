@@ -33,8 +33,8 @@ public class ContactsLoaderTask extends AsyncTask<Void, Void, Void> {
     @Override
     protected void onPreExecute() {
         super.onPreExecute();
-        LoadingDialogCreator loadingDialogCreator = new LoadingDialogCreator(activity);
-        dialog = loadingDialogCreator.createLoadingDialog();
+        LoadingDialogCreator loadingDialogCreator = new LoadingDialogCreator();
+        dialog = loadingDialogCreator.createLoadingDialog(activity);
         dialog.show();
     }
 

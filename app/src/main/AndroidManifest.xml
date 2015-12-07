@@ -21,7 +21,6 @@
         <activity
             android:name=".Activity.FragmentActivity"
             android:label="@string/title_activity_fragment"
-            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar">
         </activity>
         <activity

@@ -11,13 +11,11 @@ import com.khasang.fixmynumber.R;
  * Created by Raenar on 28.10.2015.
  */
 public class LoadingDialogCreator {
-    Activity activity;
 
-    public LoadingDialogCreator(Activity activity) {
-        this.activity = activity;
+    public LoadingDialogCreator() {
     }
 
-    public AlertDialog createLoadingDialog(){
+    public static AlertDialog createLoadingDialog(Activity activity){
         ContextThemeWrapper wrapper = new ContextThemeWrapper(activity, android.R.style.Theme_Holo);
         AlertDialog.Builder builder = new AlertDialog.Builder(wrapper);
         LayoutInflater inflater = activity.getLayoutInflater();

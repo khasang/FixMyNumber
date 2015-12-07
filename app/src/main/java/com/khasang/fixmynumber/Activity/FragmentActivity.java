@@ -1,6 +1,6 @@
 package com.khasang.fixmynumber.Activity;
 
-import android.app.AlertDialog;
+
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -8,6 +8,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.PagerAdapter;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.format.DateFormat;
@@ -21,6 +22,7 @@ import android.widget.Toast;
 import com.khasang.fixmynumber.Fragment.StepFragment1;
 import com.khasang.fixmynumber.Fragment.StepFragment2;
 import com.khasang.fixmynumber.Fragment.StepFragment3;
+import com.khasang.fixmynumber.Helper.LoadingDialogCreator;
 import com.khasang.fixmynumber.Model.ContactItem;
 import com.khasang.fixmynumber.R;
 import com.khasang.fixmynumber.Service.TestIntentHandler;
@@ -42,6 +44,7 @@ public class FragmentActivity extends BaseServiceActivity implements StepFragmen
     private EditText editTextS2;
     private boolean areAllContactsSelected;
     private AlertDialog dialogConfirm;
+    private AlertDialog loadingDialog;
     private CheckBox checkBoxSelectAll;
 
     @Override
@@ -55,7 +58,9 @@ public class FragmentActivity extends BaseServiceActivity implements StepFragmen
         contactsList = new ArrayList<ContactItem>();
         contactsListToShow = new ArrayList<ContactItem>();
         contactsListChanged = new ArrayList<ContactItem>();
+        loadingDialog = LoadingDialogCreator.createLoadingDialog(this);
         getServiceHelper().doLoadAction();
+        loadingDialog.show();
         areAllContactsSelected = false;
     }
 
@@ -67,6 +72,8 @@ public class FragmentActivity extends BaseServiceActivity implements StepFragmen
                 contactsList = resultData.getParcelableArrayList(TestIntentHandler.LOAD_LIST_KEY);
                 contactsListToShow = resultData.getParcelableArrayList(TestIntentHandler.LIST_TO_SHOW_KEY);
                 setUpUI();
+                loadingDialog.dismiss();
+                updateContactsList();
             }
             break;
         }
