@@ -20,16 +20,11 @@ import java.util.Comparator;
  */
 public class TestIntentHandler extends BaseIntentHandler {
     public static final String ACTION_LOAD = "action load";
-    public static final String LOAD_ID = "load id";
-    public static final String PROGRESS_KEY_LOAD = "progress load";
-    public static final String RESULT_KEY_LOAD_LIST = "result load list";
-    public static final String RESULT_KEY_LOAD_LIST_TO_SHOW = "result load list to show";
+    public static final String LOAD_LIST_KEY = "load list";
+    public static final String LIST_TO_SHOW_KEY = "load list to show";
 
     public static final String ACTION_SAVE = "action save";
-    public static final String SAVE_ID = "save id";
-    public static final String PROGRESS_KEY_SAVE = "progress save";
-    public static final String RESULT_KEY_SAVE_LIST = "result save list";
-    public static final String SAVED_LIST_NAME = "saved list name";
+    public static final String SAVED_LIST_KEY = "saved list";
 
     public static final int PROGRESS_CODE = 0;
     public static final int RESULT_SUCCESS_CODE = 1;
@@ -47,57 +42,19 @@ public class TestIntentHandler extends BaseIntentHandler {
                 contactsListToShow = new ArrayList<>();
                 getContacts(context);
                 Bundle bundle = new Bundle();
-                bundle.putParcelableArrayList(RESULT_KEY_LOAD_LIST, contactsList);
-                bundle.putParcelableArrayList(RESULT_KEY_LOAD_LIST_TO_SHOW, contactsListToShow);
+                bundle.putParcelableArrayList(LOAD_LIST_KEY, contactsList);
+                bundle.putParcelableArrayList(LIST_TO_SHOW_KEY, contactsListToShow);
                 callback.send(RESULT_SUCCESS_CODE, bundle);
             }
             break;
             case ACTION_SAVE: {
                 contactsList = new ArrayList<>();
-                contactsList = intent.getParcelableArrayListExtra(SAVED_LIST_NAME);
+                contactsList = intent.getParcelableArrayListExtra(SAVED_LIST_KEY);
                 saveContacts(context, contactsList);
             }
             break;
         }
 
-    }
-
-    private void saveContacts(Context context, ArrayList<ContactItem> contactList) {
-        for (int i = 0; i < contactList.size(); i++) {
-            if (contactList.get(i).getNumberNew() != null && contactList.get(i).isChecked()) {
-//                if (contactList.get(i).getAccountType().equals("sim")) {
-//                    Uri uri = Uri.parse("content://icc/adn");
-//                    ContentValues cv = new ContentValues();
-//                    cv.put("tag", contactList.get(i).getName());
-//                    String number = Util.onlyDigits(contactList.get(i).getNumberOriginal());
-//                    cv.put("number", number);
-//                    cv.put("newTag", contactList.get(i).getName());
-//                    String numberNew = Util.onlyDigits(contactList.get(i).getNumberNew());
-//                    cv.put("newNumber", numberNew);
-//                    context.getContentResolver().update(uri, cv, null, null);
-//
-//                    Log.d("SIM", "Saved Name=" + contactList.get(i).getName() + ";number ="
-//                            + number
-//                            + ";new number =" + numberNew);
-//                }
-                ArrayList<ContentProviderOperation> op = new ArrayList<ContentProviderOperation>();
-                op.add(ContentProviderOperation.newUpdate(ContactsContract.Data.CONTENT_URI)
-                        .withSelection(ContactsContract.CommonDataKinds.Phone.NUMBER + "=?",
-                                new String[]{contactList.get(i).getNumberOriginal()})
-                        .withValue(ContactsContract.CommonDataKinds.Phone.NUMBER, contactList.get(i).getNumberNew())
-                        .build());
-                try {
-                    context.getContentResolver().applyBatch(ContactsContract.AUTHORITY, op);
-                    Log.d("ContactsSaverTask", "changed " + contactList.get(i).getName()
-                            + " " + contactList.get(i).getNumberOriginal()
-                            + " => to " + contactList.get(i).getNumberNew());
-                } catch (Exception e) {
-                    Log.e("Exception: ", e.getMessage());
-                }
-            } else {
-                Log.d("ContactsSaverTask", "Unchanged: " + contactList.get(i).getName());
-            }
-        }
     }
 
     void getContacts(Context context) {
@@ -157,5 +114,43 @@ public class TestIntentHandler extends BaseIntentHandler {
                 return o1.getName().compareTo(o2.getName());
             }
         });
+    }
+
+    private void saveContacts(Context context, ArrayList<ContactItem> contactList) {
+        for (int i = 0; i < contactList.size(); i++) {
+            if (contactList.get(i).getNumberNew() != null && contactList.get(i).isChecked()) {
+//                if (contactList.get(i).getAccountType().equals("sim")) {
+//                    Uri uri = Uri.parse("content://icc/adn");
+//                    ContentValues cv = new ContentValues();
+//                    cv.put("tag", contactList.get(i).getName());
+//                    String number = Util.onlyDigits(contactList.get(i).getNumberOriginal());
+//                    cv.put("number", number);
+//                    cv.put("newTag", contactList.get(i).getName());
+//                    String numberNew = Util.onlyDigits(contactList.get(i).getNumberNew());
+//                    cv.put("newNumber", numberNew);
+//                    context.getContentResolver().update(uri, cv, null, null);
+//
+//                    Log.d("SIM", "Saved Name=" + contactList.get(i).getName() + ";number ="
+//                            + number
+//                            + ";new number =" + numberNew);
+//                }
+                ArrayList<ContentProviderOperation> op = new ArrayList<ContentProviderOperation>();
+                op.add(ContentProviderOperation.newUpdate(ContactsContract.Data.CONTENT_URI)
+                        .withSelection(ContactsContract.CommonDataKinds.Phone.NUMBER + "=?",
+                                new String[]{contactList.get(i).getNumberOriginal()})
+                        .withValue(ContactsContract.CommonDataKinds.Phone.NUMBER, contactList.get(i).getNumberNew())
+                        .build());
+                try {
+                    context.getContentResolver().applyBatch(ContactsContract.AUTHORITY, op);
+                    Log.d("ContactsSaverTask", "changed " + contactList.get(i).getName()
+                            + " " + contactList.get(i).getNumberOriginal()
+                            + " => to " + contactList.get(i).getNumberNew());
+                } catch (Exception e) {
+                    Log.e("Exception: ", e.getMessage());
+                }
+            } else {
+                Log.d("ContactsSaverTask", "Unchanged: " + contactList.get(i).getName());
+            }
+        }
     }
 }

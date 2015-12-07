@@ -55,11 +55,8 @@ public class FragmentActivity extends BaseServiceActivity implements StepFragmen
         contactsList = new ArrayList<ContactItem>();
         contactsListToShow = new ArrayList<ContactItem>();
         contactsListChanged = new ArrayList<ContactItem>();
-//        new ContactsLoaderTask(this, contactsList, contactsListToShow).execute();
-        getServiceHelper().doLoadAction(1);
+        getServiceHelper().doLoadAction();
         areAllContactsSelected = false;
-//        setUpPager();
-//        createMoreDummyContacts();
     }
 
     @Override
@@ -67,9 +64,9 @@ public class FragmentActivity extends BaseServiceActivity implements StepFragmen
         String action = requestIntent.getAction();
         switch (action) {
             case TestIntentHandler.ACTION_LOAD: {
-                contactsList = resultData.getParcelableArrayList(TestIntentHandler.RESULT_KEY_LOAD_LIST);
-                contactsListToShow = resultData.getParcelableArrayList(TestIntentHandler.RESULT_KEY_LOAD_LIST_TO_SHOW);
-                setUpPager();
+                contactsList = resultData.getParcelableArrayList(TestIntentHandler.LOAD_LIST_KEY);
+                contactsListToShow = resultData.getParcelableArrayList(TestIntentHandler.LIST_TO_SHOW_KEY);
+                setUpUI();
             }
             break;
         }
@@ -91,16 +88,17 @@ public class FragmentActivity extends BaseServiceActivity implements StepFragmen
         }
     }
 
-    private void setUpPager() {
+    private void setUpUI() {
         setUpDialogs();
         pager = (CustomViewPager) findViewById(R.id.pager);
-//        pager.setOffscreenPageLimit(0);
         final PagerAdapter pagerAdapter = new MyPagerAdapter(getSupportFragmentManager());
         pager.setAdapter(pagerAdapter);
+
         final Button backButton = (Button) findViewById(R.id.prev_button);
         final Button nextButton = (Button) findViewById(R.id.next_button);
         updateButtons(backButton, nextButton);
         updateToolBar();
+
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -144,7 +142,7 @@ public class FragmentActivity extends BaseServiceActivity implements StepFragmen
                                 Toast.LENGTH_LONG).show();
                         new ContactsBackupTask(FragmentActivity.this, contactsList).execute();
 //                        new ContactsSaverTask(FragmentActivity.this, contactsListToShow).execute();
-                        getServiceHelper().doSaveAction(2, contactsListToShow);
+                        getServiceHelper().doSaveAction(contactsListToShow);
                         dialog.dismiss();
                         finish();
                     }
