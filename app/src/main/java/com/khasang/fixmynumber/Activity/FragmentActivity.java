@@ -76,6 +76,10 @@ public class FragmentActivity extends BaseServiceActivity implements StepFragmen
                 updateContactsList();
             }
             break;
+            case TestIntentHandler.ACTION_SAVE: {
+                loadingDialog.dismiss();
+            }
+            break;
         }
 
     }
@@ -149,9 +153,9 @@ public class FragmentActivity extends BaseServiceActivity implements StepFragmen
                                 Toast.LENGTH_LONG).show();
                         new ContactsBackupTask(FragmentActivity.this, contactsList).execute();
 //                        new ContactsSaverTask(FragmentActivity.this, contactsListToShow).execute();
+                        loadingDialog.show();
                         getServiceHelper().doSaveAction(contactsListToShow);
                         dialog.dismiss();
-                        finish();
                     }
                 })
                 .setNegativeButton(R.string.dialog_no, new DialogInterface.OnClickListener() {

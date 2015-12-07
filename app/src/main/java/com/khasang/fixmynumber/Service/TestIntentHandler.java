@@ -58,6 +58,15 @@ public class TestIntentHandler extends BaseIntentHandler {
                 contactsList = new ArrayList<>();
                 contactsList = intent.getParcelableArrayListExtra(SAVED_LIST_KEY);
                 saveContacts(context, contactsList);
+                for (int i = 0; i < 3 ; i++) {
+                    try {
+                        Thread.sleep(1000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+                Bundle bundle = new Bundle();
+                callback.send(RESULT_SUCCESS_CODE, bundle);
             }
             break;
         }
