@@ -1,14 +1,18 @@
 package com.khasang.fixmynumber.Service;
 
 import android.content.ContentProviderOperation;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.os.ResultReceiver;
 import android.provider.ContactsContract;
+import android.text.format.DateFormat;
 import android.util.Log;
 
+import com.khasang.fixmynumber.Helper.DBHelper;
 import com.khasang.fixmynumber.Model.ContactItem;
 
 import java.util.ArrayList;
@@ -26,6 +30,11 @@ public class TestIntentHandler extends BaseIntentHandler {
     public static final String ACTION_SAVE = "action save";
     public static final String SAVED_LIST_KEY = "saved list";
 
+    public static final String ACTION_BACKUP = "action backup";
+    public static final String BACKUP_LIST_KEY = "backup list key";
+    public static final String BACKUP_NAME_KEY = "backup name key";
+
+
     public static final int PROGRESS_CODE = 0;
     public static final int RESULT_SUCCESS_CODE = 1;
     public static final int RESULT_FAILURE_CODE = 2;
@@ -41,13 +50,13 @@ public class TestIntentHandler extends BaseIntentHandler {
                 contactsList = new ArrayList<>();
                 contactsListToShow = new ArrayList<>();
                 getContacts(context);
-                for (int i = 0; i < 3 ; i++) {
-                    try {
-                        Thread.sleep(1000);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                }
+//                for (int i = 0; i < 3 ; i++) {
+//                    try {
+//                        Thread.sleep(1000);
+//                    } catch (InterruptedException e) {
+//                        e.printStackTrace();
+//                    }
+//                }
                 Bundle bundle = new Bundle();
                 bundle.putParcelableArrayList(LOAD_LIST_KEY, contactsList);
                 bundle.putParcelableArrayList(LIST_TO_SHOW_KEY, contactsListToShow);
@@ -58,7 +67,7 @@ public class TestIntentHandler extends BaseIntentHandler {
                 contactsList = new ArrayList<>();
                 contactsList = intent.getParcelableArrayListExtra(SAVED_LIST_KEY);
                 saveContacts(context, contactsList);
-                for (int i = 0; i < 3 ; i++) {
+                for (int i = 0; i < 3; i++) {
                     try {
                         Thread.sleep(1000);
                     } catch (InterruptedException e) {
@@ -69,6 +78,20 @@ public class TestIntentHandler extends BaseIntentHandler {
                 callback.send(RESULT_SUCCESS_CODE, bundle);
             }
             break;
+            case ACTION_BACKUP: {
+                contactsList = intent.getParcelableArrayListExtra(BACKUP_LIST_KEY);
+                Bundle bundle = new Bundle();
+                String backupName = createContactsBackup(context, contactsList);
+                for (int i = 0; i < 3; i++) {
+                    try {
+                        Thread.sleep(1000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+                bundle.putString(BACKUP_NAME_KEY, backupName);
+                callback.send(RESULT_SUCCESS_CODE, bundle);
+            }
         }
 
     }
@@ -168,5 +191,35 @@ public class TestIntentHandler extends BaseIntentHandler {
                 Log.d("ContactsSaverTask", "Unchanged: " + contactList.get(i).getName());
             }
         }
+    }
+
+    private String createContactsBackup(Context context, ArrayList<ContactItem> contactList) {
+        String newTableName;
+        String name;
+        String phone;
+        String phoneId;
+        String accountType;
+
+        DBHelper dbHelper = new DBHelper(context);
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        newTableName = "contacts" + DateFormat.format(DBHelper.dateFormat, System.currentTimeMillis());
+        db.execSQL("CREATE TABLE " + newTableName + " (" +
+                "ID INTEGER PRIMARY KEY AUTOINCREMENT, " + DBHelper.NAME + " TEXT, " + DBHelper.PHONE + " TEXT, " + DBHelper.PHONE_ID + " TEXT, "
+                + DBHelper.ACCOUNT_TYPE + " TEXT);");
+
+        for (int i = 0; i < contactList.size(); i++) {
+            name = contactList.get(i).getName();
+            phone = contactList.get(i).getNumberOriginal();
+            phoneId = contactList.get(i).getNumberOriginalId();
+            accountType = contactList.get(i).getAccountType();
+            ContentValues cv = new ContentValues();
+            cv.put(DBHelper.NAME, name);
+            cv.put(DBHelper.PHONE, phone);
+            cv.put(DBHelper.PHONE_ID, phoneId);
+            cv.put(DBHelper.ACCOUNT_TYPE, accountType);
+            long id = db.insert(newTableName, null, cv);
+        }
+        dbHelper.close();
+        return newTableName;
     }
 }

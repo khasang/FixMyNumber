@@ -15,6 +15,7 @@ public class DBHelper extends SQLiteOpenHelper{
     public static final String PHONE_ID = "PHONE_ID";
     public static final String ACCOUNT_TYPE = "ACCOUNT_TYPE";
     public static final String SQLITE_SEQUENCE = "sqlite_sequence";
+    public static final String dateFormat = "ddMMyyyyhhmmss";
 
     public DBHelper(Context context) {
         super(context, RESERVE_DB, null, DB_VERSION);

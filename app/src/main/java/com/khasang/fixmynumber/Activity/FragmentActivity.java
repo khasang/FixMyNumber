@@ -45,6 +45,7 @@ public class FragmentActivity extends BaseServiceActivity implements StepFragmen
     private boolean areAllContactsSelected;
     private AlertDialog dialogConfirm;
     private AlertDialog loadingDialog;
+    private AlertDialog savingDialog;
     private CheckBox checkBoxSelectAll;
 
     @Override
@@ -58,7 +59,7 @@ public class FragmentActivity extends BaseServiceActivity implements StepFragmen
         contactsList = new ArrayList<ContactItem>();
         contactsListToShow = new ArrayList<ContactItem>();
         contactsListChanged = new ArrayList<ContactItem>();
-        loadingDialog = LoadingDialogCreator.createLoadingDialog(this);
+        loadingDialog = LoadingDialogCreator.createLoadingDialog(this,0);
         getServiceHelper().doLoadAction();
         loadingDialog.show();
         areAllContactsSelected = false;
@@ -77,7 +78,15 @@ public class FragmentActivity extends BaseServiceActivity implements StepFragmen
             }
             break;
             case TestIntentHandler.ACTION_SAVE: {
+                savingDialog.dismiss();
+                finish();
+            }
+            case TestIntentHandler.ACTION_BACKUP: {
                 loadingDialog.dismiss();
+                savingDialog = LoadingDialogCreator.createLoadingDialog(this,1);
+                savingDialog.show();
+                getServiceHelper().doSaveAction(contactsListToShow);
+//                finish();
             }
             break;
         }
@@ -146,15 +155,15 @@ public class FragmentActivity extends BaseServiceActivity implements StepFragmen
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         String date = DateFormat.format("dd.MM.yyyy hh:mm:ss", System.currentTimeMillis()).toString();
-                        String backupName = getApplicationContext().getString(R.string.contacts) + date;
-                        String backupMessage = getString(R.string.backup_message) +"\n" +backupName;
+                        String backupName = getApplicationContext().getString(R.string.contacts) + " " + date;
+                        String backupMessage = getString(R.string.backup_message) + "\n" + backupName;
                         Toast.makeText(getApplicationContext(),
                                 backupMessage,
                                 Toast.LENGTH_LONG).show();
-                        new ContactsBackupTask(FragmentActivity.this, contactsList).execute();
+//                        new ContactsBackupTask(FragmentActivity.this, contactsList).execute();
 //                        new ContactsSaverTask(FragmentActivity.this, contactsListToShow).execute();
                         loadingDialog.show();
-                        getServiceHelper().doSaveAction(contactsListToShow);
+                        getServiceHelper().doBackupAction(contactsList);
                         dialog.dismiss();
                     }
                 })
@@ -180,13 +189,13 @@ public class FragmentActivity extends BaseServiceActivity implements StepFragmen
             nextButton.setText(R.string.button_finish);
             contactsListChanged.clear();
             for (ContactItem contactItem : contactsListToShow) {
-                if (contactItem.getNumberNew()!=null){
+                if (contactItem.getNumberNew() != null) {
                     if ((!contactItem.getNumberNew().equals(contactItem.getNumberOriginal()))) {
                         contactsListChanged.add(contactItem);
                     }
                 }
             }
-            if (contactsListChanged.size() == 0){
+            if (contactsListChanged.size() == 0) {
                 nextButton.setEnabled(false);
             }
             recyclerViewToChange.getAdapter().notifyDataSetChanged();
@@ -199,7 +208,7 @@ public class FragmentActivity extends BaseServiceActivity implements StepFragmen
 
     private void updateToolBar() {
         int page = pager.getCurrentItem();
-        if (getSupportActionBar() != null){
+        if (getSupportActionBar() != null) {
             switch (page) {
                 case 0:
                     getSupportActionBar().setTitle(R.string.change_toolbar1);
@@ -327,7 +336,9 @@ public class FragmentActivity extends BaseServiceActivity implements StepFragmen
     }
 
     public void updateContactsList() {
-        recyclerView.getAdapter().notifyDataSetChanged();
+        if (recyclerView != null) {
+            recyclerView.getAdapter().notifyDataSetChanged();
+        }
     }
 
 }

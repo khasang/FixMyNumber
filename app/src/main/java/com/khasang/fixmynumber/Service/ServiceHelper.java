@@ -86,4 +86,11 @@ public class ServiceHelper {
         i.putParcelableArrayListExtra(TestIntentHandler.SAVED_LIST_KEY, contacts);
         return runRequest(requestId, i);
     }
+
+    public int doBackupAction(ArrayList<ContactItem> contacts){
+        final int requestId = createId();
+        Intent i = createIntent(application, TestIntentHandler.ACTION_BACKUP, requestId);
+        i.putParcelableArrayListExtra(TestIntentHandler.BACKUP_LIST_KEY, contacts);
+        return runRequest(requestId, i);
+    }
 }

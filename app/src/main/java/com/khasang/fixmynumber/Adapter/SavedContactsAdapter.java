@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.khasang.fixmynumber.Activity.FragmentActivity;
+import com.khasang.fixmynumber.Helper.DBHelper;
 import com.khasang.fixmynumber.R;
 
 import java.text.ParseException;
@@ -56,7 +57,7 @@ public class SavedContactsAdapter extends RecyclerView.Adapter<SavedContactsAdap
         String savedContactsName = savedContactsList.get(position);
         String formattedName = savedContactsName.replace("contacts", "");
 
-        SimpleDateFormat format = new SimpleDateFormat("ddMMyyyyhhmmss");
+        SimpleDateFormat format = new SimpleDateFormat(DBHelper.dateFormat);
         try {
             Date newDate = format.parse(formattedName);
             format = new SimpleDateFormat("dd.MM.yyyy hh:mm:ss");

@@ -15,11 +15,18 @@ public class LoadingDialogCreator {
     public LoadingDialogCreator() {
     }
 
-    public static AlertDialog createLoadingDialog(Activity activity){
+    public static AlertDialog createLoadingDialog(Activity activity, int version){
         ContextThemeWrapper wrapper = new ContextThemeWrapper(activity, android.R.style.Theme_Holo);
         AlertDialog.Builder builder = new AlertDialog.Builder(wrapper);
         LayoutInflater inflater = activity.getLayoutInflater();
-        builder.setView(inflater.inflate(R.layout.loading_dialog, null));
+        switch (version){
+            case 0:
+                builder.setView(inflater.inflate(R.layout.loading_dialog, null));
+                break;
+            case 1:
+                builder.setView(inflater.inflate(R.layout.loading_dialog2, null));
+                break;
+        }
         return builder.create();
     }
 }
