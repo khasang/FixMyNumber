@@ -11,7 +11,6 @@ import android.support.v4.view.PagerAdapter;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -88,7 +87,6 @@ public class FragmentActivity extends BaseServiceActivity implements StepFragmen
                 String backupName = getApplicationContext().getString(R.string.contacts) + " "
                         + resultData.getString(TestIntentHandler.BACKUP_TIME_KEY);
                 String backupMessage = getString(R.string.backup_message) + "\n" + backupName;
-                Log.d("111", backupMessage);
                 Toast.makeText(getApplicationContext(),
                         backupMessage,
                         Toast.LENGTH_LONG).show();
@@ -163,8 +161,6 @@ public class FragmentActivity extends BaseServiceActivity implements StepFragmen
                 .setPositiveButton(R.string.dialog_yes, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-//                        new ContactsBackupTask(FragmentActivity.this, contactsList).execute();
-//                        new ContactsSaverTask(FragmentActivity.this, contactsListToShow).execute();
                         backupDialog.show();
                         getServiceHelper().doBackupAction(contactsList);
                         dialog.dismiss();
@@ -180,32 +176,35 @@ public class FragmentActivity extends BaseServiceActivity implements StepFragmen
     }
 
     private void updateButtons(Button backButton, Button nextButton) {
-        nextButton.setEnabled(true);
         int page = pager.getCurrentItem();
-        if (page == 0) {
-            backButton.setText(R.string.button_cancel);
-        } else {
-            backButton.setText(R.string.button_back);
-        }
-        if (page == 2) {
-            changeNumbers();
-            nextButton.setText(R.string.button_finish);
-            contactsListChanged.clear();
-            for (ContactItem contactItem : contactsListToShow) {
-                if (contactItem.getNumberNew() != null) {
-                    if ((!contactItem.getNumberNew().equals(contactItem.getNumberOriginal()))) {
-                        contactsListChanged.add(contactItem);
+        nextButton.setEnabled(true);
+        switch (page) {
+            case 0:
+                backButton.setText(R.string.button_cancel);
+                nextButton.setText(R.string.button_next);
+                break;
+            case 1:
+                backButton.setText(R.string.button_back);
+                nextButton.setText(R.string.button_next);
+                break;
+            case 2:
+                backButton.setText(R.string.button_back);
+                nextButton.setText(R.string.button_finish);
+                changeNumbers();
+                contactsListChanged.clear();
+                for (ContactItem contactItem : contactsListToShow) {
+                    if (contactItem.getNumberNew() != null) {
+                        if ((!contactItem.getNumberNew().equals(contactItem.getNumberOriginal()))) {
+                            contactsListChanged.add(contactItem);
+                        }
                     }
                 }
-            }
-            if (contactsListChanged.size() == 0) {
-                nextButton.setEnabled(false);
-            }
-            recyclerViewToChange.getAdapter().notifyDataSetChanged();
+                if (contactsListChanged.size() == 0) {
+                    nextButton.setEnabled(false);
+                }
+                recyclerViewToChange.getAdapter().notifyDataSetChanged();
 //            next.setBackgroundColor(ContextCompat.getColor(this, R.color.colorAccent));
-        } else {
-            nextButton.setText(R.string.button_next);
-//            next.setBackgroundColor(ContextCompat.getColor(this, android.support.v7.appcompat.R.color.button_material_light));;
+                break;
         }
     }
 
