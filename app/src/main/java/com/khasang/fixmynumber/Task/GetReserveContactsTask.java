@@ -8,7 +8,7 @@ import android.os.AsyncTask;
 import android.support.v7.app.AlertDialog;
 
 import com.khasang.fixmynumber.Activity.RestoreContactsActivity;
-import com.khasang.fixmynumber.Helper.LoadingDialogCreator;
+import com.khasang.fixmynumber.Helper.DialogCreator;
 import com.khasang.fixmynumber.Helper.DBHelper;
 
 import java.util.ArrayList;
@@ -30,8 +30,8 @@ public class GetReserveContactsTask extends AsyncTask<Void, Void, Void> {
     @Override
     protected void onPreExecute() {
         super.onPreExecute();
-        LoadingDialogCreator loadingDialogCreator = new LoadingDialogCreator();
-        dialog = loadingDialogCreator.createLoadingDialog(activity,0);
+        DialogCreator dialogCreator = new DialogCreator();
+        dialog = dialogCreator.createDialog(activity, 0);
         dialog.show();
     }
 

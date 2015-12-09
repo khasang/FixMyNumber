@@ -7,7 +7,7 @@ import android.provider.ContactsContract;
 import android.support.v7.app.AlertDialog;
 
 import com.khasang.fixmynumber.Activity.FragmentActivity;
-import com.khasang.fixmynumber.Helper.LoadingDialogCreator;
+import com.khasang.fixmynumber.Helper.DialogCreator;
 import com.khasang.fixmynumber.Model.ContactItem;
 
 import java.util.ArrayList;
@@ -33,8 +33,8 @@ public class ContactsLoaderTask extends AsyncTask<Void, Void, Void> {
     @Override
     protected void onPreExecute() {
         super.onPreExecute();
-        LoadingDialogCreator loadingDialogCreator = new LoadingDialogCreator();
-        dialog = loadingDialogCreator.createLoadingDialog(activity,0);
+        DialogCreator dialogCreator = new DialogCreator();
+        dialog = dialogCreator.createDialog(activity, 0);
         dialog.show();
     }
 

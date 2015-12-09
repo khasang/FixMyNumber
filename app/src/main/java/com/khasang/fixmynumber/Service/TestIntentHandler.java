@@ -32,7 +32,7 @@ public class TestIntentHandler extends BaseIntentHandler {
 
     public static final String ACTION_BACKUP = "action backup";
     public static final String BACKUP_LIST_KEY = "backup list key";
-    public static final String BACKUP_NAME_KEY = "backup name key";
+    public static final String BACKUP_TIME_KEY = "backup time key";
 
 
     public static final int PROGRESS_CODE = 0;
@@ -81,7 +81,7 @@ public class TestIntentHandler extends BaseIntentHandler {
             case ACTION_BACKUP: {
                 contactsList = intent.getParcelableArrayListExtra(BACKUP_LIST_KEY);
                 Bundle bundle = new Bundle();
-                String backupName = createContactsBackup(context, contactsList);
+                String backupTime = createContactsBackup(context, contactsList);
                 for (int i = 0; i < 3; i++) {
                     try {
                         Thread.sleep(1000);
@@ -89,7 +89,7 @@ public class TestIntentHandler extends BaseIntentHandler {
                         e.printStackTrace();
                     }
                 }
-                bundle.putString(BACKUP_NAME_KEY, backupName);
+                bundle.putString(BACKUP_TIME_KEY, backupTime);
                 callback.send(RESULT_SUCCESS_CODE, bundle);
             }
         }
@@ -195,6 +195,8 @@ public class TestIntentHandler extends BaseIntentHandler {
 
     private String createContactsBackup(Context context, ArrayList<ContactItem> contactList) {
         String newTableName;
+        String backupTimeShort;
+        String backupTimeFull;
         String name;
         String phone;
         String phoneId;
@@ -202,7 +204,11 @@ public class TestIntentHandler extends BaseIntentHandler {
 
         DBHelper dbHelper = new DBHelper(context);
         SQLiteDatabase db = dbHelper.getWritableDatabase();
-        newTableName = "contacts" + DateFormat.format(DBHelper.dateFormat, System.currentTimeMillis());
+        long currentTime = System.currentTimeMillis();
+        backupTimeShort = (String) DateFormat.format(DBHelper.dateFormatShort, currentTime);
+        backupTimeFull = (String) DateFormat.format(DBHelper.dateFormatFull, currentTime);
+
+        newTableName = "contacts" + backupTimeShort;
         db.execSQL("CREATE TABLE " + newTableName + " (" +
                 "ID INTEGER PRIMARY KEY AUTOINCREMENT, " + DBHelper.NAME + " TEXT, " + DBHelper.PHONE + " TEXT, " + DBHelper.PHONE_ID + " TEXT, "
                 + DBHelper.ACCOUNT_TYPE + " TEXT);");
@@ -220,6 +226,6 @@ public class TestIntentHandler extends BaseIntentHandler {
             long id = db.insert(newTableName, null, cv);
         }
         dbHelper.close();
-        return newTableName;
+        return backupTimeFull;
     }
 }

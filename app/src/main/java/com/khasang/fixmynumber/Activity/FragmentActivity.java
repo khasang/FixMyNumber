@@ -11,7 +11,7 @@ import android.support.v4.view.PagerAdapter;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.text.format.DateFormat;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -22,11 +22,10 @@ import android.widget.Toast;
 import com.khasang.fixmynumber.Fragment.StepFragment1;
 import com.khasang.fixmynumber.Fragment.StepFragment2;
 import com.khasang.fixmynumber.Fragment.StepFragment3;
-import com.khasang.fixmynumber.Helper.LoadingDialogCreator;
+import com.khasang.fixmynumber.Helper.DialogCreator;
 import com.khasang.fixmynumber.Model.ContactItem;
 import com.khasang.fixmynumber.R;
 import com.khasang.fixmynumber.Service.TestIntentHandler;
-import com.khasang.fixmynumber.Task.ContactsBackupTask;
 import com.khasang.fixmynumber.View.CustomViewPager;
 
 import java.util.ArrayList;
@@ -44,7 +43,8 @@ public class FragmentActivity extends BaseServiceActivity implements StepFragmen
     private EditText editTextS2;
     private boolean areAllContactsSelected;
     private AlertDialog dialogConfirm;
-    private AlertDialog loadingDialog;
+    private AlertDialog progressDialog;
+    private AlertDialog backupDialog;
     private AlertDialog savingDialog;
     private CheckBox checkBoxSelectAll;
 
@@ -59,9 +59,11 @@ public class FragmentActivity extends BaseServiceActivity implements StepFragmen
         contactsList = new ArrayList<ContactItem>();
         contactsListToShow = new ArrayList<ContactItem>();
         contactsListChanged = new ArrayList<ContactItem>();
-        loadingDialog = LoadingDialogCreator.createLoadingDialog(this,0);
+        progressDialog = DialogCreator.createDialog(this, DialogCreator.LOADING_DIALOG);
+        backupDialog = DialogCreator.createDialog(this, DialogCreator.BACKUP_DIALOG);
+        savingDialog = DialogCreator.createDialog(this, DialogCreator.SAVING_DIALOG);
         getServiceHelper().doLoadAction();
-        loadingDialog.show();
+        progressDialog.show();
         areAllContactsSelected = false;
     }
 
@@ -73,7 +75,7 @@ public class FragmentActivity extends BaseServiceActivity implements StepFragmen
                 contactsList = resultData.getParcelableArrayList(TestIntentHandler.LOAD_LIST_KEY);
                 contactsListToShow = resultData.getParcelableArrayList(TestIntentHandler.LIST_TO_SHOW_KEY);
                 setUpUI();
-                loadingDialog.dismiss();
+                progressDialog.dismiss();
                 updateContactsList();
             }
             break;
@@ -81,9 +83,16 @@ public class FragmentActivity extends BaseServiceActivity implements StepFragmen
                 savingDialog.dismiss();
                 finish();
             }
+            break;
             case TestIntentHandler.ACTION_BACKUP: {
-                loadingDialog.dismiss();
-                savingDialog = LoadingDialogCreator.createLoadingDialog(this,1);
+                String backupName = getApplicationContext().getString(R.string.contacts) + " "
+                        + resultData.getString(TestIntentHandler.BACKUP_TIME_KEY);
+                String backupMessage = getString(R.string.backup_message) + "\n" + backupName;
+                Log.d("111", backupMessage);
+                Toast.makeText(getApplicationContext(),
+                        backupMessage,
+                        Toast.LENGTH_LONG).show();
+                backupDialog.dismiss();
                 savingDialog.show();
                 getServiceHelper().doSaveAction(contactsListToShow);
 //                finish();
@@ -154,15 +163,9 @@ public class FragmentActivity extends BaseServiceActivity implements StepFragmen
                 .setPositiveButton(R.string.dialog_yes, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        String date = DateFormat.format("dd.MM.yyyy hh:mm:ss", System.currentTimeMillis()).toString();
-                        String backupName = getApplicationContext().getString(R.string.contacts) + " " + date;
-                        String backupMessage = getString(R.string.backup_message) + "\n" + backupName;
-                        Toast.makeText(getApplicationContext(),
-                                backupMessage,
-                                Toast.LENGTH_LONG).show();
 //                        new ContactsBackupTask(FragmentActivity.this, contactsList).execute();
 //                        new ContactsSaverTask(FragmentActivity.this, contactsListToShow).execute();
-                        loadingDialog.show();
+                        backupDialog.show();
                         getServiceHelper().doBackupAction(contactsList);
                         dialog.dismiss();
                     }
