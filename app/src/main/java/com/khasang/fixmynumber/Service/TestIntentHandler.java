@@ -146,20 +146,22 @@ public class TestIntentHandler extends BaseIntentHandler {
     private void saveContacts(Context context, ArrayList<ContactItem> contactList) {
         for (int i = 0; i < contactList.size(); i++) {
             if (contactList.get(i).getNumberNew() != null && contactList.get(i).isChecked()) {
-                if (contactList.get(i).getAccountType().equals("sim")) {
-                    Uri uri = Uri.parse("content://icc/adn");
-                    ContentValues cv = new ContentValues();
-                    cv.put("tag", contactList.get(i).getName());
-                    String number = Util.onlyDigits(contactList.get(i).getNumberOriginal());
-                    cv.put("number", number);
-                    cv.put("newTag", contactList.get(i).getName());
-                    String numberNew = Util.onlyDigits(contactList.get(i).getNumberNew());
-                    cv.put("newNumber", numberNew);
-                    context.getContentResolver().update(uri, cv, null, null);
+                if (contactList.get(i).getAccountType()!=null){
+                    if (contactList.get(i).getAccountType().equals("sim")) {
+                        Uri uri = Uri.parse("content://icc/adn");
+                        ContentValues cv = new ContentValues();
+                        cv.put("tag", contactList.get(i).getName());
+                        String number = Util.onlyDigits(contactList.get(i).getNumberOriginal());
+                        cv.put("number", number);
+                        cv.put("newTag", contactList.get(i).getName());
+                        String numberNew = Util.onlyDigits(contactList.get(i).getNumberNew());
+                        cv.put("newNumber", numberNew);
+                        context.getContentResolver().update(uri, cv, null, null);
 
-                    Log.d("SIM", "Saved Name=" + contactList.get(i).getName() + ";number ="
-                            + number
-                            + ";new number =" + numberNew);
+                        Log.d("SIM", "Saved Name=" + contactList.get(i).getName() + ";number ="
+                                + number
+                                + ";new number =" + numberNew);
+                    }
                 }
                 ArrayList<ContentProviderOperation> op = new ArrayList<ContentProviderOperation>();
                 op.add(ContentProviderOperation.newUpdate(ContactsContract.Data.CONTENT_URI)
