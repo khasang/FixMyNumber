@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.ResultReceiver;
 import android.provider.ContactsContract;
@@ -14,10 +15,9 @@ import android.util.Log;
 
 import com.khasang.fixmynumber.Helper.DBHelper;
 import com.khasang.fixmynumber.Model.ContactItem;
+import com.khasang.fixmynumber.Task.Util;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 
 /**
  * Created by Raenar on 01.12.2015.
@@ -50,13 +50,6 @@ public class TestIntentHandler extends BaseIntentHandler {
                 contactsList = new ArrayList<>();
                 contactsListToShow = new ArrayList<>();
                 getContacts(context);
-//                for (int i = 0; i < 3 ; i++) {
-//                    try {
-//                        Thread.sleep(1000);
-//                    } catch (InterruptedException e) {
-//                        e.printStackTrace();
-//                    }
-//                }
                 Bundle bundle = new Bundle();
                 bundle.putParcelableArrayList(LOAD_LIST_KEY, contactsList);
                 bundle.putParcelableArrayList(LIST_TO_SHOW_KEY, contactsListToShow);
@@ -100,7 +93,8 @@ public class TestIntentHandler extends BaseIntentHandler {
         ArrayList<String> usedNumbersList = new ArrayList<>();
 
         Cursor numbersCursor = context.getContentResolver()
-                .query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null, null, null, null);
+                .query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null, null, null,
+                        ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME);
         while (numbersCursor.moveToNext()) {
             String number = numbersCursor.getString(numbersCursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
             String name = numbersCursor.getString(numbersCursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME));
@@ -137,42 +131,36 @@ public class TestIntentHandler extends BaseIntentHandler {
                 if (!usedNumbersList.contains(number)) {
                     contactsListToShow.add(contactItem);
                     usedNumbersList.add(number);
+                } else if (accountType.equals("sim")) {
+                    for (ContactItem contact : contactsListToShow) {
+                        if (contact.getNumberOriginal().equals(number)) {
+                            contact.setAccountType("sim");
+                        }
+                    }
                 }
-//                else if (accountType.equals("sim")) {
-//                    for (ContactItem contact : contactsListToShow) {
-//                        if (contact.getNumberOriginal().equals(number)) {
-//                            contact.setAccountType("sim");
-//                        }
-//                    }
-//                }
             }
         }
         numbersCursor.close();
-        Collections.sort(contactsListToShow, new Comparator<ContactItem>() {
-            public int compare(ContactItem o1, ContactItem o2) {
-                return o1.getName().compareTo(o2.getName());
-            }
-        });
     }
 
     private void saveContacts(Context context, ArrayList<ContactItem> contactList) {
         for (int i = 0; i < contactList.size(); i++) {
             if (contactList.get(i).getNumberNew() != null && contactList.get(i).isChecked()) {
-//                if (contactList.get(i).getAccountType().equals("sim")) {
-//                    Uri uri = Uri.parse("content://icc/adn");
-//                    ContentValues cv = new ContentValues();
-//                    cv.put("tag", contactList.get(i).getName());
-//                    String number = Util.onlyDigits(contactList.get(i).getNumberOriginal());
-//                    cv.put("number", number);
-//                    cv.put("newTag", contactList.get(i).getName());
-//                    String numberNew = Util.onlyDigits(contactList.get(i).getNumberNew());
-//                    cv.put("newNumber", numberNew);
-//                    context.getContentResolver().update(uri, cv, null, null);
-//
-//                    Log.d("SIM", "Saved Name=" + contactList.get(i).getName() + ";number ="
-//                            + number
-//                            + ";new number =" + numberNew);
-//                }
+                if (contactList.get(i).getAccountType().equals("sim")) {
+                    Uri uri = Uri.parse("content://icc/adn");
+                    ContentValues cv = new ContentValues();
+                    cv.put("tag", contactList.get(i).getName());
+                    String number = Util.onlyDigits(contactList.get(i).getNumberOriginal());
+                    cv.put("number", number);
+                    cv.put("newTag", contactList.get(i).getName());
+                    String numberNew = Util.onlyDigits(contactList.get(i).getNumberNew());
+                    cv.put("newNumber", numberNew);
+                    context.getContentResolver().update(uri, cv, null, null);
+
+                    Log.d("SIM", "Saved Name=" + contactList.get(i).getName() + ";number ="
+                            + number
+                            + ";new number =" + numberNew);
+                }
                 ArrayList<ContentProviderOperation> op = new ArrayList<ContentProviderOperation>();
                 op.add(ContentProviderOperation.newUpdate(ContactsContract.Data.CONTENT_URI)
                         .withSelection(ContactsContract.CommonDataKinds.Phone.NUMBER + "=?",
@@ -194,30 +182,23 @@ public class TestIntentHandler extends BaseIntentHandler {
     }
 
     private String createContactsBackup(Context context, ArrayList<ContactItem> contactList) {
-        String newTableName;
-        String backupTimeShort;
-        String backupTimeFull;
-        String name;
-        String phone;
-        String phoneId;
-        String accountType;
-
         DBHelper dbHelper = new DBHelper(context);
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         long currentTime = System.currentTimeMillis();
-        backupTimeShort = (String) DateFormat.format(DBHelper.dateFormatShort, currentTime);
-        backupTimeFull = (String) DateFormat.format(DBHelper.dateFormatFull, currentTime);
+        String backupTimeShort = (String) DateFormat.format(DBHelper.dateFormatShort, currentTime);
+        String backupTimeFull = (String) DateFormat.format(DBHelper.dateFormatFull, currentTime);
 
-        newTableName = "contacts" + backupTimeShort;
+        String newTableName = "contacts" + backupTimeShort;
         db.execSQL("CREATE TABLE " + newTableName + " (" +
                 "ID INTEGER PRIMARY KEY AUTOINCREMENT, " + DBHelper.NAME + " TEXT, " + DBHelper.PHONE + " TEXT, " + DBHelper.PHONE_ID + " TEXT, "
                 + DBHelper.ACCOUNT_TYPE + " TEXT);");
 
         for (int i = 0; i < contactList.size(); i++) {
-            name = contactList.get(i).getName();
-            phone = contactList.get(i).getNumberOriginal();
-            phoneId = contactList.get(i).getNumberOriginalId();
-            accountType = contactList.get(i).getAccountType();
+            String name = contactList.get(i).getName();
+            String phone = contactList.get(i).getNumberOriginal();
+            String phoneId = contactList.get(i).getNumberOriginalId();
+            String accountType = contactList.get(i).getAccountType();
+
             ContentValues cv = new ContentValues();
             cv.put(DBHelper.NAME, name);
             cv.put(DBHelper.PHONE, phone);
