@@ -331,6 +331,6 @@ public class TestIntentHandler extends BaseIntentHandler {
 //                testNumber = testNumber.substring(0, i) + testNumber.substring(i + 1);
 //            }
 //        }
-        return testNumber.replaceAll("[^0-9]", "");
+        return testNumber.replaceAll("[^0-9+]", "");
     }
 }
