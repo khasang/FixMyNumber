@@ -42,6 +42,10 @@ public class TestIntentHandler extends BaseIntentHandler {
     public static final String ACTION_GET_BACKUP = "ACTION_GET_BACKUP";
     public static final String BACKUP_TABLES_LIST_KEY = "BACKUP_TABLES_LIST_KEY";
 
+    public static final String ACTION_LOAD_BACKUP = "ACTION_LOAD_BACKUP";
+    public static final String TABLE_NAME_KEY = "TABLE_NAME_KEY";
+    public static final String ACTION_DELETE_BACKUP = "ACTION_DELETE_BACKUP";
+
     ArrayList<ContactItem> contactsList;
     ArrayList<ContactItem> contactsListToShow;
 
@@ -63,7 +67,6 @@ public class TestIntentHandler extends BaseIntentHandler {
                 contactsList = new ArrayList<>();
                 contactsList = intent.getParcelableArrayListExtra(SAVED_LIST_KEY);
                 saveContacts(context, contactsList);
-
                 Bundle bundle = new Bundle();
                 callback.send(RESULT_SUCCESS_CODE, bundle);
             }
@@ -72,23 +75,32 @@ public class TestIntentHandler extends BaseIntentHandler {
                 contactsList = intent.getParcelableArrayListExtra(BACKUP_LIST_KEY);
                 Bundle bundle = new Bundle();
                 String backupTime = createContactsBackup(context, contactsList);
-
                 bundle.putString(BACKUP_TIME_KEY, backupTime);
                 callback.send(RESULT_SUCCESS_CODE, bundle);
+
             }
+            break;
             case ACTION_GET_BACKUP: {
                 ArrayList<String> backupList = getBackupContacts(context);
-                for (int i = 0; i < 3; i++) {
-                    try {
-                        Thread.sleep(1000);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                }
                 Bundle bundle = new Bundle();
                 bundle.putStringArrayList(BACKUP_TABLES_LIST_KEY, backupList);
                 callback.send(RESULT_SUCCESS_CODE, bundle);
             }
+            break;
+            case ACTION_LOAD_BACKUP: {
+                String selectedTable = intent.getStringExtra(TABLE_NAME_KEY);
+                loadBackup(context, selectedTable);
+                Bundle bundle = new Bundle();
+                callback.send(RESULT_SUCCESS_CODE, bundle);
+            }
+            break;
+            case ACTION_DELETE_BACKUP:{
+                String selectedTable = intent.getStringExtra(TABLE_NAME_KEY);
+                deleteBackup(context, selectedTable);
+                Bundle bundle = new Bundle();
+                callback.send(RESULT_SUCCESS_CODE, bundle);
+            }
+            break;
         }
 
     }
@@ -235,5 +247,81 @@ public class TestIntentHandler extends BaseIntentHandler {
 
         }
         return backupList;
+    }
+
+    private void loadBackup(Context context, String selectedTable) {
+        ArrayList<String> reserveNumberNames = new ArrayList<>();
+        ArrayList<String> reserveNumbers = new ArrayList<>();
+        ArrayList<String> reserveNumberIds = new ArrayList<>();
+        ArrayList<String> reserveNumberAccountTypes = new ArrayList<>();
+
+        DBHelper dbHelper = new DBHelper(context);
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        Cursor c = db.query(selectedTable, null, null, null, null, null, null);
+        if (c.moveToNext()) {
+            int numberNameIndex = c.getColumnIndex(DBHelper.NAME);
+            int numberIndex = c.getColumnIndex(DBHelper.PHONE);
+            int numberIdIndex = c.getColumnIndex(DBHelper.PHONE_ID);
+            int numberAccountTypeIndex = c.getColumnIndex(DBHelper.ACCOUNT_TYPE);
+            do {
+                String name = c.getString(numberNameIndex);
+                reserveNumberNames.add(name);
+                String number = c.getString(numberIndex);
+                reserveNumbers.add(number);
+                String numberId = c.getString(numberIdIndex);
+                reserveNumberIds.add(numberId);
+                String numberAccountType = c.getString(numberAccountTypeIndex);
+                reserveNumberAccountTypes.add(numberAccountType);
+            } while (c.moveToNext());
+        }
+        c.close();
+        dbHelper.close();
+
+        for (int i = 0; i < reserveNumbers.size(); i++) {
+            if (reserveNumbers.get(i) != null) {
+                if (reserveNumberAccountTypes.get(i) != null) {
+                    if (reserveNumberAccountTypes.get(i).equals("sim")) {
+                        String presentNumber = null;
+                        Cursor cursor = context.getContentResolver().query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
+                                null, null, null, null);
+                        if (cursor.moveToFirst()) {
+                            do {
+                                String presentName = cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME));
+                                if (presentName.equals(reserveNumberNames.get(i))) {
+                                    presentNumber = cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
+                                    presentNumber = Util.onlyDigits(presentNumber);
+                                    break;
+                                }
+                            } while (cursor.moveToNext());
+                        }
+                        cursor.close();
+                        Uri uri = Uri.parse("content://icc/adn");
+                        ContentValues cv = new ContentValues();
+                        cv.put("tag", reserveNumberNames.get(i));
+                        cv.put("number", presentNumber);
+                        cv.put("newTag", reserveNumberNames.get(i));
+                        cv.put("newNumber", Util.onlyDigits(reserveNumbers.get(i)));
+                        context.getContentResolver().update(uri, cv, null, null);
+                    }
+                }
+                ArrayList<ContentProviderOperation> op = new ArrayList<ContentProviderOperation>();
+                op.add(ContentProviderOperation.newUpdate(ContactsContract.Data.CONTENT_URI)
+                        .withSelection(ContactsContract.CommonDataKinds.Phone._ID + "=?",
+                                new String[]{reserveNumberIds.get(i)})
+                        .withValue(ContactsContract.CommonDataKinds.Phone.NUMBER, reserveNumbers.get(i))
+                        .build());
+                try {
+                    context.getContentResolver().applyBatch(ContactsContract.AUTHORITY, op);
+                } catch (Exception e) {
+                    Log.e("Exception: ", e.getMessage());
+                }
+            }
+        }
+    }
+
+    private void deleteBackup(Context context, String selectedTable) {
+        DBHelper dbHelper = new DBHelper(context);
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        dbHelper.dropTable(db, selectedTable);
     }
 }

@@ -98,4 +98,16 @@ public class ServiceHelper {
         Intent i = createIntent(application, TestIntentHandler.ACTION_GET_BACKUP, requestId);
         return runRequest(requestId,i);
     }
+    public int loadBackup(String tableName) {
+        final int requestId = createId();
+        Intent i = createIntent(application, TestIntentHandler.ACTION_LOAD_BACKUP, requestId);
+        i.putExtra(TestIntentHandler.TABLE_NAME_KEY, tableName);
+        return runRequest(requestId, i);
+    }
+    public int deleteBackup(String tableName) {
+        final int requestId = createId();
+        Intent i = createIntent(application, TestIntentHandler.ACTION_DELETE_BACKUP, requestId);
+        i.putExtra(TestIntentHandler.TABLE_NAME_KEY, tableName);
+        return runRequest(requestId, i);
+    }
 }

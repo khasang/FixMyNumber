@@ -70,20 +70,20 @@ public class FragmentActivity extends BaseServiceActivity implements StepFragmen
     public void onServiceCallback(int requestId, Intent requestIntent, int resultCode, Bundle resultData) {
         String action = requestIntent.getAction();
         switch (action) {
-            case TestIntentHandler.ACTION_LOAD: {
+            case TestIntentHandler.ACTION_LOAD:
                 contactsList = resultData.getParcelableArrayList(TestIntentHandler.LOAD_LIST_KEY);
                 contactsListToShow = resultData.getParcelableArrayList(TestIntentHandler.LIST_TO_SHOW_KEY);
                 setUpUI();
                 progressDialog.dismiss();
                 updateContactsList();
-            }
-            break;
-            case TestIntentHandler.ACTION_SAVE: {
+                break;
+
+            case TestIntentHandler.ACTION_SAVE:
                 savingDialog.dismiss();
                 finish();
-            }
-            break;
-            case TestIntentHandler.ACTION_BACKUP: {
+                break;
+
+            case TestIntentHandler.ACTION_BACKUP:
                 String backupName = getApplicationContext().getString(R.string.contacts) + " "
                         + resultData.getString(TestIntentHandler.BACKUP_TIME_KEY);
                 String backupMessage = getString(R.string.backup_message) + "\n" + backupName;
@@ -94,8 +94,7 @@ public class FragmentActivity extends BaseServiceActivity implements StepFragmen
                 savingDialog.show();
                 getServiceHelper().saveContacts(contactsListToShow);
 //                finish();
-            }
-            break;
+                break;
         }
 
     }
