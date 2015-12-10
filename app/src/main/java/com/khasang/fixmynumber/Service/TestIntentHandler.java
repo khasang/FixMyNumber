@@ -16,7 +16,6 @@ import android.util.Log;
 
 import com.khasang.fixmynumber.Helper.DBHelper;
 import com.khasang.fixmynumber.Model.ContactItem;
-import com.khasang.fixmynumber.Task.Util;
 
 import java.util.ArrayList;
 
@@ -129,14 +128,14 @@ public class TestIntentHandler extends BaseIntentHandler {
             }
             rawCursor.close();
             if (number != null && number.length() > 5) {
-//                number = Util.onlyDigits(number);
+//                number = Util.getDigitsOnly(number);
                 if (accountType != null) {
                     for (int i = 0; i < accountType.length() - 2; i++) {
                         if (accountType.charAt(i) == 's' || accountType.charAt(i) == 'S') {
                             if (accountType.charAt(i + 1) == 'i' || accountType.charAt(i + 1) == 'I') {
                                 if (accountType.charAt(i + 2) == 'm' || accountType.charAt(i + 2) == 'M') {
                                     accountType = "sim";
-//                                number = Util.onlyDigits(number);
+//                                number = Util.getDigitsOnly(number);
                                 }
                             }
                         }
@@ -167,10 +166,10 @@ public class TestIntentHandler extends BaseIntentHandler {
                         Uri uri = Uri.parse("content://icc/adn");
                         ContentValues cv = new ContentValues();
                         cv.put("tag", contactList.get(i).getName());
-                        String number = Util.onlyDigits(contactList.get(i).getNumberOriginal());
+                        String number = getDigitsOnly(contactList.get(i).getNumberOriginal());
                         cv.put("number", number);
                         cv.put("newTag", contactList.get(i).getName());
-                        String numberNew = Util.onlyDigits(contactList.get(i).getNumberNew());
+                        String numberNew = getDigitsOnly(contactList.get(i).getNumberNew());
                         cv.put("newNumber", numberNew);
                         context.getContentResolver().update(uri, cv, null, null);
 
@@ -289,7 +288,7 @@ public class TestIntentHandler extends BaseIntentHandler {
                                 String presentName = cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME));
                                 if (presentName.equals(reserveNumberNames.get(i))) {
                                     presentNumber = cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
-                                    presentNumber = Util.onlyDigits(presentNumber);
+                                    presentNumber = getDigitsOnly(presentNumber);
                                     break;
                                 }
                             } while (cursor.moveToNext());
@@ -300,7 +299,7 @@ public class TestIntentHandler extends BaseIntentHandler {
                         cv.put("tag", reserveNumberNames.get(i));
                         cv.put("number", presentNumber);
                         cv.put("newTag", reserveNumberNames.get(i));
-                        cv.put("newNumber", Util.onlyDigits(reserveNumbers.get(i)));
+                        cv.put("newNumber", getDigitsOnly(reserveNumbers.get(i)));
                         context.getContentResolver().update(uri, cv, null, null);
                     }
                 }
@@ -323,5 +322,15 @@ public class TestIntentHandler extends BaseIntentHandler {
         DBHelper dbHelper = new DBHelper(context);
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         dbHelper.dropTable(db, selectedTable);
+    }
+
+    public static String getDigitsOnly(String testNumber) {
+//        for (int i = 0; i < testNumber.length(); i++) {
+//            if ((testNumber.charAt(i) == ' ') || (testNumber.charAt(i) == '-') ||
+//                    (testNumber.charAt(i) == '(') || (testNumber.charAt(i) == ')')) {
+//                testNumber = testNumber.substring(0, i) + testNumber.substring(i + 1);
+//            }
+//        }
+        return testNumber.replaceAll("[^0-9]", "");
     }
 }
