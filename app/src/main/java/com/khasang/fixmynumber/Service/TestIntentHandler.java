@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteException;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.ResultReceiver;
@@ -23,6 +24,10 @@ import java.util.ArrayList;
  * Created by Raenar on 01.12.2015.
  */
 public class TestIntentHandler extends BaseIntentHandler {
+    public static final int PROGRESS_CODE = 0;
+    public static final int RESULT_SUCCESS_CODE = 1;
+    public static final int RESULT_FAILURE_CODE = 2;
+
     public static final String ACTION_LOAD = "action load";
     public static final String LOAD_LIST_KEY = "load list";
     public static final String LIST_TO_SHOW_KEY = "load list to show";
@@ -34,10 +39,8 @@ public class TestIntentHandler extends BaseIntentHandler {
     public static final String BACKUP_LIST_KEY = "backup list key";
     public static final String BACKUP_TIME_KEY = "backup time key";
 
-
-    public static final int PROGRESS_CODE = 0;
-    public static final int RESULT_SUCCESS_CODE = 1;
-    public static final int RESULT_FAILURE_CODE = 2;
+    public static final String ACTION_GET_BACKUP = "ACTION_GET_BACKUP";
+    public static final String BACKUP_TABLES_LIST_KEY = "BACKUP_TABLES_LIST_KEY";
 
     ArrayList<ContactItem> contactsList;
     ArrayList<ContactItem> contactsListToShow;
@@ -60,13 +63,7 @@ public class TestIntentHandler extends BaseIntentHandler {
                 contactsList = new ArrayList<>();
                 contactsList = intent.getParcelableArrayListExtra(SAVED_LIST_KEY);
                 saveContacts(context, contactsList);
-                for (int i = 0; i < 3; i++) {
-                    try {
-                        Thread.sleep(1000);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                }
+
                 Bundle bundle = new Bundle();
                 callback.send(RESULT_SUCCESS_CODE, bundle);
             }
@@ -75,6 +72,12 @@ public class TestIntentHandler extends BaseIntentHandler {
                 contactsList = intent.getParcelableArrayListExtra(BACKUP_LIST_KEY);
                 Bundle bundle = new Bundle();
                 String backupTime = createContactsBackup(context, contactsList);
+
+                bundle.putString(BACKUP_TIME_KEY, backupTime);
+                callback.send(RESULT_SUCCESS_CODE, bundle);
+            }
+            case ACTION_GET_BACKUP: {
+                ArrayList<String> backupList = getBackupContacts(context);
                 for (int i = 0; i < 3; i++) {
                     try {
                         Thread.sleep(1000);
@@ -82,7 +85,8 @@ public class TestIntentHandler extends BaseIntentHandler {
                         e.printStackTrace();
                     }
                 }
-                bundle.putString(BACKUP_TIME_KEY, backupTime);
+                Bundle bundle = new Bundle();
+                bundle.putStringArrayList(BACKUP_TABLES_LIST_KEY, backupList);
                 callback.send(RESULT_SUCCESS_CODE, bundle);
             }
         }
@@ -146,7 +150,7 @@ public class TestIntentHandler extends BaseIntentHandler {
     private void saveContacts(Context context, ArrayList<ContactItem> contactList) {
         for (int i = 0; i < contactList.size(); i++) {
             if (contactList.get(i).getNumberNew() != null && contactList.get(i).isChecked()) {
-                if (contactList.get(i).getAccountType()!=null){
+                if (contactList.get(i).getAccountType() != null) {
                     if (contactList.get(i).getAccountType().equals("sim")) {
                         Uri uri = Uri.parse("content://icc/adn");
                         ContentValues cv = new ContentValues();
@@ -210,5 +214,26 @@ public class TestIntentHandler extends BaseIntentHandler {
         }
         dbHelper.close();
         return backupTimeFull;
+    }
+
+    private ArrayList<String> getBackupContacts(Context context) {
+        ArrayList<String> backupList = new ArrayList<>();
+        DBHelper dbHelper = new DBHelper(context);
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        try {
+            Cursor c = db.query(DBHelper.SQLITE_SEQUENCE, null, null, null, null, null, null);
+            if (c.moveToNext()) {
+                int nameIndex = c.getColumnIndex("name");
+                do {
+                    String result = c.getString(nameIndex);
+                    backupList.add(result);
+                } while (c.moveToNext());
+            }
+            c.close();
+            dbHelper.close();
+        } catch (SQLiteException e) {
+
+        }
+        return backupList;
     }
 }

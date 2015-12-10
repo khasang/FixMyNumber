@@ -1,9 +1,10 @@
 package com.khasang.fixmynumber.Activity;
 
-import android.app.AlertDialog;
+
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -11,32 +12,47 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import com.khasang.fixmynumber.Adapter.SavedContactsAdapter;
+import com.khasang.fixmynumber.Helper.DialogCreator;
 import com.khasang.fixmynumber.R;
+import com.khasang.fixmynumber.Service.TestIntentHandler;
 import com.khasang.fixmynumber.Task.DeleteReserveContactsTask;
-import com.khasang.fixmynumber.Task.GetReserveContactsTask;
 import com.khasang.fixmynumber.Task.LoadReserveContactsTask;
 
 import java.util.ArrayList;
 
-public class RestoreContactsActivity extends AppCompatActivity implements SavedContactsAdapter.SavedContactsItemClickListener {
+public class RestoreContactsActivity extends BaseServiceActivity implements SavedContactsAdapter.SavedContactsItemClickListener {
     ArrayList<String> savedContactsList;
     String selectedTable;
     private RecyclerView recyclerViewSavedContacts;
     private AlertDialog dialogDelete;
     private AlertDialog dialogLoad;
+    private AlertDialog progressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_restore_contacts);
-
         selectedTable = null;
-        savedContactsList = new ArrayList<>();
-//        getDummySavedContacts();
-        new GetReserveContactsTask(this, savedContactsList).execute();
-        setUpRecyclerView();
+//        savedContactsList = new ArrayList<>();
+////        getDummySavedContacts();
+//        new GetReserveContactsTask(this, savedContactsList).execute();
+        progressDialog = DialogCreator.createDialog(this, DialogCreator.LOADING_DIALOG);
+        progressDialog.show();
+        getServiceHelper().getBackupList();
         setUpButtons();
         setTitle(R.string.restore_toolbar);
+    }
+
+    @Override
+    public void onServiceCallback(int requestId, Intent requestIntent, int resultCode, Bundle resultData) {
+        String action = requestIntent.getAction();
+        switch (action) {
+            case TestIntentHandler.ACTION_GET_BACKUP:
+                savedContactsList = resultData.getStringArrayList(TestIntentHandler.BACKUP_TABLES_LIST_KEY);
+                progressDialog.dismiss();
+                setUpRecyclerView();
+                break;
+        }
     }
 
     private void getDummySavedContacts() {

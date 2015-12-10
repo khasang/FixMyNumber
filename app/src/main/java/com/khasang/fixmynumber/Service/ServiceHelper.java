@@ -74,23 +74,28 @@ public class ServiceHelper {
         return i;
     }
 
-    public int doLoadAction() {
+    public int loadContacts() {
         final int requestId = createId();
         Intent i = createIntent(application, TestIntentHandler.ACTION_LOAD, requestId);
         return runRequest(requestId, i);
     }
 
-    public int doSaveAction(ArrayList<ContactItem> contacts) {
+    public int saveContacts(ArrayList<ContactItem> contacts) {
         final int requestId = createId();
         Intent i = createIntent(application, TestIntentHandler.ACTION_SAVE, requestId);
         i.putParcelableArrayListExtra(TestIntentHandler.SAVED_LIST_KEY, contacts);
         return runRequest(requestId, i);
     }
 
-    public int doBackupAction(ArrayList<ContactItem> contacts){
+    public int backupContacts(ArrayList<ContactItem> contacts){
         final int requestId = createId();
         Intent i = createIntent(application, TestIntentHandler.ACTION_BACKUP, requestId);
         i.putParcelableArrayListExtra(TestIntentHandler.BACKUP_LIST_KEY, contacts);
         return runRequest(requestId, i);
+    }
+    public int getBackupList(){
+        final int requestId = createId();
+        Intent i = createIntent(application, TestIntentHandler.ACTION_GET_BACKUP, requestId);
+        return runRequest(requestId,i);
     }
 }

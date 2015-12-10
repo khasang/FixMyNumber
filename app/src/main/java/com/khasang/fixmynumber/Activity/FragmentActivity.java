@@ -61,7 +61,7 @@ public class FragmentActivity extends BaseServiceActivity implements StepFragmen
         progressDialog = DialogCreator.createDialog(this, DialogCreator.LOADING_DIALOG);
         backupDialog = DialogCreator.createDialog(this, DialogCreator.BACKUP_DIALOG);
         savingDialog = DialogCreator.createDialog(this, DialogCreator.SAVING_DIALOG);
-        getServiceHelper().doLoadAction();
+        getServiceHelper().loadContacts();
         progressDialog.show();
         areAllContactsSelected = false;
     }
@@ -92,7 +92,7 @@ public class FragmentActivity extends BaseServiceActivity implements StepFragmen
                         Toast.LENGTH_LONG).show();
                 backupDialog.dismiss();
                 savingDialog.show();
-                getServiceHelper().doSaveAction(contactsListToShow);
+                getServiceHelper().saveContacts(contactsListToShow);
 //                finish();
             }
             break;
@@ -162,7 +162,7 @@ public class FragmentActivity extends BaseServiceActivity implements StepFragmen
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         backupDialog.show();
-                        getServiceHelper().doBackupAction(contactsList);
+                        getServiceHelper().backupContacts(contactsList);
                         dialog.dismiss();
                     }
                 })

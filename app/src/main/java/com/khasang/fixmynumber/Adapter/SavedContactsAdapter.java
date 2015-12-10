@@ -79,7 +79,10 @@ public class SavedContactsAdapter extends RecyclerView.Adapter<SavedContactsAdap
 
     @Override
     public int getItemCount() {
-        return savedContactsList.size();
+        if (savedContactsList!=null) {
+            return savedContactsList.size();
+        }
+        return 0;
     }
 
 

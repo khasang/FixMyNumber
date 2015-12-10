@@ -8,7 +8,6 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.khasang.fixmynumber.R;
-import com.khasang.fixmynumber.Service.TestIntentHandler;
 
 public class TestActivity extends BaseServiceActivity {
     Button testButton;
@@ -26,7 +25,7 @@ public class TestActivity extends BaseServiceActivity {
         testButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                getServiceHelper().doLoadAction();
+                getServiceHelper().loadContacts();
             }
         });
     }
