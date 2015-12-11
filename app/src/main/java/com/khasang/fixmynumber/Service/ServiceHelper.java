@@ -52,15 +52,15 @@ public class ServiceHelper {
     }
 
     private Intent createIntent(final Context context, String actionLogin, final int requestId) {
-        Intent i = new Intent(context,TestService.class);
+        Intent i = new Intent(context, TaskService.class);
         i.setAction(actionLogin);
 
-        i.putExtra(TestService.EXTRA_STATUS_RECEIVER, new ResultReceiver(new Handler()) {
+        i.putExtra(TaskService.EXTRA_STATUS_RECEIVER, new ResultReceiver(new Handler()) {
             @Override
             protected void onReceiveResult(int resultCode, Bundle resultData) {
                 Intent originalIntent = pendingActivities.get(requestId);
                 if (isPending(requestId)) {
-                    if (resultCode != TestIntentHandler.PROGRESS_CODE) {
+                    if (resultCode != IntentHandler.PROGRESS_CODE) {
                         pendingActivities.remove(requestId);
                     }
                     for (ServiceCallbackListener currentListener : currentListeners) {
@@ -76,38 +76,41 @@ public class ServiceHelper {
 
     public int loadContacts() {
         final int requestId = createId();
-        Intent i = createIntent(application, TestIntentHandler.ACTION_LOAD, requestId);
+        Intent i = createIntent(application, IntentHandler.ACTION_LOAD, requestId);
         return runRequest(requestId, i);
     }
 
     public int saveContacts(ArrayList<ContactItem> contacts) {
         final int requestId = createId();
-        Intent i = createIntent(application, TestIntentHandler.ACTION_SAVE, requestId);
-        i.putParcelableArrayListExtra(TestIntentHandler.SAVED_LIST_KEY, contacts);
+        Intent i = createIntent(application, IntentHandler.ACTION_SAVE, requestId);
+        i.putParcelableArrayListExtra(IntentHandler.SAVED_LIST_KEY, contacts);
         return runRequest(requestId, i);
     }
 
-    public int backupContacts(ArrayList<ContactItem> contacts){
+    public int backupContacts(ArrayList<ContactItem> contacts) {
         final int requestId = createId();
-        Intent i = createIntent(application, TestIntentHandler.ACTION_BACKUP, requestId);
-        i.putParcelableArrayListExtra(TestIntentHandler.BACKUP_LIST_KEY, contacts);
+        Intent i = createIntent(application, IntentHandler.ACTION_BACKUP, requestId);
+        i.putParcelableArrayListExtra(IntentHandler.BACKUP_LIST_KEY, contacts);
         return runRequest(requestId, i);
     }
-    public int getBackupList(){
+
+    public int getBackupList() {
         final int requestId = createId();
-        Intent i = createIntent(application, TestIntentHandler.ACTION_GET_BACKUP, requestId);
-        return runRequest(requestId,i);
+        Intent i = createIntent(application, IntentHandler.ACTION_GET_BACKUP, requestId);
+        return runRequest(requestId, i);
     }
+
     public int loadBackup(String tableName) {
         final int requestId = createId();
-        Intent i = createIntent(application, TestIntentHandler.ACTION_LOAD_BACKUP, requestId);
-        i.putExtra(TestIntentHandler.TABLE_NAME_KEY, tableName);
+        Intent i = createIntent(application, IntentHandler.ACTION_LOAD_BACKUP, requestId);
+        i.putExtra(IntentHandler.TABLE_NAME_KEY, tableName);
         return runRequest(requestId, i);
     }
+
     public int deleteBackup(String tableName) {
         final int requestId = createId();
-        Intent i = createIntent(application, TestIntentHandler.ACTION_DELETE_BACKUP, requestId);
-        i.putExtra(TestIntentHandler.TABLE_NAME_KEY, tableName);
+        Intent i = createIntent(application, IntentHandler.ACTION_DELETE_BACKUP, requestId);
+        i.putExtra(IntentHandler.TABLE_NAME_KEY, tableName);
         return runRequest(requestId, i);
     }
 }

@@ -14,7 +14,7 @@ import android.widget.Toast;
 import com.khasang.fixmynumber.Adapter.SavedContactsAdapter;
 import com.khasang.fixmynumber.Helper.DialogCreator;
 import com.khasang.fixmynumber.R;
-import com.khasang.fixmynumber.Service.TestIntentHandler;
+import com.khasang.fixmynumber.Service.IntentHandler;
 
 import java.util.ArrayList;
 
@@ -44,16 +44,17 @@ public class RestoreContactsActivity extends BaseServiceActivity implements Save
     public void onServiceCallback(int requestId, Intent requestIntent, int resultCode, Bundle resultData) {
         String action = requestIntent.getAction();
         switch (action) {
-            case TestIntentHandler.ACTION_GET_BACKUP:
-                savedContactsList = resultData.getStringArrayList(TestIntentHandler.BACKUP_TABLES_LIST_KEY);
+            case IntentHandler.ACTION_GET_BACKUP:
+                savedContactsList = resultData.getStringArrayList(IntentHandler.BACKUP_TABLES_LIST_KEY);
                 progressDialog.dismiss();
                 setUpRecyclerView();
                 break;
-            case TestIntentHandler.ACTION_LOAD_BACKUP:
+            case IntentHandler.ACTION_LOAD_BACKUP:
+                progressDialog.dismiss();
                 Toast.makeText(getApplicationContext(), R.string.restore_contacts_loaded, Toast.LENGTH_SHORT).show();
                 finish();
                 break;
-            case TestIntentHandler.ACTION_DELETE_BACKUP:
+            case IntentHandler.ACTION_DELETE_BACKUP:
                 break;
         }
     }
@@ -104,7 +105,6 @@ public class RestoreContactsActivity extends BaseServiceActivity implements Save
                 .setPositiveButton(R.string.dialog_yes, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-//                        Toast.makeText(getApplicationContext(), "Deleting " + selectedTable, Toast.LENGTH_SHORT).show();
                         getServiceHelper().deleteBackup(selectedTable);
                         for (int i = 0; i < savedContactsList.size(); i++) {
                             if (savedContactsList.get(i).equals(selectedTable)) {
@@ -130,6 +130,7 @@ public class RestoreContactsActivity extends BaseServiceActivity implements Save
                 .setPositiveButton(R.string.dialog_yes, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
+                        progressDialog.show();
                         getServiceHelper().loadBackup(selectedTable);
                         dialog.dismiss();
                     }

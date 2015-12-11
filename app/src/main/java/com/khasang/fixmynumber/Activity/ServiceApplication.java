@@ -7,7 +7,7 @@ import com.khasang.fixmynumber.Service.ServiceHelper;
 /**
  * Created by Raenar on 03.12.2015.
  */
-public class TestApplication extends Application {
+public class ServiceApplication extends Application {
     private ServiceHelper serviceHelper ;
 
     @Override

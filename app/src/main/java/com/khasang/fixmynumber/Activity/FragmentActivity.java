@@ -24,7 +24,7 @@ import com.khasang.fixmynumber.Fragment.StepFragment3;
 import com.khasang.fixmynumber.Helper.DialogCreator;
 import com.khasang.fixmynumber.Model.ContactItem;
 import com.khasang.fixmynumber.R;
-import com.khasang.fixmynumber.Service.TestIntentHandler;
+import com.khasang.fixmynumber.Service.IntentHandler;
 import com.khasang.fixmynumber.View.CustomViewPager;
 
 import java.util.ArrayList;
@@ -70,22 +70,22 @@ public class FragmentActivity extends BaseServiceActivity implements StepFragmen
     public void onServiceCallback(int requestId, Intent requestIntent, int resultCode, Bundle resultData) {
         String action = requestIntent.getAction();
         switch (action) {
-            case TestIntentHandler.ACTION_LOAD:
-                contactsList = resultData.getParcelableArrayList(TestIntentHandler.LOAD_LIST_KEY);
-                contactsListToShow = resultData.getParcelableArrayList(TestIntentHandler.LIST_TO_SHOW_KEY);
+            case IntentHandler.ACTION_LOAD:
+                contactsList = resultData.getParcelableArrayList(IntentHandler.LOAD_LIST_KEY);
+                contactsListToShow = resultData.getParcelableArrayList(IntentHandler.LIST_TO_SHOW_KEY);
                 setUpUI();
                 progressDialog.dismiss();
                 updateContactsList();
                 break;
 
-            case TestIntentHandler.ACTION_SAVE:
+            case IntentHandler.ACTION_SAVE:
                 savingDialog.dismiss();
                 finish();
                 break;
 
-            case TestIntentHandler.ACTION_BACKUP:
+            case IntentHandler.ACTION_BACKUP:
                 String backupName = getApplicationContext().getString(R.string.contacts) + " "
-                        + resultData.getString(TestIntentHandler.BACKUP_TIME_KEY);
+                        + resultData.getString(IntentHandler.BACKUP_TIME_KEY);
                 String backupMessage = getString(R.string.backup_message) + "\n" + backupName;
                 Toast.makeText(getApplicationContext(),
                         backupMessage,

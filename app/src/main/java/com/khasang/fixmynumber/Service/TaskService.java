@@ -10,12 +10,12 @@ import android.text.TextUtils;
 /**
  * Created by Raenar on 01.12.2015.
  */
-public class TestService extends IntentService {
+public class TaskService extends IntentService {
 
     public static final String EXTRA_STATUS_RECEIVER = "receiver";
 
-    public TestService() {
-        super("TestService");
+    public TaskService() {
+        super("TaskService");
     }
 
     @Nullable
@@ -28,11 +28,10 @@ public class TestService extends IntentService {
         String action = intent.getAction();
         if (!TextUtils.isEmpty(action)) {
             final ResultReceiver receiver = intent.getParcelableExtra(EXTRA_STATUS_RECEIVER);
-//            if (TestIntentHandler.ACTION_LOAD.equals(action)) {
-//                new TestIntentHandler().execute(intent, getApplicationContext(), receiver);
+//            if (IntentHandler.ACTION_LOAD.equals(action)) {
+//                new IntentHandler().execute(intent, getApplicationContext(), receiver);
 //            }
-//            // .....
-            new TestIntentHandler().execute(intent, getApplicationContext(), receiver);
+            new IntentHandler().execute(intent, getApplicationContext(), receiver);
         }
     }
 }

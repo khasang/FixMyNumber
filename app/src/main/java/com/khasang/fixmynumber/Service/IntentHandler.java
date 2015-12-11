@@ -22,7 +22,7 @@ import java.util.ArrayList;
 /**
  * Created by Raenar on 01.12.2015.
  */
-public class TestIntentHandler extends BaseIntentHandler {
+public class IntentHandler extends BaseIntentHandler {
     public static final int PROGRESS_CODE = 0;
     public static final int RESULT_SUCCESS_CODE = 1;
     public static final int RESULT_FAILURE_CODE = 2;
@@ -44,6 +44,7 @@ public class TestIntentHandler extends BaseIntentHandler {
     public static final String ACTION_LOAD_BACKUP = "ACTION_LOAD_BACKUP";
     public static final String TABLE_NAME_KEY = "TABLE_NAME_KEY";
     public static final String ACTION_DELETE_BACKUP = "ACTION_DELETE_BACKUP";
+
 
     ArrayList<ContactItem> contactsList;
     ArrayList<ContactItem> contactsListToShow;
@@ -93,7 +94,7 @@ public class TestIntentHandler extends BaseIntentHandler {
                 callback.send(RESULT_SUCCESS_CODE, bundle);
             }
             break;
-            case ACTION_DELETE_BACKUP:{
+            case ACTION_DELETE_BACKUP: {
                 String selectedTable = intent.getStringExtra(TABLE_NAME_KEY);
                 deleteBackup(context, selectedTable);
                 Bundle bundle = new Bundle();
@@ -243,7 +244,7 @@ public class TestIntentHandler extends BaseIntentHandler {
             c.close();
             dbHelper.close();
         } catch (SQLiteException e) {
-
+            Log.d("Exception: ", e.toString());
         }
         return backupList;
     }
@@ -325,12 +326,6 @@ public class TestIntentHandler extends BaseIntentHandler {
     }
 
     public static String getDigitsOnly(String testNumber) {
-//        for (int i = 0; i < testNumber.length(); i++) {
-//            if ((testNumber.charAt(i) == ' ') || (testNumber.charAt(i) == '-') ||
-//                    (testNumber.charAt(i) == '(') || (testNumber.charAt(i) == ')')) {
-//                testNumber = testNumber.substring(0, i) + testNumber.substring(i + 1);
-//            }
-//        }
         return testNumber.replaceAll("[^0-9+]", "");
     }
 }
