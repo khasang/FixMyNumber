@@ -1,9 +1,10 @@
 package com.khasang.fixmynumber.Activity;
 
-import android.app.AlertDialog;
+
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -11,32 +12,51 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import com.khasang.fixmynumber.Adapter.SavedContactsAdapter;
+import com.khasang.fixmynumber.Helper.DialogCreator;
 import com.khasang.fixmynumber.R;
-import com.khasang.fixmynumber.Task.DeleteReserveContactsTask;
-import com.khasang.fixmynumber.Task.GetReserveContactsTask;
-import com.khasang.fixmynumber.Task.LoadReserveContactsTask;
+import com.khasang.fixmynumber.Service.IntentHandler;
 
 import java.util.ArrayList;
 
-public class RestoreContactsActivity extends AppCompatActivity implements SavedContactsAdapter.SavedContactsItemClickListener {
+public class RestoreContactsActivity extends BaseServiceActivity implements SavedContactsAdapter.SavedContactsItemClickListener {
     ArrayList<String> savedContactsList;
     String selectedTable;
     private RecyclerView recyclerViewSavedContacts;
     private AlertDialog dialogDelete;
     private AlertDialog dialogLoad;
+    private AlertDialog progressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_restore_contacts);
-
         selectedTable = null;
-        savedContactsList = new ArrayList<>();
-//        getDummySavedContacts();
-        new GetReserveContactsTask(this, savedContactsList).execute();
-        setUpRecyclerView();
+//        savedContactsList = new ArrayList<>();
+////        getDummySavedContacts();
+        progressDialog = DialogCreator.createDialog(this, DialogCreator.LOADING_DIALOG);
+        progressDialog.show();
+        getServiceHelper().getBackupList();
         setUpButtons();
         setTitle(R.string.restore_toolbar);
+    }
+
+    @Override
+    public void onServiceCallback(int requestId, Intent requestIntent, int resultCode, Bundle resultData) {
+        String action = requestIntent.getAction();
+        switch (action) {
+            case IntentHandler.ACTION_GET_BACKUP:
+                savedContactsList = resultData.getStringArrayList(IntentHandler.BACKUP_TABLES_LIST_KEY);
+                progressDialog.dismiss();
+                setUpRecyclerView();
+                break;
+            case IntentHandler.ACTION_LOAD_BACKUP:
+                progressDialog.dismiss();
+                Toast.makeText(getApplicationContext(), R.string.restore_contacts_loaded, Toast.LENGTH_SHORT).show();
+                finish();
+                break;
+            case IntentHandler.ACTION_DELETE_BACKUP:
+                break;
+        }
     }
 
     private void getDummySavedContacts() {
@@ -85,8 +105,7 @@ public class RestoreContactsActivity extends AppCompatActivity implements SavedC
                 .setPositiveButton(R.string.dialog_yes, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-//                        Toast.makeText(getApplicationContext(), "Deleting " + selectedTable, Toast.LENGTH_SHORT).show();
-                        new DeleteReserveContactsTask(RestoreContactsActivity.this, selectedTable).execute();
+                        getServiceHelper().deleteBackup(selectedTable);
                         for (int i = 0; i < savedContactsList.size(); i++) {
                             if (savedContactsList.get(i).equals(selectedTable)) {
                                 savedContactsList.remove(i);
@@ -111,10 +130,9 @@ public class RestoreContactsActivity extends AppCompatActivity implements SavedC
                 .setPositiveButton(R.string.dialog_yes, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        Toast.makeText(getApplicationContext(), R.string.restore_contacts_loaded, Toast.LENGTH_SHORT).show();
-                        new LoadReserveContactsTask(RestoreContactsActivity.this, selectedTable).execute();
+                        progressDialog.show();
+                        getServiceHelper().loadBackup(selectedTable);
                         dialog.dismiss();
-                        finish();
                     }
                 })
                 .setNegativeButton(R.string.dialog_no, new DialogInterface.OnClickListener() {

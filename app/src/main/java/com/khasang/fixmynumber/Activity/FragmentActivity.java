@@ -1,16 +1,16 @@
 package com.khasang.fixmynumber.Activity;
 
-import android.app.AlertDialog;
+
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.PagerAdapter;
-import android.support.v7.app.AppCompatActivity;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.text.format.DateFormat;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -21,17 +21,16 @@ import android.widget.Toast;
 import com.khasang.fixmynumber.Fragment.StepFragment1;
 import com.khasang.fixmynumber.Fragment.StepFragment2;
 import com.khasang.fixmynumber.Fragment.StepFragment3;
+import com.khasang.fixmynumber.Helper.DialogCreator;
 import com.khasang.fixmynumber.Model.ContactItem;
 import com.khasang.fixmynumber.R;
-import com.khasang.fixmynumber.Task.ContactsBackupTask;
-import com.khasang.fixmynumber.Task.ContactsLoaderTask;
-import com.khasang.fixmynumber.Task.ContactsSaverTask;
+import com.khasang.fixmynumber.Service.IntentHandler;
 import com.khasang.fixmynumber.View.CustomViewPager;
 
 import java.util.ArrayList;
 import java.util.Random;
 
-public class FragmentActivity extends AppCompatActivity implements StepFragment1.Fragment1ViewsCreateListener, StepFragment1.Fragment1ContactClickListener, StepFragment2.Fragment2ViewsUpdateListener, StepFragment3.Fragment3ViewsCreateListener {
+public class FragmentActivity extends BaseServiceActivity implements StepFragment1.Fragment1ViewsCreateListener, StepFragment1.Fragment1ContactClickListener, StepFragment2.Fragment2ViewsUpdateListener, StepFragment3.Fragment3ViewsCreateListener {
     CustomViewPager pager;
     ArrayList<ContactItem> contactsList;
     ArrayList<ContactItem> contactsListToShow;
@@ -43,6 +42,9 @@ public class FragmentActivity extends AppCompatActivity implements StepFragment1
     private EditText editTextS2;
     private boolean areAllContactsSelected;
     private AlertDialog dialogConfirm;
+    private AlertDialog progressDialog;
+    private AlertDialog backupDialog;
+    private AlertDialog savingDialog;
     private CheckBox checkBoxSelectAll;
 
     @Override
@@ -56,10 +58,45 @@ public class FragmentActivity extends AppCompatActivity implements StepFragment1
         contactsList = new ArrayList<ContactItem>();
         contactsListToShow = new ArrayList<ContactItem>();
         contactsListChanged = new ArrayList<ContactItem>();
-        new ContactsLoaderTask(this, contactsList, contactsListToShow).execute();
+        progressDialog = DialogCreator.createDialog(this, DialogCreator.LOADING_DIALOG);
+        backupDialog = DialogCreator.createDialog(this, DialogCreator.BACKUP_DIALOG);
+        savingDialog = DialogCreator.createDialog(this, DialogCreator.SAVING_DIALOG);
+        getServiceHelper().loadContacts();
+        progressDialog.show();
         areAllContactsSelected = false;
-        setUpPager();
-//        createMoreDummyContacts();
+    }
+
+    @Override
+    public void onServiceCallback(int requestId, Intent requestIntent, int resultCode, Bundle resultData) {
+        String action = requestIntent.getAction();
+        switch (action) {
+            case IntentHandler.ACTION_LOAD:
+                contactsList = resultData.getParcelableArrayList(IntentHandler.LOAD_LIST_KEY);
+                contactsListToShow = resultData.getParcelableArrayList(IntentHandler.LIST_TO_SHOW_KEY);
+                setUpUI();
+                progressDialog.dismiss();
+                updateContactsList();
+                break;
+
+            case IntentHandler.ACTION_SAVE:
+                savingDialog.dismiss();
+                finish();
+                break;
+
+            case IntentHandler.ACTION_BACKUP:
+                String backupName = getApplicationContext().getString(R.string.contacts) + " "
+                        + resultData.getString(IntentHandler.BACKUP_TIME_KEY);
+                String backupMessage = getString(R.string.backup_message) + "\n" + backupName;
+                Toast.makeText(getApplicationContext(),
+                        backupMessage,
+                        Toast.LENGTH_LONG).show();
+                backupDialog.dismiss();
+                savingDialog.show();
+                getServiceHelper().saveContacts(contactsListToShow);
+//                finish();
+                break;
+        }
+
     }
 
     private void createMoreDummyContacts() {
@@ -77,16 +114,17 @@ public class FragmentActivity extends AppCompatActivity implements StepFragment1
         }
     }
 
-    private void setUpPager() {
+    private void setUpUI() {
         setUpDialogs();
         pager = (CustomViewPager) findViewById(R.id.pager);
-//        pager.setOffscreenPageLimit(0);
         final PagerAdapter pagerAdapter = new MyPagerAdapter(getSupportFragmentManager());
         pager.setAdapter(pagerAdapter);
+
         final Button backButton = (Button) findViewById(R.id.prev_button);
         final Button nextButton = (Button) findViewById(R.id.next_button);
         updateButtons(backButton, nextButton);
         updateToolBar();
+
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -116,22 +154,15 @@ public class FragmentActivity extends AppCompatActivity implements StepFragment1
     }
 
     private void setUpDialogs() {
-        AlertDialog.Builder builderDelete = new AlertDialog.Builder(this, R.style.MyAlertDialogStyle);
-        builderDelete.setTitle(R.string.dialog_confirm_title)
+        AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.MyAlertDialogStyle);
+        builder.setTitle(R.string.dialog_confirm_title)
                 .setMessage(R.string.dialog_confirm_message)
                 .setPositiveButton(R.string.dialog_yes, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        String date = DateFormat.format("dd.MM.yyyy hh:mm:ss", System.currentTimeMillis()).toString();
-                        String backupName = getApplicationContext().getString(R.string.contacts) + date;
-                        String backupMessage = getString(R.string.backup_message) +"\n" +backupName;
-                        Toast.makeText(getApplicationContext(),
-                                backupMessage,
-                                Toast.LENGTH_LONG).show();
-                        new ContactsBackupTask(FragmentActivity.this, contactsList).execute();
-                        new ContactsSaverTask(FragmentActivity.this, contactsListToShow).execute();
+                        backupDialog.show();
+                        getServiceHelper().backupContacts(contactsList);
                         dialog.dismiss();
-                        finish();
                     }
                 })
                 .setNegativeButton(R.string.dialog_no, new DialogInterface.OnClickListener() {
@@ -140,51 +171,56 @@ public class FragmentActivity extends AppCompatActivity implements StepFragment1
                         dialog.dismiss();
                     }
                 });
-        dialogConfirm = builderDelete.create();
+        dialogConfirm = builder.create();
     }
 
     private void updateButtons(Button backButton, Button nextButton) {
-        nextButton.setEnabled(true);
         int page = pager.getCurrentItem();
-        if (page == 0) {
-            backButton.setText(R.string.button_cancel);
-        } else {
-            backButton.setText(R.string.button_back);
-        }
-        if (page == 2) {
-            changeNumbers();
-            nextButton.setText(R.string.button_finish);
-            contactsListChanged.clear();
-            for (ContactItem contactItem : contactsListToShow) {
-                if (contactItem.getNumberNew()!=null){
-                    if ((!contactItem.getNumberNew().equals(contactItem.getNumberOriginal()))) {
-                        contactsListChanged.add(contactItem);
+        nextButton.setEnabled(true);
+        switch (page) {
+            case 0:
+                backButton.setText(R.string.button_cancel);
+                nextButton.setText(R.string.button_next);
+                break;
+            case 1:
+                backButton.setText(R.string.button_back);
+                nextButton.setText(R.string.button_next);
+                break;
+            case 2:
+                backButton.setText(R.string.button_back);
+                nextButton.setText(R.string.button_finish);
+                changeNumbers();
+                contactsListChanged.clear();
+                for (ContactItem contactItem : contactsListToShow) {
+                    if (contactItem.getNumberNew() != null) {
+                        if ((!contactItem.getNumberNew().equals(contactItem.getNumberOriginal()))) {
+                            contactsListChanged.add(contactItem);
+                        }
                     }
                 }
-            }
-            if (contactsListChanged.size() == 0){
-                nextButton.setEnabled(false);
-            }
-            recyclerViewToChange.getAdapter().notifyDataSetChanged();
+                if (contactsListChanged.size() == 0) {
+                    nextButton.setEnabled(false);
+                }
+                recyclerViewToChange.getAdapter().notifyDataSetChanged();
 //            next.setBackgroundColor(ContextCompat.getColor(this, R.color.colorAccent));
-        } else {
-            nextButton.setText(R.string.button_next);
-//            next.setBackgroundColor(ContextCompat.getColor(this, android.support.v7.appcompat.R.color.button_material_light));;
+                break;
         }
     }
 
     private void updateToolBar() {
         int page = pager.getCurrentItem();
-        switch (page) {
-            case 0:
-                getSupportActionBar().setTitle(R.string.change_toolbar1);
-                break;
-            case 1:
-                getSupportActionBar().setTitle(R.string.change_toolbar2);
-                break;
-            case 2:
-                getSupportActionBar().setTitle(R.string.change_toolbar3);
-                break;
+        if (getSupportActionBar() != null) {
+            switch (page) {
+                case 0:
+                    getSupportActionBar().setTitle(R.string.change_toolbar1);
+                    break;
+                case 1:
+                    getSupportActionBar().setTitle(R.string.change_toolbar2);
+                    break;
+                case 2:
+                    getSupportActionBar().setTitle(R.string.change_toolbar3);
+                    break;
+            }
         }
     }
 
@@ -301,7 +337,9 @@ public class FragmentActivity extends AppCompatActivity implements StepFragment1
     }
 
     public void updateContactsList() {
-        recyclerView.getAdapter().notifyDataSetChanged();
+        if (recyclerView != null) {
+            recyclerView.getAdapter().notifyDataSetChanged();
+        }
     }
 
 }

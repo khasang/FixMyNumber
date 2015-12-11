@@ -47,4 +47,6 @@
     <string name="dialog_loading">Loading</string>
     <string name="dialog_confirm_title">Confirm changes</string>
     <string name="dialog_confirm_message">Do you want to apply these changes to your contacts?</string>
+    <string name="dialog_creating_backup">Creating backup</string>
+    <string name="dialog_saving_contacts">Saving contacts</string>
 </resources>

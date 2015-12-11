@@ -38,4 +38,6 @@
     <string name="dialog_confirm_title">Подтвердите изменения</string>
     <string name="restore_contacts_loaded">Контакты загружены</string>
     <string name="backup_message">Создана резервная копия контактов:</string>
+    <string name="dialog_saving_contacts">Сохранение контактов</string>
+    <string name="dialog_creating_backup">Создание резервной копии </string>
 </resources>

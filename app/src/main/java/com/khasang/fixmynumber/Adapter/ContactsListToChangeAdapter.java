@@ -45,7 +45,10 @@ public class ContactsListToChangeAdapter extends RecyclerView.Adapter<ContactsLi
 
     @Override
     public int getItemCount() {
-        return contactsListToChange.size();
+        if (contactsListToChange != null){
+            return contactsListToChange.size();
+        }
+        return 0;
     }
 
 

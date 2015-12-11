@@ -1,15 +1,19 @@
 package com.khasang.fixmynumber.Model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 /**
  * Created by Raenar on 16.10.2015.
  */
-public class ContactItem {
+public class ContactItem implements Parcelable{
     private String name;
     private String numberOriginal;
     private String numberOriginalId;
     private String numberNew;
     private boolean isChecked;
     private String accountType;
+    private int isCheckedInt;
 
     public ContactItem() {
     }
@@ -21,6 +25,20 @@ public class ContactItem {
         this.numberNew = numberNew;
         this.isChecked = isChecked;
         this.accountType = accountType;
+    }
+
+    public ContactItem(Parcel parcel) {
+        name = parcel.readString();
+        numberOriginal = parcel.readString();
+        numberOriginalId = parcel.readString();
+        numberNew = parcel.readString();
+        accountType = parcel.readString();
+        isCheckedInt = parcel.readInt();
+        if (isCheckedInt == 0) {
+            isChecked = false;
+        } else {
+            isChecked = true;
+        }
     }
 
     public String getName() {
@@ -69,5 +87,37 @@ public class ContactItem {
 
     public void setAccountType(String accountType) {
         this.accountType = accountType;
+    }
+
+    public static final Creator<ContactItem> CREATOR = new Creator<ContactItem>() {
+        @Override
+        public ContactItem createFromParcel(Parcel parcel) {
+            return new ContactItem(parcel);
+        }
+
+        @Override
+        public ContactItem[] newArray(int i) {
+            return new ContactItem[i];
+        }
+    };
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int flags) {
+        parcel.writeString(name);
+        parcel.writeString(numberOriginal);
+        parcel.writeString(numberOriginalId);
+        parcel.writeString(numberNew);
+        parcel.writeString(accountType);
+        if (isChecked) {
+            isCheckedInt = 1;
+        } else {
+            isCheckedInt = 0;
+        }
+        parcel.writeInt(isCheckedInt);
     }
 }
