@@ -1,9 +1,11 @@
 package com.khasang.fixmynumber.Activity;
 
 
+
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -12,6 +14,7 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import com.khasang.fixmynumber.Adapter.SavedContactsAdapter;
+import com.khasang.fixmynumber.Fragment.RestoreListFragment;
 import com.khasang.fixmynumber.Helper.DialogCreator;
 import com.khasang.fixmynumber.R;
 import com.khasang.fixmynumber.Service.IntentHandler;
@@ -25,18 +28,25 @@ public class RestoreContactsActivity extends BaseServiceActivity implements Save
     private AlertDialog dialogDelete;
     private AlertDialog dialogLoad;
     private AlertDialog progressDialog;
+    private RestoreListFragment fragment1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_restore_contacts);
+
+        fragment1 = new RestoreListFragment();
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        transaction.add(R.id.fragmentContainer, fragment1);
+        transaction.commit();
+
         selectedTable = null;
 //        savedContactsList = new ArrayList<>();
 ////        getDummySavedContacts();
         progressDialog = DialogCreator.createDialog(this, DialogCreator.LOADING_DIALOG);
         progressDialog.show();
         getServiceHelper().getBackupList();
-        setUpButtons();
+//        setUpButtons();
         setTitle(R.string.restore_toolbar);
     }
 
@@ -47,7 +57,7 @@ public class RestoreContactsActivity extends BaseServiceActivity implements Save
             case IntentHandler.ACTION_GET_BACKUP:
                 savedContactsList = resultData.getStringArrayList(IntentHandler.BACKUP_TABLES_LIST_KEY);
                 progressDialog.dismiss();
-                setUpRecyclerView();
+//                setUpRecyclerView();
                 break;
             case IntentHandler.ACTION_LOAD_BACKUP:
                 progressDialog.dismiss();
