@@ -21,10 +21,9 @@ import com.khasang.fixmynumber.Service.IntentHandler;
 
 import java.util.ArrayList;
 
-public class RestoreContactsActivity extends BaseServiceActivity implements SavedContactsAdapter.SavedContactsItemClickListener {
+public class RestoreContactsActivity extends BaseServiceActivity implements SavedContactsAdapter.SavedContactsItemClickListener, RestoreListFragment.OnButtonClickListener {
     ArrayList<String> savedContactsList;
     String selectedTable;
-    private RecyclerView recyclerViewSavedContacts;
     private AlertDialog dialogDelete;
     private AlertDialog dialogLoad;
     private AlertDialog progressDialog;
@@ -47,6 +46,7 @@ public class RestoreContactsActivity extends BaseServiceActivity implements Save
         progressDialog.show();
         getServiceHelper().getBackupList();
 //        setUpButtons();
+        setUpDialogs();
         setTitle(R.string.restore_toolbar);
     }
 
@@ -57,6 +57,7 @@ public class RestoreContactsActivity extends BaseServiceActivity implements Save
             case IntentHandler.ACTION_GET_BACKUP:
                 savedContactsList = resultData.getStringArrayList(IntentHandler.BACKUP_TABLES_LIST_KEY);
                 progressDialog.dismiss();
+                fragment1.setList(savedContactsList);
 //                setUpRecyclerView();
                 break;
             case IntentHandler.ACTION_LOAD_BACKUP:
@@ -76,36 +77,21 @@ public class RestoreContactsActivity extends BaseServiceActivity implements Save
         }
     }
 
-    private void setUpRecyclerView() {
-        recyclerViewSavedContacts = (RecyclerView) findViewById(R.id.recyclerViewSavedContacts);
-        SavedContactsAdapter savedContactsAdapter = new SavedContactsAdapter(savedContactsList, this);
-        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
-        recyclerViewSavedContacts.setAdapter(savedContactsAdapter);
-        recyclerViewSavedContacts.setLayoutManager(layoutManager);
-    }
-
-    private void setUpButtons() {
-        Button buttonLoad = (Button) findViewById(R.id.buttonLoad);
-        Button buttonDelete = (Button) findViewById(R.id.buttonDelete);
-        setUpDialogs();
-
-        buttonLoad.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+    @Override
+    public void OnButtonClick(View v) {
+        switch (v.getId()){
+            case R.id.buttonDelete:
+                if (selectedTable != null) {
+                    dialogDelete.show();
+                }
+                break;
+            case R.id.buttonLoad:
                 if (selectedTable != null) {
                     dialogLoad.show();
                 }
-            }
-        });
-        buttonDelete.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (selectedTable != null) {
-                    dialogDelete.show();
-                    recyclerViewSavedContacts.getAdapter().notifyDataSetChanged();
-                }
-            }
-        });
+                break;
+
+        }
     }
 
     private void setUpDialogs() {
@@ -121,8 +107,7 @@ public class RestoreContactsActivity extends BaseServiceActivity implements Save
                                 savedContactsList.remove(i);
                             }
                         }
-                        recyclerViewSavedContacts.getAdapter().notifyDataSetChanged();
-                        ((SavedContactsAdapter) recyclerViewSavedContacts.getAdapter()).resetSelection();
+                       fragment1.updateList();
                         dialog.dismiss();
                     }
                 })
@@ -159,7 +144,4 @@ public class RestoreContactsActivity extends BaseServiceActivity implements Save
         selectedTable = name;
     }
 
-    public void updateUI() {
-        recyclerViewSavedContacts.getAdapter().notifyDataSetChanged();
-    }
 }
