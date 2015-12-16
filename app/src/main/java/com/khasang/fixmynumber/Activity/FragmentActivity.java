@@ -120,8 +120,8 @@ public class FragmentActivity extends BaseServiceActivity implements StepFragmen
         final PagerAdapter pagerAdapter = new MyPagerAdapter(getSupportFragmentManager());
         pager.setAdapter(pagerAdapter);
 
-        final Button backButton = (Button) findViewById(R.id.prev_button);
-        final Button nextButton = (Button) findViewById(R.id.next_button);
+        final Button backButton = (Button) findViewById(R.id.buttonCancel);
+        final Button nextButton = (Button) findViewById(R.id.buttonConfirm);
         updateButtons(backButton, nextButton);
         updateToolBar();
 

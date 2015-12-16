@@ -1,7 +1,6 @@
 package com.khasang.fixmynumber.Fragment;
 
 
-import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -16,34 +15,29 @@ import com.khasang.fixmynumber.Adapter.SavedContactsAdapter;
 import com.khasang.fixmynumber.R;
 
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by Raenar on 16.12.2015.
  */
-public class RestoreListFragment extends Fragment {
+public class RestoreFragment1 extends Fragment {
 
     private RecyclerView recyclerViewSavedContacts;
-
-    public interface OnButtonClickListener{
-        public void OnButtonClick(View v);
-    }
-
     private OnButtonClickListener listener;
+
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
         try {
             listener = ((OnButtonClickListener) context);
-        } catch (ClassCastException e){
+        } catch (ClassCastException e) {
             throw new ClassCastException(context.toString() + " must implement OnButtonClickListener");
         }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_restore_list,container,false);
+        View v = inflater.inflate(R.layout.fragment_restore_list, container, false);
         recyclerViewSavedContacts = (RecyclerView) v.findViewById(R.id.recyclerViewSavedContacts);
         ((Button) v.findViewById(R.id.buttonDelete)).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -60,15 +54,16 @@ public class RestoreListFragment extends Fragment {
         return v;
     }
 
-    public void setList(ArrayList<String> savedContactsList){
+    public void setList(ArrayList<String> savedContactsList) {
         SavedContactsAdapter savedContactsAdapter = new SavedContactsAdapter(savedContactsList, getContext());
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
         recyclerViewSavedContacts.setAdapter(savedContactsAdapter);
         recyclerViewSavedContacts.setLayoutManager(layoutManager);
     }
-    public void updateList(){
+
+    public void updateList() {
         recyclerViewSavedContacts.getAdapter().notifyDataSetChanged();
-        ((SavedContactsAdapter)recyclerViewSavedContacts.getAdapter()).resetSelection();
+        ((SavedContactsAdapter) recyclerViewSavedContacts.getAdapter()).resetSelection();
 
     }
 }
