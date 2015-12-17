@@ -95,11 +95,9 @@ public class RestoreContactsActivity extends BaseServiceActivity implements Save
                 break;
             case R.id.buttonCancel:
                 getSupportFragmentManager().popBackStack();
-                Toast.makeText(this, "cancel", Toast.LENGTH_SHORT).show();
                 break;
             case R.id.buttonConfirm:
                 dialogLoad.show();
-                Toast.makeText(this, "confirm", Toast.LENGTH_SHORT).show();
                 break;
 
 
