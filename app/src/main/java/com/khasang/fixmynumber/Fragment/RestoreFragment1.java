@@ -21,8 +21,11 @@ import java.util.ArrayList;
  */
 public class RestoreFragment1 extends Fragment {
 
+    public static final String CURRENT_CONTACTS_LIST = "currentContactsList";
     private RecyclerView recyclerViewSavedContacts;
     private OnButtonClickListener listener;
+    Bundle savedData;
+    ArrayList<String> currentContactsList;
 
 
     @Override
@@ -55,6 +58,7 @@ public class RestoreFragment1 extends Fragment {
     }
 
     public void setList(ArrayList<String> savedContactsList) {
+        currentContactsList = savedContactsList;
         SavedContactsAdapter savedContactsAdapter = new SavedContactsAdapter(savedContactsList, getContext());
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
         recyclerViewSavedContacts.setAdapter(savedContactsAdapter);
@@ -65,5 +69,21 @@ public class RestoreFragment1 extends Fragment {
         recyclerViewSavedContacts.getAdapter().notifyDataSetChanged();
         ((SavedContactsAdapter) recyclerViewSavedContacts.getAdapter()).resetSelection();
 
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        savedData = new Bundle();
+        savedData.putStringArrayList(CURRENT_CONTACTS_LIST, currentContactsList);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (savedData!=null){
+            currentContactsList = savedData.getStringArrayList(CURRENT_CONTACTS_LIST);
+            setList(currentContactsList);
+        }
     }
 }
