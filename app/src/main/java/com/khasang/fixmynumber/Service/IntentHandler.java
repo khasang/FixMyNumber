@@ -109,6 +109,7 @@ public class IntentHandler extends BaseIntentHandler {
                 contactsList = intent.getParcelableArrayListExtra(LIST_TO_SHOW_KEY);
                 String selectedTable = intent.getStringExtra(TABLE_NAME_KEY);
                 fillContactsFromBackup(context, selectedTable, contactsList);
+                sortByChangedContacts(contactsList);
                 Bundle bundle = new Bundle();
                 bundle.putParcelableArrayList(LIST_TO_SHOW_KEY, contactsList);
                 callback.send(RESULT_SUCCESS_CODE, bundle);
@@ -343,8 +344,7 @@ public class IntentHandler extends BaseIntentHandler {
     }
 
     private void fillContactsFromBackup(Context context, String selectedTable, ArrayList<ContactItem> contactsListToFill) {
-        HashMap<String,String> loadedContactsMap = new HashMap<>();
-
+        HashMap<String, String> loadedContactsMap = new HashMap<>();
         DBHelper dbHelper = new DBHelper(context);
         SQLiteDatabase db = dbHelper.getWritableDatabase();
 
@@ -363,12 +363,29 @@ public class IntentHandler extends BaseIntentHandler {
 
         for (ContactItem contactItem : contactsListToFill) {
             String id = contactItem.getNumberOriginalId();
-            if (loadedContactsMap.containsKey(id)){
-                contactItem.setNumberNew(loadedContactsMap.get(id));
-            } else {
-                contactItem.setNumberNew(null);
+            contactItem.setNumberNew(null);
+            if (loadedContactsMap.containsKey(id)) {
+                String loadedNumber = loadedContactsMap.get(id);
+                if (!loadedNumber.equals(contactItem.getNumberOriginal())) {
+                    contactItem.setNumberNew(loadedNumber);
+                }
             }
         }
 
+    }
+
+    private void sortByChangedContacts(ArrayList<ContactItem> contactsList) {
+        ArrayList<ContactItem> tempArray1 = new ArrayList<>();
+        ArrayList<ContactItem> tempArray2 = new ArrayList<>();
+        for (ContactItem contactItem : contactsList) {
+            if (contactItem.getNumberNew() != null) {
+                tempArray1.add(contactItem);
+            } else {
+                tempArray2.add(contactItem);
+            }
+        }
+        contactsList.clear();
+        contactsList.addAll(tempArray1);
+        contactsList.addAll(tempArray2);
     }
 }
