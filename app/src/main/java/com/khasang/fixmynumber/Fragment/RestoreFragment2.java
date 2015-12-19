@@ -20,7 +20,7 @@ import java.util.ArrayList;
  * Created by Raenar on 16.12.2015.
  */
 public class RestoreFragment2 extends Fragment {
-    RecyclerView recyclerViewSavedContacts;
+    RecyclerView recyclerViewContactsToChange;
     OnButtonClickListener listener;
 
 
@@ -37,6 +37,7 @@ public class RestoreFragment2 extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_restore_confirm, container, false);
+        recyclerViewContactsToChange = (RecyclerView) v.findViewById(R.id.recyclerViewContactsToChange);
         ((Button) v.findViewById(R.id.buttonCancel)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -55,11 +56,11 @@ public class RestoreFragment2 extends Fragment {
     public void setList(ArrayList<ContactItem> contactsListToChange) {
         ContactsListToChangeAdapter adapter = new ContactsListToChangeAdapter(contactsListToChange);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
-        recyclerViewSavedContacts.setAdapter(adapter);
-        recyclerViewSavedContacts.setLayoutManager(layoutManager);
+        recyclerViewContactsToChange.setAdapter(adapter);
+        recyclerViewContactsToChange.setLayoutManager(layoutManager);
     }
 
     public void updateList() {
-        recyclerViewSavedContacts.getAdapter().notifyDataSetChanged();
+        recyclerViewContactsToChange.getAdapter().notifyDataSetChanged();
     }
 }

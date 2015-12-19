@@ -14,6 +14,7 @@ import com.khasang.fixmynumber.Fragment.OnButtonClickListener;
 import com.khasang.fixmynumber.Fragment.RestoreFragment1;
 import com.khasang.fixmynumber.Fragment.RestoreFragment2;
 import com.khasang.fixmynumber.Helper.DialogCreator;
+import com.khasang.fixmynumber.Model.ContactItem;
 import com.khasang.fixmynumber.R;
 import com.khasang.fixmynumber.Service.IntentHandler;
 
@@ -22,6 +23,7 @@ import java.util.ArrayList;
 public class RestoreContactsActivity extends BaseServiceActivity implements SavedContactsAdapter.SavedContactsItemClickListener,
         OnButtonClickListener {
     ArrayList<String> savedContactsList;
+    ArrayList<ContactItem> contactsListToShow;
     String selectedTable;
     private AlertDialog dialogDelete;
     private AlertDialog dialogLoad;
@@ -43,7 +45,8 @@ public class RestoreContactsActivity extends BaseServiceActivity implements Save
 //        savedContactsList = new ArrayList<>();
         progressDialog = DialogCreator.createDialog(this, DialogCreator.LOADING_DIALOG);
         progressDialog.show();
-        getServiceHelper().getBackupList();
+        getServiceHelper().loadContacts();
+
         setUpDialogs();
         setTitle(R.string.restore_toolbar);
     }
@@ -52,6 +55,10 @@ public class RestoreContactsActivity extends BaseServiceActivity implements Save
     public void onServiceCallback(int requestId, Intent requestIntent, int resultCode, Bundle resultData) {
         String action = requestIntent.getAction();
         switch (action) {
+            case IntentHandler.ACTION_LOAD:
+                contactsListToShow = resultData.getParcelableArrayList(IntentHandler.LIST_TO_SHOW_KEY);
+                getServiceHelper().getBackupList();
+                break;
             case IntentHandler.ACTION_GET_BACKUP:
                 savedContactsList = resultData.getStringArrayList(IntentHandler.BACKUP_TABLES_LIST_KEY);
                 progressDialog.dismiss();
@@ -64,6 +71,12 @@ public class RestoreContactsActivity extends BaseServiceActivity implements Save
                 finish();
                 break;
             case IntentHandler.ACTION_DELETE_BACKUP:
+                break;
+            case IntentHandler.ACTION_GET_CONTACTS_BACKUP:
+                progressDialog.dismiss();
+                contactsListToShow = resultData.getParcelableArrayList(IntentHandler.LIST_TO_SHOW_KEY);
+                fragment2.setList(contactsListToShow);
+                fragment2.updateList();
                 break;
         }
     }
@@ -91,6 +104,8 @@ public class RestoreContactsActivity extends BaseServiceActivity implements Save
                     transaction.replace(R.id.fragmentContainer, fragment2);
                     transaction.addToBackStack(null);
                     transaction.commit();
+                    getServiceHelper().fillContactsFromBackup(contactsListToShow, selectedTable);
+                    progressDialog.show();
                 }
                 break;
             case R.id.buttonCancel:
