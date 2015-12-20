@@ -3,6 +3,7 @@ package com.khasang.fixmynumber.Activity;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -46,6 +47,8 @@ public class FragmentActivity extends BaseServiceActivity implements StepFragmen
     private AlertDialog backupDialog;
     private AlertDialog savingDialog;
     private CheckBox checkBoxSelectAll;
+    public static final String FILE_NAME = "preferences";
+    public static final String DATA_MAP_KEY = "info";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,7 +57,6 @@ public class FragmentActivity extends BaseServiceActivity implements StepFragmen
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
         contactsList = new ArrayList<ContactItem>();
         contactsListToShow = new ArrayList<ContactItem>();
         contactsListChanged = new ArrayList<ContactItem>();
@@ -64,6 +66,45 @@ public class FragmentActivity extends BaseServiceActivity implements StepFragmen
         getServiceHelper().loadContacts();
         progressDialog.show();
         areAllContactsSelected = false;
+        showInfoDialog();
+    }
+
+    private void showInfoDialog() {
+        final SharedPreferences sharedPreferences = getSharedPreferences(FILE_NAME, MODE_PRIVATE);
+        if (!sharedPreferences.contains(DATA_MAP_KEY)) {
+//            View view = View.inflate(this, R.layout.info_dialog_view, null);
+//            final CheckBox infoDialogCheckBox = (CheckBox) view.findViewById(R.id.infoDialogCheckBox);
+            final boolean[] booleans = {false};
+            final String[] strings = {getResources().getString(R.string.info_dialog_cancel_message)};
+            final AlertDialog.Builder infoDialogBuilder = new AlertDialog.Builder(this, R.style.MyAlertDialogStyle);
+            infoDialogBuilder
+                    .setCustomTitle(View.inflate(this, R.layout.info_dialog_view_title, null))
+                    .setMultiChoiceItems(strings, booleans, new DialogInterface.OnMultiChoiceClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which, boolean isChecked) {
+                    if (isChecked) {
+                        SharedPreferences.Editor editor = sharedPreferences.edit();
+                        editor.putBoolean(DATA_MAP_KEY, true);
+                        editor.apply();
+                    }
+                }
+            })
+//                    .setView(R.layout.info_dialog_view)
+                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+//                            if (infoDialogCheckBox.isChecked()) {
+//                                SharedPreferences.Editor editor = sharedPreferences.edit();
+//                                editor.putBoolean(DATA_MAP_KEY, true);
+//                                editor.apply();
+//                            }
+                            dialog.dismiss();
+                        }
+                    })
+                    .create()
+                    .show();
+        }
+
     }
 
     @Override

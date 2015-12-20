@@ -49,4 +49,6 @@
     <string name="dialog_confirm_message">Do you want to apply these changes to your contacts?</string>
     <string name="dialog_creating_backup">Creating backup</string>
     <string name="dialog_saving_contacts">Saving contacts</string>
+    <string name="info_dialog_message">Before changing your contacts will be established backed up</string>
+    <string name="info_dialog_cancel_message">Do not show next time</string>
 </resources>
