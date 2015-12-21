@@ -72,36 +72,7 @@ public class FragmentActivity extends BaseServiceActivity implements StepFragmen
     private void showInfoDialog() {
         final SharedPreferences sharedPreferences = getSharedPreferences(FILE_NAME, MODE_PRIVATE);
         if (!sharedPreferences.contains(DATA_MAP_KEY)) {
-//            View view = View.inflate(this, R.layout.info_dialog_view, null);
-//            final CheckBox infoDialogCheckBox = (CheckBox) view.findViewById(R.id.infoDialogCheckBox);
-            final boolean[] booleans = {false};
-            final String[] strings = {getResources().getString(R.string.info_dialog_cancel_message)};
-            final AlertDialog.Builder infoDialogBuilder = new AlertDialog.Builder(this, R.style.MyAlertDialogStyle);
-            infoDialogBuilder
-                    .setCustomTitle(View.inflate(this, R.layout.info_dialog_view_title, null))
-                    .setMultiChoiceItems(strings, booleans, new DialogInterface.OnMultiChoiceClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which, boolean isChecked) {
-                    if (isChecked) {
-                        SharedPreferences.Editor editor = sharedPreferences.edit();
-                        editor.putBoolean(DATA_MAP_KEY, true);
-                        editor.apply();
-                    }
-                }
-            })
-//                    .setView(R.layout.info_dialog_view)
-                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-//                            if (infoDialogCheckBox.isChecked()) {
-//                                SharedPreferences.Editor editor = sharedPreferences.edit();
-//                                editor.putBoolean(DATA_MAP_KEY, true);
-//                                editor.apply();
-//                            }
-                            dialog.dismiss();
-                        }
-                    })
-                    .create()
+            DialogCreator.createDialog(this, DialogCreator.INFO_DIALOG)
                     .show();
         }
 
