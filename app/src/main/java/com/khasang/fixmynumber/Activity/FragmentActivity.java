@@ -3,6 +3,7 @@ package com.khasang.fixmynumber.Activity;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -46,6 +47,8 @@ public class FragmentActivity extends BaseServiceActivity implements StepFragmen
     private AlertDialog backupDialog;
     private AlertDialog savingDialog;
     private CheckBox checkBoxSelectAll;
+    public static final String PREFERENCES_NAME = "preferences";
+    public static final String INFO_DIALOG_KEY = "INFO_DIALOG_KEY";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,7 +57,6 @@ public class FragmentActivity extends BaseServiceActivity implements StepFragmen
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
         contactsList = new ArrayList<ContactItem>();
         contactsListToShow = new ArrayList<ContactItem>();
         contactsListChanged = new ArrayList<ContactItem>();
@@ -64,6 +66,16 @@ public class FragmentActivity extends BaseServiceActivity implements StepFragmen
         getServiceHelper().loadContacts();
         progressDialog.show();
         areAllContactsSelected = false;
+        showInfoDialog();
+    }
+
+    private void showInfoDialog() {
+        final SharedPreferences sharedPreferences = getSharedPreferences(PREFERENCES_NAME, MODE_PRIVATE);
+        if (!sharedPreferences.contains(INFO_DIALOG_KEY)) {
+            DialogCreator.createDialog(this, DialogCreator.INFO_DIALOG)
+                    .show();
+        }
+
     }
 
     @Override
