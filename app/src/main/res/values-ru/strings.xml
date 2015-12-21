@@ -40,6 +40,6 @@
     <string name="backup_message">Создана резервная копия контактов:</string>
     <string name="dialog_saving_contacts">Сохранение контактов</string>
     <string name="dialog_creating_backup">Создание резервной копии </string>
-    <string name="info_dialog_message">Перед изменением контактов будет создана их резервная копия, чтобы Вы могли восстановить старые контакты</string>
-    <string name="info_dialog_cancel_message">Не показывать в следующий раз</string>
+    <string name="dialog_info_message">Перед изменением контактов создается их резервная копия, поэтому при необходимости вы сможете восстановить старые контакты</string>
+    <string name="dialog_info_cancel_message">Не показывать в следующий раз</string>
 </resources>

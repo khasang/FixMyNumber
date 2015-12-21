@@ -45,8 +45,9 @@ public class DialogCreator {
                 View view = View.inflate(activity, R.layout.info_dialog_view, null);
                 final CheckBox infoDialogCheckBox = (CheckBox) view.findViewById(R.id.infoDialogCheckBox);
                 builder
-                        .setMessage(R.string.info_dialog_message)
+                        .setMessage(R.string.dialog_info_message)
                         .setView(view)
+//                        .setView(view,16,16,16,16)
                         .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
