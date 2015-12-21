@@ -41,7 +41,7 @@ public class DialogCreator {
                 builder.setView(inflater.inflate(R.layout.saving_dialog, null));
                 break;
             case INFO_DIALOG:
-                final SharedPreferences sharedPreferences = activity.getSharedPreferences(FragmentActivity.FILE_NAME, FragmentActivity.MODE_PRIVATE);
+                final SharedPreferences sharedPreferences = activity.getSharedPreferences(FragmentActivity.PREFERENCES_NAME, FragmentActivity.MODE_PRIVATE);
                 View view = View.inflate(activity, R.layout.info_dialog_view, null);
                 final CheckBox infoDialogCheckBox = (CheckBox) view.findViewById(R.id.infoDialogCheckBox);
                 builder
@@ -53,7 +53,7 @@ public class DialogCreator {
                             public void onClick(DialogInterface dialog, int which) {
                                 if (infoDialogCheckBox.isChecked()) {
                                     SharedPreferences.Editor editor = sharedPreferences.edit();
-                                    editor.putBoolean(FragmentActivity.DATA_MAP_KEY, true);
+                                    editor.putBoolean(FragmentActivity.INFO_DIALOG_KEY, true);
                                     editor.apply();
                                 }
                                 dialog.dismiss();

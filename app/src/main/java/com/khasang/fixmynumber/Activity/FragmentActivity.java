@@ -47,8 +47,8 @@ public class FragmentActivity extends BaseServiceActivity implements StepFragmen
     private AlertDialog backupDialog;
     private AlertDialog savingDialog;
     private CheckBox checkBoxSelectAll;
-    public static final String FILE_NAME = "preferences";
-    public static final String DATA_MAP_KEY = "info";
+    public static final String PREFERENCES_NAME = "preferences";
+    public static final String INFO_DIALOG_KEY = "INFO_DIALOG_KEY";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,8 +70,8 @@ public class FragmentActivity extends BaseServiceActivity implements StepFragmen
     }
 
     private void showInfoDialog() {
-        final SharedPreferences sharedPreferences = getSharedPreferences(FILE_NAME, MODE_PRIVATE);
-        if (!sharedPreferences.contains(DATA_MAP_KEY)) {
+        final SharedPreferences sharedPreferences = getSharedPreferences(PREFERENCES_NAME, MODE_PRIVATE);
+        if (!sharedPreferences.contains(INFO_DIALOG_KEY)) {
             DialogCreator.createDialog(this, DialogCreator.INFO_DIALOG)
                     .show();
         }
