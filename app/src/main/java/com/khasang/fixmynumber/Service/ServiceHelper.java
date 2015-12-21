@@ -51,9 +51,9 @@ public class ServiceHelper {
         return requestId;
     }
 
-    private Intent createIntent(final Context context, String actionLogin, final int requestId) {
+    private Intent createIntent(final Context context, String action, final int requestId) {
         Intent i = new Intent(context, TaskService.class);
-        i.setAction(actionLogin);
+        i.setAction(action);
 
         i.putExtra(TaskService.EXTRA_STATUS_RECEIVER, new ResultReceiver(new Handler()) {
             @Override
@@ -110,6 +110,14 @@ public class ServiceHelper {
     public int deleteBackup(String tableName) {
         final int requestId = createId();
         Intent i = createIntent(application, IntentHandler.ACTION_DELETE_BACKUP, requestId);
+        i.putExtra(IntentHandler.TABLE_NAME_KEY, tableName);
+        return runRequest(requestId, i);
+    }
+
+    public int fillContactsFromBackup(ArrayList<ContactItem> contacts, String tableName) {
+        final int requestId = createId();
+        Intent i = createIntent(application, IntentHandler.ACTION_GET_CONTACTS_BACKUP, requestId);
+        i.putParcelableArrayListExtra(IntentHandler.LIST_TO_SHOW_KEY, contacts);
         i.putExtra(IntentHandler.TABLE_NAME_KEY, tableName);
         return runRequest(requestId, i);
     }

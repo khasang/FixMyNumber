@@ -4,39 +4,50 @@ package com.khasang.fixmynumber.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.view.View;
-import android.widget.Button;
 import android.widget.Toast;
 
 import com.khasang.fixmynumber.Adapter.SavedContactsAdapter;
+import com.khasang.fixmynumber.Fragment.OnButtonClickListener;
+import com.khasang.fixmynumber.Fragment.RestoreFragment1;
+import com.khasang.fixmynumber.Fragment.RestoreFragment2;
 import com.khasang.fixmynumber.Helper.DialogCreator;
+import com.khasang.fixmynumber.Model.ContactItem;
 import com.khasang.fixmynumber.R;
 import com.khasang.fixmynumber.Service.IntentHandler;
 
 import java.util.ArrayList;
 
-public class RestoreContactsActivity extends BaseServiceActivity implements SavedContactsAdapter.SavedContactsItemClickListener {
+public class RestoreContactsActivity extends BaseServiceActivity implements SavedContactsAdapter.SavedContactsItemClickListener,
+        OnButtonClickListener {
     ArrayList<String> savedContactsList;
+    ArrayList<ContactItem> contactsListToShow;
     String selectedTable;
-    private RecyclerView recyclerViewSavedContacts;
     private AlertDialog dialogDelete;
     private AlertDialog dialogLoad;
     private AlertDialog progressDialog;
+    private RestoreFragment1 fragment1;
+    private RestoreFragment2 fragment2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_restore_contacts);
+
+        fragment1 = new RestoreFragment1();
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        transaction.add(R.id.fragmentContainer, fragment1);
+        transaction.commit();
+
         selectedTable = null;
 //        savedContactsList = new ArrayList<>();
-////        getDummySavedContacts();
         progressDialog = DialogCreator.createDialog(this, DialogCreator.LOADING_DIALOG);
         progressDialog.show();
-        getServiceHelper().getBackupList();
-        setUpButtons();
+        getServiceHelper().loadContacts();
+
+        setUpDialogs();
         setTitle(R.string.restore_toolbar);
     }
 
@@ -44,10 +55,15 @@ public class RestoreContactsActivity extends BaseServiceActivity implements Save
     public void onServiceCallback(int requestId, Intent requestIntent, int resultCode, Bundle resultData) {
         String action = requestIntent.getAction();
         switch (action) {
+            case IntentHandler.ACTION_LOAD:
+                contactsListToShow = resultData.getParcelableArrayList(IntentHandler.LIST_TO_SHOW_KEY);
+                getServiceHelper().getBackupList();
+                break;
             case IntentHandler.ACTION_GET_BACKUP:
                 savedContactsList = resultData.getStringArrayList(IntentHandler.BACKUP_TABLES_LIST_KEY);
                 progressDialog.dismiss();
-                setUpRecyclerView();
+                fragment1.setList(savedContactsList);
+//                setUpRecyclerView();
                 break;
             case IntentHandler.ACTION_LOAD_BACKUP:
                 progressDialog.dismiss();
@@ -55,6 +71,12 @@ public class RestoreContactsActivity extends BaseServiceActivity implements Save
                 finish();
                 break;
             case IntentHandler.ACTION_DELETE_BACKUP:
+                break;
+            case IntentHandler.ACTION_GET_CONTACTS_BACKUP:
+                progressDialog.dismiss();
+                contactsListToShow = resultData.getParcelableArrayList(IntentHandler.LIST_TO_SHOW_KEY);
+                fragment2.setList(contactsListToShow);
+                fragment2.updateList();
                 break;
         }
     }
@@ -66,36 +88,35 @@ public class RestoreContactsActivity extends BaseServiceActivity implements Save
         }
     }
 
-    private void setUpRecyclerView() {
-        recyclerViewSavedContacts = (RecyclerView) findViewById(R.id.recyclerViewSavedContacts);
-        SavedContactsAdapter savedContactsAdapter = new SavedContactsAdapter(savedContactsList, this);
-        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
-        recyclerViewSavedContacts.setAdapter(savedContactsAdapter);
-        recyclerViewSavedContacts.setLayoutManager(layoutManager);
-    }
-
-    private void setUpButtons() {
-        Button buttonLoad = (Button) findViewById(R.id.buttonLoad);
-        Button buttonDelete = (Button) findViewById(R.id.buttonDelete);
-        setUpDialogs();
-
-        buttonLoad.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (selectedTable != null) {
-                    dialogLoad.show();
-                }
-            }
-        });
-        buttonDelete.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+    @Override
+    public void OnButtonClick(View v) {
+        switch (v.getId()) {
+            case R.id.buttonDelete:
                 if (selectedTable != null) {
                     dialogDelete.show();
-                    recyclerViewSavedContacts.getAdapter().notifyDataSetChanged();
                 }
-            }
-        });
+                break;
+            case R.id.buttonLoad:
+                if (selectedTable != null) {
+                    fragment2 = new RestoreFragment2();
+//                    fragment2.setList();
+                    FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+                    transaction.replace(R.id.fragmentContainer, fragment2);
+                    transaction.addToBackStack(null);
+                    transaction.commit();
+                    getServiceHelper().fillContactsFromBackup(contactsListToShow, selectedTable);
+                    progressDialog.show();
+                }
+                break;
+            case R.id.buttonCancel:
+                getSupportFragmentManager().popBackStack();
+                break;
+            case R.id.buttonConfirm:
+                dialogLoad.show();
+                break;
+
+
+        }
     }
 
     private void setUpDialogs() {
@@ -111,8 +132,7 @@ public class RestoreContactsActivity extends BaseServiceActivity implements Save
                                 savedContactsList.remove(i);
                             }
                         }
-                        recyclerViewSavedContacts.getAdapter().notifyDataSetChanged();
-                        ((SavedContactsAdapter) recyclerViewSavedContacts.getAdapter()).resetSelection();
+                        fragment1.updateList();
                         dialog.dismiss();
                     }
                 })
@@ -149,7 +169,4 @@ public class RestoreContactsActivity extends BaseServiceActivity implements Save
         selectedTable = name;
     }
 
-    public void updateUI() {
-        recyclerViewSavedContacts.getAdapter().notifyDataSetChanged();
-    }
 }

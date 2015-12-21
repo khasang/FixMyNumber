@@ -18,6 +18,9 @@ import com.khasang.fixmynumber.Helper.DBHelper;
 import com.khasang.fixmynumber.Model.ContactItem;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
 
 /**
  * Created by Raenar on 01.12.2015.
@@ -44,6 +47,7 @@ public class IntentHandler extends BaseIntentHandler {
     public static final String ACTION_LOAD_BACKUP = "ACTION_LOAD_BACKUP";
     public static final String TABLE_NAME_KEY = "TABLE_NAME_KEY";
     public static final String ACTION_DELETE_BACKUP = "ACTION_DELETE_BACKUP";
+    public static final String ACTION_GET_CONTACTS_BACKUP = "GET_CONTACTS_BACKUP";
 
 
     ArrayList<ContactItem> contactsList;
@@ -98,6 +102,16 @@ public class IntentHandler extends BaseIntentHandler {
                 String selectedTable = intent.getStringExtra(TABLE_NAME_KEY);
                 deleteBackup(context, selectedTable);
                 Bundle bundle = new Bundle();
+                callback.send(RESULT_SUCCESS_CODE, bundle);
+            }
+            break;
+            case ACTION_GET_CONTACTS_BACKUP: {
+                contactsList = intent.getParcelableArrayListExtra(LIST_TO_SHOW_KEY);
+                String selectedTable = intent.getStringExtra(TABLE_NAME_KEY);
+                fillContactsFromBackup(context, selectedTable, contactsList);
+                sortByChangedContacts(contactsList);
+                Bundle bundle = new Bundle();
+                bundle.putParcelableArrayList(LIST_TO_SHOW_KEY, contactsList);
                 callback.send(RESULT_SUCCESS_CODE, bundle);
             }
             break;
@@ -327,5 +341,51 @@ public class IntentHandler extends BaseIntentHandler {
 
     public static String getDigitsOnly(String testNumber) {
         return testNumber.replaceAll("[^0-9+]", "");
+    }
+
+    private void fillContactsFromBackup(Context context, String selectedTable, ArrayList<ContactItem> contactsListToFill) {
+        HashMap<String, String> loadedContactsMap = new HashMap<>();
+        DBHelper dbHelper = new DBHelper(context);
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+
+        Cursor c = db.query(selectedTable, null, null, null, null, null, null);
+        if (c.moveToNext()) {
+            int numberIndex = c.getColumnIndex(DBHelper.PHONE);
+            int numberIdIndex = c.getColumnIndex(DBHelper.PHONE_ID);
+            do {
+                String number = c.getString(numberIndex);
+                String numberId = c.getString(numberIdIndex);
+                loadedContactsMap.put(numberId, number);
+            } while (c.moveToNext());
+        }
+        c.close();
+        dbHelper.close();
+
+        for (ContactItem contactItem : contactsListToFill) {
+            String id = contactItem.getNumberOriginalId();
+            contactItem.setNumberNew(null);
+            if (loadedContactsMap.containsKey(id)) {
+                String loadedNumber = loadedContactsMap.get(id);
+                if (!loadedNumber.equals(contactItem.getNumberOriginal())) {
+                    contactItem.setNumberNew(loadedNumber);
+                }
+            }
+        }
+
+    }
+
+    private void sortByChangedContacts(ArrayList<ContactItem> contactsList) {
+        ArrayList<ContactItem> tempArray1 = new ArrayList<>();
+        ArrayList<ContactItem> tempArray2 = new ArrayList<>();
+        for (ContactItem contactItem : contactsList) {
+            if (contactItem.getNumberNew() != null) {
+                tempArray1.add(contactItem);
+            } else {
+                tempArray2.add(contactItem);
+            }
+        }
+        contactsList.clear();
+        contactsList.addAll(tempArray1);
+        contactsList.addAll(tempArray2);
     }
 }
