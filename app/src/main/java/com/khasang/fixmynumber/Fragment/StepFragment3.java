@@ -50,7 +50,7 @@ public class StepFragment3 extends Fragment {
         ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.fragment_step3, container, false);
 
         RecyclerView recyclerViewContactsToChange = (RecyclerView) rootView.findViewById(R.id.recyclerViewContactsToChange);
-        ContactsListToChangeAdapter adapter = new ContactsListToChangeAdapter(contactsList);
+        ContactsListToChangeAdapter adapter = new ContactsListToChangeAdapter(contactsList,false);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
         recyclerViewContactsToChange.setAdapter(adapter);
         recyclerViewContactsToChange.setLayoutManager(layoutManager);

@@ -18,9 +18,11 @@ import java.util.List;
 public class ContactsListToChangeAdapter extends RecyclerView.Adapter<ContactsListToChangeAdapter.ViewHolder> {
 
     private List<ContactItem> contactsListToChange;
+    boolean highlightChanges;
 
-    public ContactsListToChangeAdapter(List<ContactItem> contactsList) {
+    public ContactsListToChangeAdapter(List<ContactItem> contactsList, boolean highlightChanges) {
         this.contactsListToChange = contactsList;
+        this.highlightChanges = highlightChanges;
     }
 
     @Override
@@ -36,16 +38,16 @@ public class ContactsListToChangeAdapter extends RecyclerView.Adapter<ContactsLi
         viewHolder.numberOriginal.setText(contact.getNumberOriginal());
         if ((contact.getNumberOriginal().equals(contact.getNumberNew())) || (contact.getNumberNew() == null)) {
             viewHolder.numberNew.setText(R.string.unchanged);
-//            viewHolder.itemView.setBackgroundColor(Color.TRANSPARENT);
+            if (highlightChanges) viewHolder.itemView.setBackgroundColor(Color.TRANSPARENT);
         } else {
             viewHolder.numberNew.setText(contact.getNumberNew());
-//            viewHolder.itemView.setBackgroundColor(Color.LTGRAY);
+            if (highlightChanges) viewHolder.itemView.setBackgroundColor(Color.LTGRAY);
         }
     }
 
     @Override
     public int getItemCount() {
-        if (contactsListToChange != null){
+        if (contactsListToChange != null) {
             return contactsListToChange.size();
         }
         return 0;

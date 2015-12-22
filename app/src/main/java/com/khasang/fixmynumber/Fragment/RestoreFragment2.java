@@ -54,7 +54,7 @@ public class RestoreFragment2 extends Fragment {
     }
 
     public void setList(ArrayList<ContactItem> contactsListToChange) {
-        ContactsListToChangeAdapter adapter = new ContactsListToChangeAdapter(contactsListToChange);
+        ContactsListToChangeAdapter adapter = new ContactsListToChangeAdapter(contactsListToChange,true);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
         recyclerViewContactsToChange.setAdapter(adapter);
         recyclerViewContactsToChange.setLayoutManager(layoutManager);
