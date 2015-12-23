@@ -18,8 +18,6 @@ import com.khasang.fixmynumber.Helper.DBHelper;
 import com.khasang.fixmynumber.Model.ContactItem;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
 
 /**
@@ -156,7 +154,7 @@ public class IntentHandler extends BaseIntentHandler {
                         }
                     }
                 }
-                ContactItem contactItem = new ContactItem(name, number, id, null, false, accountType);
+                ContactItem contactItem = new ContactItem(name, id, accountType, number, null, false);
                 contactsList.add(contactItem);
                 if (!usedNumbersList.contains(number)) {
                     contactsListToShow.add(contactItem);
@@ -228,7 +226,7 @@ public class IntentHandler extends BaseIntentHandler {
         for (int i = 0; i < contactList.size(); i++) {
             String name = contactList.get(i).getName();
             String phone = contactList.get(i).getNumberOriginal();
-            String phoneId = contactList.get(i).getNumberOriginalId();
+            String phoneId = contactList.get(i).getContactID();
             String accountType = contactList.get(i).getAccountType();
 
             ContentValues cv = new ContentValues();
@@ -362,7 +360,7 @@ public class IntentHandler extends BaseIntentHandler {
         dbHelper.close();
 
         for (ContactItem contactItem : contactsListToFill) {
-            String id = contactItem.getNumberOriginalId();
+            String id = contactItem.getContactID();
             contactItem.setNumberNew(null);
             if (loadedContactsMap.containsKey(id)) {
                 String loadedNumber = loadedContactsMap.get(id);

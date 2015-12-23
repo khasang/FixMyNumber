@@ -8,20 +8,19 @@ import android.os.Parcelable;
  */
 public class ContactItem implements Parcelable{
     private String name;
+    private String contactID;
+    private String accountType;
     private String numberOriginal;
-    private String numberOriginalId;
     private String numberNew;
     private boolean isChecked;
-    private String accountType;
-    private int isCheckedInt;
 
     public ContactItem() {
     }
 
-    public ContactItem(String name, String numberOriginal, String numberOriginalId, String numberNew, boolean isChecked, String accountType) {
+    public ContactItem(String name, String contactID, String accountType, String numberOriginal, String numberNew, boolean isChecked) {
         this.name = name;
         this.numberOriginal = numberOriginal;
-        this.numberOriginalId = numberOriginalId;
+        this.contactID = contactID;
         this.numberNew = numberNew;
         this.isChecked = isChecked;
         this.accountType = accountType;
@@ -30,10 +29,10 @@ public class ContactItem implements Parcelable{
     public ContactItem(Parcel parcel) {
         name = parcel.readString();
         numberOriginal = parcel.readString();
-        numberOriginalId = parcel.readString();
+        contactID = parcel.readString();
         numberNew = parcel.readString();
         accountType = parcel.readString();
-        isCheckedInt = parcel.readInt();
+        int isCheckedInt = parcel.readInt();
         if (isCheckedInt == 0) {
             isChecked = false;
         } else {
@@ -57,12 +56,12 @@ public class ContactItem implements Parcelable{
         this.numberOriginal = numberOriginal;
     }
 
-    public String getNumberOriginalId() {
-        return numberOriginalId;
+    public String getContactID() {
+        return contactID;
     }
 
-    public void setNumberOriginalId(String numberOriginalId) {
-        this.numberOriginalId = numberOriginalId;
+    public void setContactID(String contactID) {
+        this.contactID = contactID;
     }
 
     public String getNumberNew() {
@@ -110,9 +109,10 @@ public class ContactItem implements Parcelable{
     public void writeToParcel(Parcel parcel, int flags) {
         parcel.writeString(name);
         parcel.writeString(numberOriginal);
-        parcel.writeString(numberOriginalId);
+        parcel.writeString(contactID);
         parcel.writeString(numberNew);
         parcel.writeString(accountType);
+        int isCheckedInt;
         if (isChecked) {
             isCheckedInt = 1;
         } else {

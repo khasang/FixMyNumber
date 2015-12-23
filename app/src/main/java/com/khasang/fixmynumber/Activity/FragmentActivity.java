@@ -121,7 +121,7 @@ public class FragmentActivity extends BaseServiceActivity implements StepFragmen
             int prefixID = random.nextInt(prefixArray.length);
             String generatedName = namesArray[nameID];
             String generatedNumber = prefixArray[prefixID] + "800555-" + i;
-            ContactItem newItem = new ContactItem(generatedName, generatedNumber, "" + i, null, false, null);
+            ContactItem newItem = new ContactItem(generatedName, "" + i, null, generatedNumber, null, false);
             contactsList.add(newItem);
         }
     }
