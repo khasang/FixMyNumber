@@ -4,6 +4,7 @@
 
     <!--"menu"-->
     <string name="menu_change_contacts">Change first digit in contacts</string>
+    <string name="menu_remove_duplicates">Remove duplicate contacts</string>
     <string name="menu_restore_contacts">Restore saved contacts</string>
 
     <!--"general"-->

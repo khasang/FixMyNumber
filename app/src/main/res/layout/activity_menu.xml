@@ -15,19 +15,33 @@
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
         android:layout_margin="@dimen/activity_horizontal_margin"
+        android:layout_marginLeft="@dimen/activity_horizontal_margin"
+        android:layout_marginRight="@dimen/activity_horizontal_margin"
         android:text="@string/menu_change_contacts" />
+
+    <Button
+        android:id="@+id/buttonStartDuplicates"
+        style="@style/MyButtonStyle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/buttonStartChange"
+        android:layout_centerHorizontal="true"
+        android:layout_marginLeft="@dimen/activity_horizontal_margin"
+        android:layout_marginRight="@dimen/activity_horizontal_margin"
+        android:layout_marginBottom="@dimen/activity_vertical_margin"
+        android:text="@string/menu_remove_duplicates" />
 
     <Button
         android:id="@+id/buttonStartRestore"
         style="@style/MyButtonStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignEnd="@+id/buttonStartChange"
-        android:layout_alignLeft="@+id/buttonStartChange"
-        android:layout_alignRight="@+id/buttonStartChange"
-        android:layout_alignStart="@+id/buttonStartChange"
-        android:layout_below="@+id/buttonStartChange"
+        android:layout_below="@+id/buttonStartDuplicates"
+        android:layout_marginLeft="@dimen/activity_horizontal_margin"
+        android:layout_marginRight="@dimen/activity_horizontal_margin"
         android:text="@string/menu_restore_contacts" />
+
+
 
     <TextView
         android:layout_width="match_parent"
@@ -48,4 +62,5 @@
         android:layout_above="@+id/buttonStartChange"
         android:layout_centerHorizontal="true"
         android:src="@drawable/menulogo" />
+
 </RelativeLayout>

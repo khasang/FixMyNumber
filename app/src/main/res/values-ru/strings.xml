@@ -42,4 +42,5 @@
     <string name="dialog_creating_backup">Создание резервной копии </string>
     <string name="dialog_info_message">Перед изменением контактов создается их резервная копия, поэтому при необходимости вы сможете восстановить старые контакты</string>
     <string name="dialog_info_cancel_message">Не показывать в следующий раз</string>
+    <string name="menu_remove_duplicates">Удалить дубликаты контактов</string>
 </resources>
