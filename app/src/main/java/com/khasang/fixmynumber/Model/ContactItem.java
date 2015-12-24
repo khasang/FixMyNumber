@@ -13,6 +13,7 @@ public class ContactItem implements Parcelable{
     private String numberOriginal;
     private String numberNew;
     private boolean isChecked;
+    private int group;
 
     public ContactItem() {
     }
@@ -24,6 +25,24 @@ public class ContactItem implements Parcelable{
         this.numberNew = numberNew;
         this.isChecked = isChecked;
         this.accountType = accountType;
+    }
+
+    public ContactItem(String name, String contactID, String accountType, String numberOriginal, String numberNew, boolean isChecked, int group) {
+        this.name = name;
+        this.contactID = contactID;
+        this.accountType = accountType;
+        this.numberOriginal = numberOriginal;
+        this.numberNew = numberNew;
+        this.isChecked = isChecked;
+        this.group = group;
+    }
+
+    public int getGroup() {
+        return group;
+    }
+
+    public void setGroup(int group) {
+        this.group = group;
     }
 
     public ContactItem(Parcel parcel) {

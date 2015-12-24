@@ -274,7 +274,7 @@ public class FragmentActivity extends BaseServiceActivity implements StepFragmen
         }
     }
 
-
+//todo move fragment code to fragments
     @Override
     public void onFragment1ViewsCreated(ViewGroup v) {
         recyclerView = (RecyclerView) v.findViewById(R.id.recyclerViewContacts);

@@ -2,7 +2,6 @@ package com.khasang.fixmynumber.Fragment;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -11,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.khasang.fixmynumber.Adapter.ContactsListAdapter;
+import com.khasang.fixmynumber.Adapter.DuplicatesAdapter;
 import com.khasang.fixmynumber.Model.ContactItem;
 import com.khasang.fixmynumber.R;
 
@@ -29,8 +29,9 @@ public class DuplicateFragment extends Fragment {
         recyclerView = (RecyclerView) v.findViewById(R.id.recyclerViewContacts);
         return v;
     }
-    public void setList(Activity activity, ArrayList<ContactItem> contactsList){
-        ContactsListAdapter adapter = new ContactsListAdapter(activity, contactsList);
+
+    public void setList(Activity activity, ArrayList<ContactItem> contactsList, ArrayList<Integer> groupList) {
+        DuplicatesAdapter adapter = new DuplicatesAdapter(activity, contactsList, groupList);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(layoutManager);
