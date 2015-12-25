@@ -43,11 +43,14 @@ public class DuplicatesAdapter extends RecyclerView.Adapter<DuplicatesAdapter.Vi
             ContactItem contactItem = contactsList.get(i);
             if (contactItem.getGroup() == group){
                 LinearLayout layout = new LinearLayout(context);
-                TextView tv = new TextView(context);
+                TextView tvName = new TextView(context);
+                TextView tvNumber = new TextView(context);
                 CheckBox checkbox = new CheckBox(context);
-                tv.setText(contactItem.getName());
+                tvName.setText(contactItem.getName());
+                tvNumber.setText(contactItem.getNumberOriginal());
                 layout.addView(checkbox);
-                layout.addView(tv);
+                layout.addView(tvName);
+                layout.addView(tvNumber);
                 holder.layout.addView(layout);
             }
         }
