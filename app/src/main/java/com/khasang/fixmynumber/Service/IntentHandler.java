@@ -18,7 +18,11 @@ import com.khasang.fixmynumber.Helper.DBHelper;
 import com.khasang.fixmynumber.Model.ContactItem;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.TreeSet;
 
 /**
  * Created by Raenar on 01.12.2015.
@@ -46,6 +50,8 @@ public class IntentHandler extends BaseIntentHandler {
     public static final String TABLE_NAME_KEY = "TABLE_NAME_KEY";
     public static final String ACTION_DELETE_BACKUP = "ACTION_DELETE_BACKUP";
     public static final String ACTION_GET_CONTACTS_BACKUP = "GET_CONTACTS_BACKUP";
+    public static final String ACTION_FIND_DUPLICATES = "ACTION_FIND_DUPLICATES";
+    public static final String GROUP_LIST_KEY = "GROUP_LIST_KEY";
 
 
     ArrayList<ContactItem> contactsList;
@@ -113,6 +119,16 @@ public class IntentHandler extends BaseIntentHandler {
                 callback.send(RESULT_SUCCESS_CODE, bundle);
             }
             break;
+            case ACTION_FIND_DUPLICATES: {
+                contactsList = intent.getParcelableArrayListExtra(LIST_TO_SHOW_KEY);
+                ArrayList<Integer> groupList = new ArrayList<>();
+                findDuplicates(contactsList, groupList);
+                Bundle bundle = new Bundle();
+                bundle.putParcelableArrayList(LIST_TO_SHOW_KEY, contactsList);
+                bundle.putIntegerArrayList(GROUP_LIST_KEY, groupList);
+                callback.send(RESULT_SUCCESS_CODE, bundle);
+            }
+            break;
         }
 
     }
@@ -159,10 +175,13 @@ public class IntentHandler extends BaseIntentHandler {
                 if (!usedNumbersList.contains(number)) {
                     contactsListToShow.add(contactItem);
                     usedNumbersList.add(number);
-                } else if (accountType.equals("sim")) {
-                    for (ContactItem contact : contactsListToShow) {
-                        if (contact.getNumberOriginal().equals(number)) {
-                            contact.setAccountType("sim");
+                } else
+                if (accountType!=null) {
+                    if (accountType.equals("sim")) {
+                        for (ContactItem contact : contactsListToShow) {
+                            if (contact.getNumberOriginal().equals(number)) {
+                                contact.setAccountType("sim");
+                            }
                         }
                     }
                 }
@@ -385,5 +404,58 @@ public class IntentHandler extends BaseIntentHandler {
         contactsList.clear();
         contactsList.addAll(tempArray1);
         contactsList.addAll(tempArray2);
+    }
+
+    private void findDuplicates(ArrayList<ContactItem> contactsList, ArrayList<Integer> groupList) {
+        ArrayList<ContactItem> duplicatesList = new ArrayList<>();
+        HashSet<String> numbersSet = new HashSet<>();
+        HashSet<String> namesSet = new HashSet<>();
+        int groupNumber = 0;
+        //creating list of duplicates
+        for (ContactItem contactItem : contactsList) {
+            if (numbersSet.contains(contactItem.getNumberOriginal())
+                    || namesSet.contains(contactItem.getName())) {
+                duplicatesList.add(contactItem);
+            }
+            if (!numbersSet.contains(contactItem.getNumberOriginal()))
+                numbersSet.add(contactItem.getNumberOriginal());
+            if (!namesSet.contains(contactItem.getNumberOriginal()))
+                namesSet.add(contactItem.getName());
+        }
+
+        //adding group to number duplicates
+        for (int i = 0; i < duplicatesList.size() - 1; i++) {
+            ContactItem currentContact = duplicatesList.get(i);
+            if (currentContact.getGroup() == 0) {
+                groupNumber++;
+                currentContact.setGroup(groupNumber);
+                groupList.add(groupNumber);
+                for (int j = i + 1; j < duplicatesList.size(); j++) {
+                    ContactItem nextContact = duplicatesList.get(j);
+                    if (nextContact.getGroup() == 0) {
+                        if (currentContact.getNumberOriginal().equals(nextContact.getNumberOriginal())) {
+                            nextContact.setGroup(currentContact.getGroup());
+                        }
+                    }
+                }
+            }
+        }
+        //adding group to name duplicates
+        for (int i = 0; i < duplicatesList.size() - 1; i++) {
+            ContactItem currentContact = duplicatesList.get(i);
+            if (currentContact.getGroup() == 0) {
+                groupNumber++;
+                currentContact.setGroup(groupNumber);
+                groupList.add(groupNumber);
+                for (int j = i + 1; j < duplicatesList.size(); j++) {
+                    ContactItem nextContact = duplicatesList.get(j);
+                    if (nextContact.getGroup() == 0) {
+                        if (currentContact.getName().equals(nextContact.getName())) {
+                            nextContact.setGroup(currentContact.getGroup());
+                        }
+                    }
+                }
+            }
+        }
     }
 }

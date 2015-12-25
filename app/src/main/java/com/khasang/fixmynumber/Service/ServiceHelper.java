@@ -121,4 +121,11 @@ public class ServiceHelper {
         i.putExtra(IntentHandler.TABLE_NAME_KEY, tableName);
         return runRequest(requestId, i);
     }
+
+    public int findDuplicates(ArrayList<ContactItem> contacts) {
+        final int requestId = createId();
+        Intent i = createIntent(application, IntentHandler.ACTION_FIND_DUPLICATES, requestId);
+        i.putParcelableArrayListExtra(IntentHandler.LIST_TO_SHOW_KEY, contacts);
+        return runRequest(requestId, i);
+    }
 }
