@@ -45,6 +45,9 @@ public class DuplicatesActivity extends BaseServiceActivity implements StepFragm
 //                contactsList.add(new ContactItem("TestA2","1","testType","111","222",false,2));
 //                contactsList.add(new ContactItem("TestB2","1","testType","111","222",false,2));
 //                contactsList.add(new ContactItem("TestA3","1","testType","111","222",false,3));
+                for (ContactItem contactItem : contactsList) {
+                    Log.d("original", contactItem.getName() + " " +contactItem.getAccountType());
+                }
                 getServiceHelper().findDuplicates(contactsList);
                 break;
             case IntentHandler.ACTION_FIND_DUPLICATES:

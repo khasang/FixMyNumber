@@ -51,6 +51,9 @@ public class DuplicatesAdapter extends RecyclerView.Adapter<DuplicatesAdapter.Vi
         if (duplicatesList.size() < 5) {
             for (int i = 0; i < duplicatesList.size(); i++) {
                 String name = duplicatesList.get(i).getName();
+                if (duplicatesList.get(i).getAccountType().equals("sim")){
+                    name = name + " (SIM)";
+                }
                 String number = duplicatesList.get(i).getNumberOriginal();
                 switch (i) {
                     case 0:
@@ -79,7 +82,7 @@ public class DuplicatesAdapter extends RecyclerView.Adapter<DuplicatesAdapter.Vi
                         holder.number5.setText(number);
                         break;
                 }
-                Log.d("Adapter", "Contact in grp = " + name + " i = " + i);
+                Log.d("Adapter", "Contact in grp = " + name + " i = " + i + " type "+duplicatesList.get(i).getAccountType());
             }
         }
 

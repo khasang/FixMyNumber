@@ -173,7 +173,8 @@ public class IntentHandler extends BaseIntentHandler {
                 ContactItem contactItem = new ContactItem(name, id, accountType, number, null, false);
                 contactsList.add(contactItem);
                 if (!usedNumbersList.contains(number)) {
-                    contactsListToShow.add(contactItem);
+                    //todo fix checkbox (link contactsListToShow and contactsList items) in Fragment activity
+                    contactsListToShow.add(new ContactItem(name, id, accountType, number, null, false));
                     usedNumbersList.add(number);
                 } else
                 if (accountType!=null) {
