@@ -3,6 +3,7 @@ package com.khasang.fixmynumber.Adapter;
 import android.content.Context;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -38,10 +39,11 @@ public class DuplicatesAdapter extends RecyclerView.Adapter<DuplicatesAdapter.Vi
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         int group = groupList.get(position);
-
+        Log.d("Adapter", "grp = "+ group);
         for (int i = 0; i < contactsList.size(); i++) {
             ContactItem contactItem = contactsList.get(i);
             if (contactItem.getGroup() == group){
+                Log.d("Adapter", "Contact in grp = "+contactItem.getName());
                 LinearLayout layout = new LinearLayout(context);
                 TextView tvName = new TextView(context);
                 TextView tvNumber = new TextView(context);
@@ -54,6 +56,7 @@ public class DuplicatesAdapter extends RecyclerView.Adapter<DuplicatesAdapter.Vi
                 holder.layout.addView(layout);
             }
         }
+        Log.d("Adapter", "/grp");
 
     }
 

@@ -408,6 +408,7 @@ public class IntentHandler extends BaseIntentHandler {
 
     private void findDuplicates(ArrayList<ContactItem> contactsList, ArrayList<Integer> groupList) {
         ArrayList<ContactItem> duplicatesList = new ArrayList<>();
+        ArrayList<ContactItem> duplicatesListTemp = new ArrayList<>();
         HashSet<String> numbersSet = new HashSet<>();
         HashSet<String> namesSet = new HashSet<>();
         int groupNumber = 0;
@@ -416,12 +417,28 @@ public class IntentHandler extends BaseIntentHandler {
             if (numbersSet.contains(contactItem.getNumberOriginal())
                     || namesSet.contains(contactItem.getName())) {
                 duplicatesList.add(contactItem);
+                Log.d("Handler","added duplicate: "+contactItem.getName());
             }
             if (!numbersSet.contains(contactItem.getNumberOriginal()))
                 numbersSet.add(contactItem.getNumberOriginal());
             if (!namesSet.contains(contactItem.getNumberOriginal()))
                 namesSet.add(contactItem.getName());
         }
+
+        //adding first unique item to duplicates list
+        duplicatesListTemp = new ArrayList<>();
+        for (ContactItem duplicateContact : duplicatesList) {
+            for (ContactItem contactItem : contactsList) {
+                if (contactItem.getName().equals(duplicateContact.getName())
+                        ||contactItem.getNumberOriginal().equals(duplicateContact.getNumberOriginal()) ){
+                    if (!duplicatesList.contains(contactItem)){
+                        duplicatesListTemp.add(contactItem);
+                        Log.d("Handler", "added duplicate: " + contactItem.getName());
+                    }
+                }
+            }
+        }
+        duplicatesList.addAll(duplicatesListTemp);
 
         //adding group to number duplicates
         for (int i = 0; i < duplicatesList.size() - 1; i++) {
@@ -440,6 +457,9 @@ public class IntentHandler extends BaseIntentHandler {
                 }
             }
         }
+        for (ContactItem contactItem : duplicatesList) {
+            Log.d("Handler", "added number grp: " + contactItem.getName() + " " + contactItem.getGroup());
+        }
         //adding group to name duplicates
         for (int i = 0; i < duplicatesList.size() - 1; i++) {
             ContactItem currentContact = duplicatesList.get(i);
@@ -456,6 +476,9 @@ public class IntentHandler extends BaseIntentHandler {
                     }
                 }
             }
+        }
+        for (ContactItem contactItem : duplicatesList) {
+            Log.d("Handler", "added name grp: " + contactItem.getName() + " " + contactItem.getGroup());
         }
     }
 }
