@@ -440,7 +440,7 @@ public class IntentHandler extends BaseIntentHandler {
         }
         duplicatesList.addAll(duplicatesListTemp);
 
-        //adding group to number duplicates
+        //adding group to both names and number duplicates
         for (int i = 0; i < duplicatesList.size() - 1; i++) {
             ContactItem currentContact = duplicatesList.get(i);
             if (currentContact.getGroup() == 0) {
@@ -450,7 +450,8 @@ public class IntentHandler extends BaseIntentHandler {
                 for (int j = i + 1; j < duplicatesList.size(); j++) {
                     ContactItem nextContact = duplicatesList.get(j);
                     if (nextContact.getGroup() == 0) {
-                        if (currentContact.getNumberOriginal().equals(nextContact.getNumberOriginal())) {
+                        if (currentContact.getNumberOriginal().equals(nextContact.getNumberOriginal())
+                                ||currentContact.getName().equals(nextContact.getName())) {
                             nextContact.setGroup(currentContact.getGroup());
                         }
                     }
@@ -460,25 +461,25 @@ public class IntentHandler extends BaseIntentHandler {
         for (ContactItem contactItem : duplicatesList) {
             Log.d("Handler", "added number grp: " + contactItem.getName() + " " + contactItem.getGroup());
         }
-        //adding group to name duplicates
-        for (int i = 0; i < duplicatesList.size() - 1; i++) {
-            ContactItem currentContact = duplicatesList.get(i);
-            if (currentContact.getGroup() == 0) {
-                groupNumber++;
-                currentContact.setGroup(groupNumber);
-                groupList.add(groupNumber);
-                for (int j = i + 1; j < duplicatesList.size(); j++) {
-                    ContactItem nextContact = duplicatesList.get(j);
-                    if (nextContact.getGroup() == 0) {
-                        if (currentContact.getName().equals(nextContact.getName())) {
-                            nextContact.setGroup(currentContact.getGroup());
-                        }
-                    }
-                }
-            }
-        }
-        for (ContactItem contactItem : duplicatesList) {
-            Log.d("Handler", "added name grp: " + contactItem.getName() + " " + contactItem.getGroup());
-        }
+//        //adding group to name duplicates
+//        for (int i = 0; i < duplicatesList.size() - 1; i++) {
+//            ContactItem currentContact = duplicatesList.get(i);
+//            if (currentContact.getGroup() == 0) {
+//                groupNumber++;
+//                currentContact.setGroup(groupNumber);
+//                groupList.add(groupNumber);
+//                for (int j = i + 1; j < duplicatesList.size(); j++) {
+//                    ContactItem nextContact = duplicatesList.get(j);
+//                    if (nextContact.getGroup() == 0) {
+//                        if (currentContact.getName().equals(nextContact.getName())) {
+//                            nextContact.setGroup(currentContact.getGroup());
+//                        }
+//                    }
+//                }
+//            }
+//        }
+//        for (ContactItem contactItem : duplicatesList) {
+//            Log.d("Handler", "added name grp: " + contactItem.getName() + " " + contactItem.getGroup());
+//        }
     }
 }
