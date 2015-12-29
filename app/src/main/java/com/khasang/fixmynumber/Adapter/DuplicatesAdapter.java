@@ -1,7 +1,6 @@
 package com.khasang.fixmynumber.Adapter;
 
 import android.content.Context;
-import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -55,39 +54,33 @@ public class DuplicatesAdapter extends RecyclerView.Adapter<DuplicatesAdapter.Vi
                     name = name + " (SIM)";
                 }
                 String number = duplicatesList.get(i).getNumberOriginal();
+                DuplicateLayout duplicateLayout = null;
                 switch (i) {
                     case 0:
-                        holder.layoutDuplicate1.setVisibility(View.VISIBLE);
-                        holder.name1.setText(name);
-                        holder.number1.setText(number);
+                        duplicateLayout = holder.duplicateLayout1;
                         break;
                     case 1:
-                        holder.layoutDuplicate2.setVisibility(View.VISIBLE);
-                        holder.name2.setText(name);
-                        holder.number2.setText(number);
+                        duplicateLayout = holder.duplicateLayout2;
                         break;
                     case 2:
-                        holder.layoutDuplicate3.setVisibility(View.VISIBLE);
-                        holder.name3.setText(name);
-                        holder.number3.setText(number);
+                        duplicateLayout = holder.duplicateLayout3;
                         break;
                     case 3:
-                        holder.layoutDuplicate4.setVisibility(View.VISIBLE);
-                        holder.name4.setText(name);
-                        holder.number4.setText(number);
+                        duplicateLayout = holder.duplicateLayout4;
                         break;
                     case 4:
-                        holder.layoutDuplicate5.setVisibility(View.VISIBLE);
-                        holder.name5.setText(name);
-                        holder.number5.setText(number);
+                        duplicateLayout = holder.duplicateLayout5;
                         break;
                 }
-                Log.d("Adapter", "Contact in grp = " + name + " i = " + i + " type "+duplicatesList.get(i).getAccountType());
+                if (duplicateLayout != null) {
+                    duplicateLayout.layout.setVisibility(View.VISIBLE);
+                    duplicateLayout.name.setText(name);
+                    duplicateLayout.number.setText(number);
+                    Log.d("Adapter", "Contact in grp = " + name + " i = " + i + " type "+duplicatesList.get(i).getAccountType());
+                }
             }
         }
-
         Log.d("Adapter", "/grp");
-
     }
 
     @Override
@@ -99,61 +92,42 @@ public class DuplicatesAdapter extends RecyclerView.Adapter<DuplicatesAdapter.Vi
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        LinearLayout layoutDuplicate1;
-        LinearLayout layoutDuplicate2;
-        LinearLayout layoutDuplicate3;
-        LinearLayout layoutDuplicate4;
-        LinearLayout layoutDuplicate5;
-        CheckBox checkBox1;
-        TextView name1;
-        TextView number1;
-        CheckBox checkBox2;
-        TextView name2;
-        TextView number2;
-        CheckBox checkBox3;
-        TextView name3;
-        TextView number3;
-        CheckBox checkBox4;
-        TextView name4;
-        TextView number4;
-        CheckBox checkBox5;
-        TextView name5;
-        TextView number5;
+        DuplicateLayout duplicateLayout1;
+        DuplicateLayout duplicateLayout2;
+        DuplicateLayout duplicateLayout3;
+        DuplicateLayout duplicateLayout4;
+        DuplicateLayout duplicateLayout5;
 
         public ViewHolder(View v) {
             super(v);
-            layoutDuplicate1 = (LinearLayout) v.findViewById(R.id.item1);
-            checkBox1 = (CheckBox) layoutDuplicate1.findViewById(R.id.checkBox);
-            name1 = (TextView) layoutDuplicate1.findViewById(R.id.contactName);
-            number1 = (TextView) layoutDuplicate1.findViewById(R.id.contactNumber);
-
-            layoutDuplicate2 = (LinearLayout) v.findViewById(R.id.item2);
-            checkBox2 = (CheckBox) layoutDuplicate2.findViewById(R.id.checkBox);
-            name2 = (TextView) layoutDuplicate2.findViewById(R.id.contactName);
-            number2 = (TextView) layoutDuplicate2.findViewById(R.id.contactNumber);
-
-            layoutDuplicate3 = (LinearLayout) v.findViewById(R.id.item3);
-            checkBox3 = (CheckBox) layoutDuplicate3.findViewById(R.id.checkBox);
-            name3 = (TextView) layoutDuplicate3.findViewById(R.id.contactName);
-            number3 = (TextView) layoutDuplicate3.findViewById(R.id.contactNumber);
-
-            layoutDuplicate4 = (LinearLayout) v.findViewById(R.id.item4);
-            checkBox4 = (CheckBox) layoutDuplicate4.findViewById(R.id.checkBox);
-            name4 = (TextView) layoutDuplicate4.findViewById(R.id.contactName);
-            number4 = (TextView) layoutDuplicate4.findViewById(R.id.contactNumber);
-
-            layoutDuplicate5 = (LinearLayout) v.findViewById(R.id.item5);
-            checkBox5 = (CheckBox) layoutDuplicate5.findViewById(R.id.checkBox);
-            name5 = (TextView) layoutDuplicate5.findViewById(R.id.contactName);
-            number5 = (TextView) layoutDuplicate5.findViewById(R.id.contactNumber);
+            duplicateLayout1 = new DuplicateLayout(v,R.id.item1);
+            duplicateLayout2 = new DuplicateLayout(v,R.id.item2);
+            duplicateLayout3 = new DuplicateLayout(v,R.id.item3);
+            duplicateLayout4 = new DuplicateLayout(v,R.id.item4);
+            duplicateLayout5 = new DuplicateLayout(v,R.id.item5);
         }
 
         public void hideAllViews() {
-            layoutDuplicate1.setVisibility(View.GONE);
-            layoutDuplicate2.setVisibility(View.GONE);
-            layoutDuplicate3.setVisibility(View.GONE);
-            layoutDuplicate4.setVisibility(View.GONE);
-            layoutDuplicate5.setVisibility(View.GONE);
+            duplicateLayout1.layout.setVisibility(View.GONE);
+            duplicateLayout2.layout.setVisibility(View.GONE);
+            duplicateLayout3.layout.setVisibility(View.GONE);
+            duplicateLayout4.layout.setVisibility(View.GONE);
+            duplicateLayout5.layout.setVisibility(View.GONE);
         }
     }
+
+    public class DuplicateLayout {
+        LinearLayout layout;
+        CheckBox checkBox;
+        TextView name;
+        TextView number;
+
+        public DuplicateLayout(View v, int id) {
+            layout = (LinearLayout) v.findViewById(id);
+            checkBox = (CheckBox) layout.findViewById(R.id.checkBox);
+            name = (TextView) layout.findViewById(R.id.contactName);
+            number = (TextView) layout.findViewById(R.id.contactNumber);
+        }
+    }
+
 }
