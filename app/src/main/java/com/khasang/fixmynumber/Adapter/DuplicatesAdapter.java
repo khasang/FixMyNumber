@@ -21,12 +21,24 @@ import java.util.ArrayList;
 public class DuplicatesAdapter extends RecyclerView.Adapter<DuplicatesAdapter.ViewHolder> {
     ArrayList<ContactItem> contactsList;
     ArrayList<Integer> groupList;
+    ArrayList<ArrayList<ContactItem>> groupArraysList;
     Context context;
 
     public DuplicatesAdapter(Context context, ArrayList<ContactItem> contactsList, ArrayList<Integer> groupList) {
         this.contactsList = contactsList;
         this.groupList = groupList;
         this.context = context;
+        groupArraysList = new ArrayList<>();
+        for (Integer group : groupList) {
+            ArrayList<ContactItem> tempArray = new ArrayList<>();
+            for (int i = 0; i < contactsList.size(); i++) {
+                ContactItem contactItem = contactsList.get(i);
+                if (contactItem.getGroup() == group) {
+                    tempArray.add(contactItem);
+                }
+            }
+            groupArraysList.add(tempArray);
+        }
     }
 
     @Override
@@ -38,14 +50,9 @@ public class DuplicatesAdapter extends RecyclerView.Adapter<DuplicatesAdapter.Vi
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         int group = groupList.get(position);
-        ArrayList<ContactItem> duplicatesList = new ArrayList<>();
+        ArrayList<ContactItem> duplicatesList = groupArraysList.get(position);
         Log.d("Adapter", "grp = " + group);
-        for (int i = 0; i < contactsList.size(); i++) {
-            ContactItem contactItem = contactsList.get(i);
-            if (contactItem.getGroup() == group) {
-                duplicatesList.add(contactItem);
-            }
-        }
+
         holder.hideAllViews();
         if (duplicatesList.size() < 5) {
             for (int i = 0; i < duplicatesList.size(); i++) {
